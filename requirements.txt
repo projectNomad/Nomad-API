@@ -1,0 +1,12 @@
+Django==1.11.12
+django-filter==1.1.0
+django-cors-headers==2.2.1
+django-import-export==1.0.0
+djangorestframework==3.8.2
+django-username-email==2.2.2
+Markdown==2.1.0
+Faker==0.8.17
+factory-boy==2.10.0
+django-anymail==4.2
+configparser==3.5.0
+drfdocs==0.0.11
