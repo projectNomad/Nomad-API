@@ -1,0 +1,22 @@
+language: python
+
+python:
+  - 3.7.2
+
+notifications:
+  email:
+    on_success: change
+    on_failure: change
+
+install:
+  - pip install -r requirements.txt
+  - pip install coveralls
+  - pip install pycodestyle
+
+script:
+  - cd source/apiNomad
+  - coverage run --include=apiNomad/* --omit=*__init__*,*migrations/*,*tests/* manage.py test .
+  - pycodestyle --count --show-source --exclude=migrations,.*,__pycache__,docs,env  .
+
+after_success:
+  coveralls
