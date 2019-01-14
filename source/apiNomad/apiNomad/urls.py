@@ -86,11 +86,11 @@ urlpatterns = [
     #     r'^activity/',
     #     include('activity.urls', namespace="activity"),
     # ),
-    # # Location
-    # url(
-    #     r'^location/',
-    #     include('location.urls', namespace="location"),
-    # ),
+    # Location
+    url(
+        r'^location/',
+        include('location.urls', namespace="location"),
+    ),
 ]
 
 if settings.DEBUG:
