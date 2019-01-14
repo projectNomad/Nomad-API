@@ -109,6 +109,7 @@ class Test:
         test = "coverage run " \
                "--include="\
                + PROJECT_PATH + "/apiNomad/*," \
+               + PROJECT_PATH + "/location/*," \
                "--omit=*__init__*,*migrations/*,*tests/* "\
                + PROJECT_PATH + "/manage.py test source/apiNomad"
 
