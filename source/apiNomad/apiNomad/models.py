@@ -142,3 +142,4 @@ class Profile(models.Model):
         choices=GENDER_STATUS,
         default=GENDER_STATUS[0][0],
     )
+
