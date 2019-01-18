@@ -12,10 +12,23 @@ from apiNomad.models import User
 
 class ParticipantionBasicSerializer(serializers.ModelSerializer):
     """This class represents the ActivityConstraint model serializer."""
-    participant = UserBasicSerializer(
+    user = UserBasicSerializer(
         read_only=True,
         default=serializers.CurrentUserDefault(),
     )
+
+    def to_representation(self, instance):
+        data = dict()
+        data['id'] = instance.id
+        data['date_created'] = instance.date_created
+        data['user'] = UserBasicSerializer(
+            instance.user
+        ).to_representation(instance.user)
+        data['event'] = EventBasicSerializer(
+            instance.event
+        ).to_representation(instance.event)
+
+        return data
 
     class Meta:
         model = models.Participation

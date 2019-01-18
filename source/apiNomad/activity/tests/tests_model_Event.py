@@ -164,9 +164,9 @@ class EventTests(APITransactionTestCase):
             date_end=date_end,
         )
 
-    def test_participants_property(self):
+    def test_users_property(self):
         """
-        Ensure we get the correct number of participants that are signed up
+        Ensure we get the correct number of users that are signed up
         """
         date_start = timezone.now()
         date_end = date_start

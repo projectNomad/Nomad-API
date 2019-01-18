@@ -120,14 +120,14 @@ class Participation(models.Model):
 
     class Meta:
         verbose_name_plural = 'Participations'
-        unique_together = ('event', 'participant')
+        unique_together = ('event', 'user')
 
     event = models.ForeignKey(
         Event,
         related_name='participation',
         on_delete=models.CASCADE,
     )
-    participant = models.ForeignKey(
+    user = models.ForeignKey(
         User,
         related_name='participation',
         on_delete=models.CASCADE,
@@ -139,7 +139,7 @@ class Participation(models.Model):
 
     def __str__(self):
         return '{0}, {1}, {2}'.format(
-            self.participant,
+            self.user,
             self.event,
             str(self.date_created),
         )

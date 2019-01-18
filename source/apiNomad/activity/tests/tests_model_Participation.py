@@ -55,7 +55,7 @@ class ParticipationTests(APITransactionTestCase):
         )
 
         self.participation = Participation.objects.create(
-            participant=self.user,
+            user=self.user,
             event=self.event,
         )
 
@@ -69,7 +69,7 @@ class ParticipationTests(APITransactionTestCase):
         )
 
         self.participation_presence = Participation.objects.create(
-            participant=self.admin,
+            user=self.admin,
             event=self.event_2,
         )
 
@@ -83,11 +83,11 @@ class ParticipationTests(APITransactionTestCase):
         with mock.patch('django.utils.timezone.now') as mock_now:
             mock_now.return_value = date_created
             participation = Participation.objects.create(
-                participant=self.admin,
+                user=self.admin,
                 event=self.event,
             )
         self.assertEqual(participation.date_created, date_created)
-        self.assertEqual(participation.participant.id, self.admin.id)
+        self.assertEqual(participation.user.id, self.admin.id)
         self.assertEqual(participation.event.id, self.event.id)
 
     def test_create_participation_missing_event(self):
@@ -100,7 +100,7 @@ class ParticipationTests(APITransactionTestCase):
             IntegrityError,
             Participation.objects.create,
             date_created=date_created,
-            participant=self.user,
+            user=self.user,
         )
 
     def test_create_participation_missing_user(self):
