@@ -3,11 +3,9 @@ from rest_framework.test import APIClient, APITransactionTestCase
 from django.db import IntegrityError
 from django.utils import timezone
 
-# from apiNomad.factories import UserFactory, AdminFactory
-from ....apiNomad.apiNomad.factories import UserFactory, AdminFactory
-from ....apiNomad.location.models import Address, StateProvince, Country
-# from location.models import Address, StateProvince, Country
-from ..models import Event, Participation
+from apiNomad.factories import UserFactory, AdminFactory
+from location.models import Address, StateProvince, Country
+from activity.models import Event, Participation
 
 
 class EventTests(APITransactionTestCase):
@@ -51,7 +49,7 @@ class EventTests(APITransactionTestCase):
         Ensure we can create a new event with just required arguments
         """
         date_start = timezone.now()
-        end_date = date_start + timezone.timedelta(
+        date_end = date_start + timezone.timedelta(
             minutes=100
         )
 
@@ -59,62 +57,29 @@ class EventTests(APITransactionTestCase):
             guide=self.user,
             title=self.TITLE,
             description=self.DESCRIPTION,
+            address=self.address,
             date_start=date_start,
-            end_date=end_date,
+            date_end=date_end,
         )
-        print(event.guide)
         self.assertEqual(event.date_start, date_start)
-        self.assertEqual(event.end_date, end_date)
+        self.assertEqual(event.date_end, date_end)
         self.assertEqual(event.title, self.TITLE)
         self.assertEqual(event.description, self.DESCRIPTION)
-        self.assertEqual(event.limit_participant, 0)
-
-    def test_create_event_missing_date_start(self):
-        """
-        Ensure we can't create a new event without required date_start
-        """
-        date_start = timezone.now()
-        end_date = date_start + timezone.timedelta(
-            minutes=100
-        )
-
-        self.assertRaises(
-            IntegrityError,
-            Event.objects.create,
-            guide=self.user,
-            title=self.TITLE,
-            description=self.DESCRIPTION,
-            end_date=end_date,
-        )
-
-    def test_create_event_missing_date_end(self):
-        """
-        Ensure we can't create a new event without required end_date
-        """
-        date_start = timezone.now()
-
-        self.assertRaises(
-            IntegrityError,
-            Event.objects.create,
-            guide=self.user,
-            title=self.TITLE,
-            description=self.DESCRIPTION,
-            date_start=date_start,
-        )
 
     def test_is_expired_property_true(self):
         """
         Ensure we have True if the event is expired
         """
         date_start = timezone.now()
-        end_date = date_start
+        date_end = date_start
 
         event = Event.objects.create(
-            guide=self.user,
+            guide_id=self.user.id,
             title=self.TITLE,
+            address=self.address,
             description=self.DESCRIPTION,
             date_start=date_start,
-            end_date=end_date,
+            date_end=date_end,
         )
 
         self.assertEqual(event.is_expired, True)
@@ -124,16 +89,17 @@ class EventTests(APITransactionTestCase):
         Ensure we have False if the event is not expired
         """
         date_start = timezone.now()
-        end_date = date_start + timezone.timedelta(
+        date_end = date_start + timezone.timedelta(
             minutes=100
         )
 
         event = Event.objects.create(
-            guide=self.user,
+            guide_id=self.user.id,
             title=self.TITLE,
+            address=self.address,
             description=self.DESCRIPTION,
             date_start=date_start,
-            end_date=end_date,
+            date_end=date_end,
         )
 
         self.assertEqual(event.is_expired, False)
@@ -143,16 +109,17 @@ class EventTests(APITransactionTestCase):
         Ensure we have True if the event is active
         """
         date_start = timezone.now()
-        end_date = date_start + timezone.timedelta(
+        date_end = date_start + timezone.timedelta(
             minutes=100,
         )
 
         event = Event.objects.create(
             guide=self.user,
             title=self.TITLE,
+            address=self.address,
             description=self.DESCRIPTION,
             date_start=date_start,
-            end_date=end_date,
+            date_end=date_end,
         )
 
         self.assertEqual(event.is_active, True)
@@ -162,26 +129,27 @@ class EventTests(APITransactionTestCase):
         Ensure we have False if the event is not active
         """
         date_start = timezone.now()
-        end_date = date_start
+        date_end = date_start
 
         event = Event.objects.create(
             guide=self.user,
             title=self.TITLE,
+            address=self.address,
             description=self.DESCRIPTION,
             date_start=date_start,
-            end_date=end_date,
+            date_end=date_end,
         )
 
         self.assertEqual(event.is_active, False)
 
-    def test_create_event_with_end_date_older_than_date_start(self):
+    def test_create_event_with_date_end_older_than_date_start(self):
         """
-        Ensure we can't create a new event with an end_date older
+        Ensure we can't create a new event with an date_end older
         than the date_start.
         """
-        # Here we have an end_date older than the date_start
-        end_date = timezone.now()
-        date_start = end_date + timezone.timedelta(
+        # Here we have an date_end older than the date_start
+        date_end = timezone.now()
+        date_start = date_end + timezone.timedelta(
             minutes=100,
         )
 
@@ -190,24 +158,26 @@ class EventTests(APITransactionTestCase):
             Event.objects.create,
             guide=self.user,
             title=self.TITLE,
+            address=self.address,
             description=self.DESCRIPTION,
             date_start=date_start,
-            end_date=end_date,
+            date_end=date_end,
         )
 
-    def test_participants_property(self):
+    def test_users_property(self):
         """
-        Ensure we get the correct number of volunteers that are signed up
+        Ensure we get the correct number of users that are signed up
         """
         date_start = timezone.now()
-        end_date = date_start
+        date_end = date_start
 
         event = Event.objects.create(
             guide=self.user,
             title=self.TITLE,
+            address=self.address,
             description=self.DESCRIPTION,
             date_start=date_start,
-            end_date=end_date,
+            date_end=date_end,
         )
 
         Participation.objects.create(
@@ -224,36 +194,7 @@ class EventTests(APITransactionTestCase):
             user=self.admin,
             event=event,
         )
-
-        self.assertEqual(event.participants, 1)
-
-    def test_nb_volunteers_standby_property(self):
-        """
-        Ensure we get the correct number of volunteers that are signed up and
-        on hold.
-        """
-        date_start = timezone.now()
-        end_date = date_start
-
-        event = Event.objects.create(
-            guide=self.user,
-            title=self.TITLE,
-            description=self.DESCRIPTION,
-            date_start=date_start,
-            end_date=end_date,
-        )
-
-        Participation.objects.create(
-            user=self.user,
-            event=event,
-        )
-
-        Participation.objects.create(
-            user=self.user2,
-            event=event,
-        )
-
-        self.assertEqual(event.participants, 2)
+        self.assertEqual(event.nb_participants, 3)
 
     def test_is_started_property_false(self):
         """
@@ -262,16 +203,17 @@ class EventTests(APITransactionTestCase):
         date_start = timezone.now() + timezone.timedelta(
             minutes=100
         )
-        end_date = date_start + timezone.timedelta(
+        date_end = date_start + timezone.timedelta(
             minutes=100
         )
 
         event = Event.objects.create(
             guide=self.user,
             title=self.TITLE,
+            address=self.address,
             description=self.DESCRIPTION,
             date_start=date_start,
-            end_date=end_date,
+            date_end=date_end,
         )
 
         self.assertEqual(event.is_started, False)
@@ -281,16 +223,17 @@ class EventTests(APITransactionTestCase):
         Ensure we have True if the event is started
         """
         date_start = timezone.now()
-        end_date = date_start + timezone.timedelta(
+        date_end = date_start + timezone.timedelta(
             minutes=100
         )
 
         event = Event.objects.create(
             guide=self.user,
             title=self.TITLE,
+            address=self.address,
             description=self.DESCRIPTION,
             date_start=date_start,
-            end_date=end_date,
+            date_end=date_end,
         )
 
         self.assertEqual(event.is_started, True)
@@ -300,16 +243,17 @@ class EventTests(APITransactionTestCase):
         Ensure we have True if the event is started
         """
         date_start = timezone.now()
-        end_date = date_start + timezone.timedelta(
+        date_end = date_start + timezone.timedelta(
             minutes=100
         )
 
         event = Event.objects.create(
             guide=self.user,
             title=self.TITLE,
+            address=self.address,
             description=self.DESCRIPTION,
             date_start=date_start,
-            end_date=end_date,
+            date_end=date_end,
         )
 
-        self.assertEqual(event.duration, end_date - date_start)
+        self.assertEqual(event.duration, date_end - date_start)
