@@ -13,9 +13,7 @@ class EventIsManager(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        is_manager = request.user in obj.cell.managers.all()
-
-        return is_manager or request.user.is_superuser
+        return request.user or request.user.is_superuser
 
 
 class ParticipationIsManager(permissions.BasePermission):

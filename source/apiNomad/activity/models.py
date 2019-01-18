@@ -3,15 +3,17 @@ from django.utils import timezone
 from django.conf import settings
 
 from location.models import Address
+from apiNomad.models import User
 
 
 class Event(models.Model):
 
     class Meta:
-        verbose_name_plural = 'Activities'
+        verbose_name_plural = 'Events'
+        ordering = ('date_start',)
 
     guide = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        User,
         on_delete=models.CASCADE,
         verbose_name="Guides",
     )
@@ -21,23 +23,16 @@ class Event(models.Model):
         on_delete=models.CASCADE,
     )
     participants = models.ManyToManyField(
-        settings.AUTH_USER_MODEL,
+        User,
         verbose_name="Participants",
         related_name="participants",
         blank=True,
+        null=True,
         through='Participation',
     )
-    family = models.BooleanField(
-        verbose_name="Contraintes activity",
-        default=True
-    )
-    nb_participant = models.PositiveIntegerField(
-        verbose_name="Number of participant",
+    nb_participants = models.PositiveIntegerField(
+        verbose_name="Number of participants",
         default=0,
-    )
-    limit_participant = models.BooleanField(
-        verbose_name="Limite de participation",
-        default=False
     )
     title = models.CharField(
         verbose_name="Title",
@@ -50,25 +45,28 @@ class Event(models.Model):
         verbose_name="Creation date",
         auto_now_add=True,
     )
-    youtube_link = models.URLField(
-        verbose_name="Youtube Link",
-        blank=True,
-        null=True,
-    )
     date_start = models.DateTimeField(
         verbose_name="Start date",
+        null=True
     )
     date_end = models.DateTimeField(
         verbose_name="End date",
-        blank=True,
         null=True
     )
 
     def clean(self):
+        if not self.date_start:
+            raise IntegrityError("The event start date cannot be empty.")
+        if not self.date_end:
+            raise IntegrityError("The event end date cannot be empty.")
         if self.date_start and self.date_end:
             if self.date_start > self.date_end:
                 error = "The start date needs to be older than end date."
                 raise IntegrityError(error)
+        if not self.title:
+            raise IntegrityError("The event title cannot be empty.")
+        if not self.description:
+            raise IntegrityError("The event description cannot be empty.")
 
     def save(self, *args, **kwargs):
         self.clean()
@@ -105,6 +103,10 @@ class Event(models.Model):
     def duration(self):
         return self.date_end - self.date_start
 
+    @property
+    def nb_participants(self):
+        return self.participants.count()
+
 
 class Participation(models.Model):
     """
@@ -126,7 +128,7 @@ class Participation(models.Model):
         on_delete=models.CASCADE,
     )
     participant = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        User,
         related_name='participation',
         on_delete=models.CASCADE,
     )

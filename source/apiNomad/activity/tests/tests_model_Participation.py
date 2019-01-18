@@ -9,9 +9,9 @@ from django.utils import timezone
 
 # from apiNomad.factories import UserFactory, AdminFactory
 # from location.models import Address, StateProvince, Country
-from ....apiNomad.apiNomad.factories import UserFactory, AdminFactory
-from ....apiNomad.location.models import Address, StateProvince, Country
-from ..models import Event, Participation
+from apiNomad.factories import UserFactory, AdminFactory
+from location.models import Address, StateProvince, Country
+from activity.models import Event, Participation
 
 
 class ParticipationTests(APITransactionTestCase):
@@ -49,12 +49,13 @@ class ParticipationTests(APITransactionTestCase):
             guide=self.user,
             title='event title',
             description='description event',
+            address=self.address,
             date_start=event_date_start,
             date_end=event_date_start + timezone.timedelta(minutes=100),
         )
 
         self.participation = Participation.objects.create(
-            participant=self.admin,
+            participant=self.user,
             event=self.event,
         )
 
@@ -62,6 +63,7 @@ class ParticipationTests(APITransactionTestCase):
             guide=self.user,
             title='event title',
             description='description event',
+            address=self.address,
             date_start=event_date_start,
             date_end=event_date_start + timezone.timedelta(minutes=100),
         )
@@ -76,29 +78,28 @@ class ParticipationTests(APITransactionTestCase):
         Ensure we can create a new participation with just required arguments
         """
 
-        subscription_date = timezone.now()
+        date_created = timezone.now()
 
         with mock.patch('django.utils.timezone.now') as mock_now:
-            mock_now.return_value = subscription_date
+            mock_now.return_value = date_created
             participation = Participation.objects.create(
-                participant=self.user,
+                participant=self.admin,
                 event=self.event,
             )
-
-        self.assertEqual(participation.subscription_date, subscription_date)
-        self.assertEqual(participation.participant.id, self.user.id)
+        self.assertEqual(participation.date_created, date_created)
+        self.assertEqual(participation.participant.id, self.admin.id)
         self.assertEqual(participation.event.id, self.event.id)
 
     def test_create_participation_missing_event(self):
         """
         Ensure we can't create a new participation without required event
         """
-        subscription_date = timezone.now()
+        date_created = timezone.now()
 
         self.assertRaises(
             IntegrityError,
             Participation.objects.create,
-            subscription_date=subscription_date,
+            date_created=date_created,
             participant=self.user,
         )
 
@@ -106,12 +107,12 @@ class ParticipationTests(APITransactionTestCase):
         """
         Ensure we can't create a new participation without required user
         """
-        subscription_date = timezone.now()
+        date_created = timezone.now()
 
         self.assertRaises(
             IntegrityError,
             Participation.objects.create,
-            subscription_date=subscription_date,
+            date_created=date_created,
             event=self.event,
         )
 
@@ -121,7 +122,7 @@ class ParticipationTests(APITransactionTestCase):
         """
 
         self.assertEqual(
-            self.participation.date_start,
+            self.event.date_start,
             self.participation.event.date_start
         )
 
@@ -131,25 +132,9 @@ class ParticipationTests(APITransactionTestCase):
         """
 
         self.assertEqual(
-            self.participation.date_end,
+            self.event.date_end,
             self.participation.event.date_end
         )
-
-    def test_duration_from_model(self):
-        """
-        Check duration
-        """
-
-        self.assertEqual(
-            self.participation_presence.duration,
-            timedelta(minutes=300)
-        )
-
-    def test_duration_from_event_property(self):
-        """
-        Check duration
-        """
-        self.assertEqual(self.participation.duration, timedelta(0, 6000))
 
     def test_name(self):
         self.assertIsNot(self.participation.__str__, None)

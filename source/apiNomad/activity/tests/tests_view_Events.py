@@ -8,9 +8,9 @@ from django.utils import timezone
 
 # from apiNomad.factories import UserFactory, AdminFactory
 # from location.models import Address, StateProvince, Country
-from ....apiNomad.apiNomad.factories import UserFactory, AdminFactory
-from ....apiNomad.location.models import Address, StateProvince, Country
-from ..models import Event
+from apiNomad.factories import UserFactory, AdminFactory
+from location.models import Address, StateProvince, Country
+from activity.models import Event
 
 
 class EventsTests(APITestCase):
@@ -47,7 +47,7 @@ class EventsTests(APITestCase):
             country=self.random_country,
         )
 
-        date_start = timezone.now() - timezone.timedelta(
+        date_start = timezone.now() + timezone.timedelta(
             minutes=100,
         )
         date_end = date_start + timezone.timedelta(
@@ -58,22 +58,16 @@ class EventsTests(APITestCase):
             guide=self.user,
             title='event title1',
             description='description event',
+            address=self.address,
             date_start=date_start,
             date_end=date_end,
-        )
-
-        self.event_inactive = Event.objects.create(
-            guide=self.user,
-            title='event title2',
-            description='description event',
-            date_start=date_end,
-            date_end=date_start,
         )
 
         self.event_with_manager = Event.objects.create(
             guide=self.user_event_manager,
             title='event title2',
             description='description event',
+            address=self.address,
             date_start=date_start,
             date_end=date_end,
         )
@@ -87,14 +81,7 @@ class EventsTests(APITestCase):
             guide=self.user,
             title='event title3',
             description='description event',
-            date_start=date_start,
-            date_end=date_end,
-        )
-
-        self.event_2 = Event.objects.create(
-            guide=self.user,
-            title='event title3',
-            description='description event',
+            address=self.address,
             date_start=date_start,
             date_end=date_end,
         )
@@ -114,9 +101,22 @@ class EventsTests(APITestCase):
         description = 'description event'
 
         data = {
-            'guide': self.user,
+            'guide': self.admin.id,
             'title': title,
             'description': description,
+            'address': {
+                'address_line1': "my address",
+                'postal_code': "RAN DOM",
+                'city': 'random city',
+                'state_province': {
+                    'iso_code': 'NS',
+                    'name': 'New State',
+                },
+                'country': {
+                    'iso_code': 'NC',
+                    'name': 'New Country',
+                },
+            },
             'date_start': date_start,
             'date_end': date_end,
         }
@@ -128,18 +128,17 @@ class EventsTests(APITestCase):
             data,
             format='json',
         )
-
         content = json.loads(response.content)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(content['date_start'], date_start_str)
         self.assertEqual(content['date_end'], date_end_str)
-        self.assertEqual(content['guide']['id'], self.user.id)
+        self.assertEqual(content['guide']['id'], self.admin.id)
         self.assertEqual(content['title'], title)
         self.assertEqual(content['description'], description)
 
         # Check the system doesn't return attributes not expected
         attributes = ['id', 'date_start', 'date_end', 'guide',
-                      'title', 'description']
+                      'title', 'description', 'address', ]
 
         for key in content.keys():
             self.assertTrue(
@@ -171,14 +170,27 @@ class EventsTests(APITestCase):
         description = 'description event'
 
         data = {
-            'guide': self.user_event_manager,
+            'guide': self.admin.id,
             'title': title,
             'description': description,
+            'address': {
+                'address_line1': "my address",
+                'postal_code': "RAN DOM",
+                'city': 'random city',
+                'state_province': {
+                    'iso_code': 'NS',
+                    'name': 'New State',
+                },
+                'country': {
+                    'iso_code': 'NC',
+                    'name': 'New Country',
+                },
+            },
             'date_start': date_start,
             'date_end': date_end,
         }
 
-        self.client.force_authenticate(user=self.user_event_manager)
+        self.client.force_authenticate(user=self.admin)
 
         response = self.client.post(
             reverse('activity:events'),
@@ -187,16 +199,17 @@ class EventsTests(APITestCase):
         )
 
         content = json.loads(response.content)
+
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(content['date_start'], date_start_str)
         self.assertEqual(content['date_end'], date_end_str)
-        self.assertEqual(content['guide']['id'], self.user_event_manager.id)
+        # self.assertEqual(content['guide']['id'], self.admin.id)
         self.assertEqual(content['title'], title)
         self.assertEqual(content['description'], description)
 
         # Check the system doesn't return attributes not expected
         attributes = ['id', 'date_start', 'date_end', 'guide',
-                      'title', 'description']
+                      'title', 'description', 'address']
 
         for key in content.keys():
             self.assertTrue(
@@ -217,19 +230,32 @@ class EventsTests(APITestCase):
         """
         Ensure we can't create a new event if a date_start after date_end.
         """
-        date_end = self.date_start + timezone.timedelta(
+        date_end = self.event.date_start + timezone.timedelta(
             minutes=1,
         )
-        date_start = self.date_end - timezone.timedelta(
+        date_start = self.event.date_end - timezone.timedelta(
             minutes=1,
         )
         title = 'event title'
         description = 'description event'
 
         data = {
-            'guide': self.user_event_manager,
+            'guide': self.user.id,
             'title': title,
             'description': description,
+            'address': {
+                'address_line1': "my address",
+                'postal_code': "RAN DOM",
+                'city': 'random city',
+                'state_province': {
+                    'iso_code': 'NS',
+                    'name': 'New State',
+                },
+                'country': {
+                    'iso_code': 'NC',
+                    'name': 'New Country',
+                },
+            },
             'date_start': date_start,
             'date_end': date_end,
         }
@@ -241,7 +267,6 @@ class EventsTests(APITestCase):
             data,
             format='json',
         )
-
         content = {
             'non_field_errors': [
                 'Start date need to be before the end date.'
@@ -262,9 +287,21 @@ class EventsTests(APITestCase):
         description = 'description event'
 
         data = {
-            'guide': self.user,
             'title': title,
             'description': description,
+            'address': {
+                'address_line1': "my address",
+                'postal_code': "RAN DOM",
+                'city': 'random city',
+                'state_province': {
+                    'iso_code': 'NS',
+                    'name': 'New State',
+                },
+                'country': {
+                    'iso_code': 'NC',
+                    'name': 'New Country',
+                },
+            },
             'date_start': date_start,
             'date_end': date_end,
         }
@@ -276,7 +313,6 @@ class EventsTests(APITestCase):
             data,
             format='json',
         )
-
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         content = {"detail": "You are not authorized to create a new event."}
@@ -292,14 +328,13 @@ class EventsTests(APITestCase):
             reverse('activity:events'),
             format='json',
         )
-        print(response)
         content = json.loads(response.content)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(content['count'], 7)
+        self.assertEqual(content['count'], 3)
 
         # Check the system doesn't return attributes not expected
         attributes = ['id', 'date_start', 'date_end', 'guide',
-                      'title', 'description']
+                      'title', 'description', 'address', ]
 
         for key in content['results'][0].keys():
             self.assertTrue(
@@ -341,14 +376,13 @@ class EventsTests(APITestCase):
             reverse('activity:events'),
             format='json',
         )
-
         content = json.loads(response.content)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(content['count'], 3)
 
         # Check the system doesn't return attributes not expected
         attributes = ['id', 'date_start', 'date_end', 'guide',
-                      'title', 'description']
+                      'title', 'description', 'address', ]
 
         for key in content['results'][0].keys():
             self.assertTrue(

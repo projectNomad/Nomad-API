@@ -37,7 +37,6 @@ class Event(generics.ListCreateAPIView):
 
     def post(self, request, *args, **kwargs):
         if self.request.user.has_perm("activity.add_event"):
-            print(self.request.user)
             return self.create(request, *args, **kwargs)
         content = {
             'detail': _("You are not authorized to create a new event."),
@@ -71,6 +70,24 @@ class EventId(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return models.Event.objects.filter()
+
+    def patch(self, request, *args, **kwargs):
+        if self.request.user.has_perm('activity.change_event'):
+            return self.partial_update(request, *args, **kwargs)
+
+        content = {
+            'detail': _("You are not authorized to update a cell."),
+        }
+        return Response(content, status=status.HTTP_403_FORBIDDEN)
+
+    def delete(self, request, *args, **kwargs):
+        if self.request.user.has_perm('activity.delete_event'):
+            return self.destroy(request, *args, **kwargs)
+
+        content = {
+            'detail': _("You are not authorized to delete a cell."),
+        }
+        return Response(content, status=status.HTTP_403_FORBIDDEN)
 
 
 class Participations(generics.ListCreateAPIView):
