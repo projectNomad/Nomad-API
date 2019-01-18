@@ -207,15 +207,15 @@ class ParticipationsTests(APITestCase):
             'attributes : {0}'.format(attributes),
         )
 
-    def test_list_participations_filtered_by_email(self):
+    def test_list_participations_filtered_by_user(self):
         """
         Ensure we can filter permissions by username.
         """
         self.client.force_authenticate(user=self.user)
 
-        url = "{0}?participation_id={1}".format(
+        url = "{0}?user_id={1}".format(
             reverse('activity:participations'),
-            self.participation.id,
+            self.user.id,
         )
 
         response = self.client.get(
