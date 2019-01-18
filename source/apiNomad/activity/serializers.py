@@ -34,7 +34,7 @@ class ParticipantionBasicSerializer(serializers.ModelSerializer):
         model = models.Participation
         fields = (
             'id',
-            'user',
+            'participant',
             'event',
             'date_created',
         )
