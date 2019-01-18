@@ -150,13 +150,13 @@ class ParticipationsId(generics.RetrieveUpdateDestroyAPIView):
 
     def delete(self, request, *args, **kwargs):
         participation = self.get_object()
-        if not participation.activity.is_started:
+        if not participation.event.is_started:
             return self.destroy(request, *args, **kwargs)
         else:
             content = {
                 'non_field_errors':
                     _("You can't delete a participation if the associated "
-                      "activity is already started"),
+                      "event is already started"),
             }
 
             return Response(content, status=status.HTTP_403_FORBIDDEN)
