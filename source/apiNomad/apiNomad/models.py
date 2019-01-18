@@ -142,3 +142,10 @@ class Profile(models.Model):
         choices=GENDER_STATUS,
         default=GENDER_STATUS[0][0],
     )
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super(Profile, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return str(self.user)

@@ -12,6 +12,7 @@ class UserFactory(factory.DjangoModelFactory):
     last_name = factory.Faker('last_name')
     email = factory.Sequence('john{0}@volontaria.com'.format)
     password = 'Test123!'
+    is_active = True
 
     @classmethod
     def _prepare(cls, create, **kwargs):

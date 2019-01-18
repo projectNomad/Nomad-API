@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'cuser',
     'apiNomad',
+    'location',
+    'activity',
 ]
 
 MIDDLEWARE = [

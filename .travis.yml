@@ -15,7 +15,7 @@ install:
 
 script:
   - cd source/apiNomad
-  - coverage run --include=apiNomad/*,location/* --omit=*__init__*,*migrations/*,*tests/* manage.py test .
+  - coverage run --include=apiNomad/*,location/*,activity/* --omit=*__init__*,*migrations/*,*tests/* manage.py test .
   - pycodestyle --count --show-source --exclude=migrations,.*,__pycache__,docs,env  .
 
 after_success:

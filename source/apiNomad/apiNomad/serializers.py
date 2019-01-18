@@ -185,14 +185,12 @@ class UserPublicSerializer(serializers.ModelSerializer):
             'first_name',
             'last_name',
             'email',
-            'gender',
         )
         read_only_fields = (
             'id',
             'first_name',
             'last_name',
             'email',
-            'gender',
         )
 
 
