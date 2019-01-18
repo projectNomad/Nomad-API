@@ -181,17 +181,17 @@ class EventTests(APITransactionTestCase):
         )
 
         Participation.objects.create(
-            participant=self.user,
+            user=self.user,
             event=event,
         )
 
         Participation.objects.create(
-            participant=self.user2,
+            user=self.user2,
             event=event,
         )
 
         Participation.objects.create(
-            participant=self.admin,
+            user=self.admin,
             event=event,
         )
         self.assertEqual(event.nb_participants, 3)
