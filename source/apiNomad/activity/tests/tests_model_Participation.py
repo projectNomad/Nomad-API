@@ -11,7 +11,7 @@ from django.utils import timezone
 # from location.models import Address, StateProvince, Country
 from apiNomad.factories import UserFactory, AdminFactory
 from location.models import Address, StateProvince, Country
-from activity.models import Event, Participation
+from activity.models import Event, Participation, EventOption
 
 
 class ParticipationTests(APITransactionTestCase):
@@ -43,6 +43,10 @@ class ParticipationTests(APITransactionTestCase):
             state_province=self.random_state_province,
             country=self.random_country,
         )
+        self.event_option = EventOption.objects.create(
+            family=True,
+            limit_participant=5
+        )
 
         event_date_start = timezone.now()
         self.event = Event.objects.create(
@@ -50,6 +54,7 @@ class ParticipationTests(APITransactionTestCase):
             title='event title',
             description='description event',
             address=self.address,
+            option=self.event_option,
             date_start=event_date_start,
             date_end=event_date_start + timezone.timedelta(minutes=100),
         )
@@ -64,6 +69,7 @@ class ParticipationTests(APITransactionTestCase):
             title='event title',
             description='description event',
             address=self.address,
+            option=self.event_option,
             date_start=event_date_start,
             date_end=event_date_start + timezone.timedelta(minutes=100),
         )

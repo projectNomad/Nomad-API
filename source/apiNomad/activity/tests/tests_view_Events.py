@@ -10,7 +10,7 @@ from django.utils import timezone
 # from location.models import Address, StateProvince, Country
 from apiNomad.factories import UserFactory, AdminFactory
 from location.models import Address, StateProvince, Country
-from activity.models import Event
+from activity.models import Event, EventOption
 
 
 class EventsTests(APITestCase):
@@ -47,6 +47,11 @@ class EventsTests(APITestCase):
             country=self.random_country,
         )
 
+        self.event_option = EventOption.objects.create(
+            family=True,
+            limit_participant=5
+        )
+
         date_start = timezone.now() + timezone.timedelta(
             minutes=100,
         )
@@ -59,6 +64,7 @@ class EventsTests(APITestCase):
             title='event title1',
             description='description event',
             address=self.address,
+            option=self.event_option,
             date_start=date_start,
             date_end=date_end,
         )
@@ -68,6 +74,7 @@ class EventsTests(APITestCase):
             title='event title2',
             description='description event',
             address=self.address,
+            option=self.event_option,
             date_start=date_start,
             date_end=date_end,
         )
@@ -82,6 +89,7 @@ class EventsTests(APITestCase):
             title='event title3',
             description='description event',
             address=self.address,
+            option=self.event_option,
             date_start=date_start,
             date_end=date_end,
         )
@@ -117,6 +125,10 @@ class EventsTests(APITestCase):
                     'name': 'New Country',
                 },
             },
+            'option': {
+                'family': True,
+                'limit_participant': '5',
+            },
             'date_start': date_start,
             'date_end': date_end,
         }
@@ -135,10 +147,12 @@ class EventsTests(APITestCase):
         self.assertEqual(content['guide']['id'], self.admin.id)
         self.assertEqual(content['title'], title)
         self.assertEqual(content['description'], description)
+        self.assertEqual(content['option']['family'], True)
+        self.assertEqual(content['option']['limit_participant'], 5)
 
         # Check the system doesn't return attributes not expected
         attributes = ['id', 'date_start', 'date_end', 'guide',
-                      'title', 'description', 'address', ]
+                      'title', 'description', 'address', 'option']
 
         for key in content.keys():
             self.assertTrue(
@@ -184,7 +198,11 @@ class EventsTests(APITestCase):
                 'country': {
                     'iso_code': 'NC',
                     'name': 'New Country',
-                },
+                }
+            },
+            'option': {
+                'family': True,
+                'limit_participant': '5',
             },
             'date_start': date_start,
             'date_end': date_end,
@@ -203,13 +221,14 @@ class EventsTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(content['date_start'], date_start_str)
         self.assertEqual(content['date_end'], date_end_str)
-        # self.assertEqual(content['guide']['id'], self.admin.id)
         self.assertEqual(content['title'], title)
         self.assertEqual(content['description'], description)
+        self.assertEqual(content['option']['family'], True)
+        self.assertEqual(content['option']['limit_participant'], 5)
 
         # Check the system doesn't return attributes not expected
         attributes = ['id', 'date_start', 'date_end', 'guide',
-                      'title', 'description', 'address']
+                      'title', 'description', 'address', 'option']
 
         for key in content.keys():
             self.assertTrue(
@@ -255,6 +274,10 @@ class EventsTests(APITestCase):
                     'iso_code': 'NC',
                     'name': 'New Country',
                 },
+            },
+            'option': {
+                'family': '1',
+                'limit_participant': '5',
             },
             'date_start': date_start,
             'date_end': date_end,
@@ -302,6 +325,10 @@ class EventsTests(APITestCase):
                     'name': 'New Country',
                 },
             },
+            'option': {
+                'family': True,
+                'limit_participant': '5',
+            },
             'date_start': date_start,
             'date_end': date_end,
         }
@@ -334,7 +361,7 @@ class EventsTests(APITestCase):
 
         # Check the system doesn't return attributes not expected
         attributes = ['id', 'date_start', 'date_end', 'guide',
-                      'title', 'description', 'address', ]
+                      'title', 'description', 'address', 'option']
 
         for key in content['results'][0].keys():
             self.assertTrue(
@@ -382,7 +409,7 @@ class EventsTests(APITestCase):
 
         # Check the system doesn't return attributes not expected
         attributes = ['id', 'date_start', 'date_end', 'guide',
-                      'title', 'description', 'address', ]
+                      'title', 'description', 'address', 'option']
 
         for key in content['results'][0].keys():
             self.assertTrue(

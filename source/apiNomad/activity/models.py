@@ -1,9 +1,23 @@
 from django.db import models, IntegrityError
 from django.utils import timezone
-from django.conf import settings
 
 from location.models import Address
 from apiNomad.models import User
+
+
+class EventOption(models.Model):
+    """
+    This class represent the options Events model
+
+    """
+    class Meta:
+        verbose_name_plural = 'EventOptions'
+
+    family = models.BooleanField(default=True)
+    limit_participant = models.PositiveIntegerField(
+        verbose_name="number of limit participants",
+        default=0
+    )
 
 
 class Event(models.Model):
@@ -16,6 +30,11 @@ class Event(models.Model):
         User,
         on_delete=models.CASCADE,
         verbose_name="Guides",
+    )
+    option = models.ForeignKey(
+        EventOption,
+        blank=False,
+        on_delete=models.CASCADE,
     )
     address = models.ForeignKey(
         Address,
@@ -48,6 +67,9 @@ class Event(models.Model):
     date_start = models.DateTimeField(
         verbose_name="Start date",
         null=True
+    )
+    date_deleted = models.DateTimeField(
+        auto_now_add=True,
     )
     date_end = models.DateTimeField(
         verbose_name="End date",
@@ -84,12 +106,18 @@ class Event(models.Model):
     @property
     def is_active(self):
         now = timezone.now()
-        # Activity is active if it has not ended yet
+        # Event is active if it has not ended yet
         # (even if it has not started)
         if self.date_start and self.date_end:
             return self.date_end > now
         # Without date, the activity is active
         return True
+
+    @property
+    def is_cancelled(self):
+        # the event is canceled if the creation date
+        # is less than the date of deletion
+        return self.date_created < self.date_deleted
 
     @property
     def is_started(self):

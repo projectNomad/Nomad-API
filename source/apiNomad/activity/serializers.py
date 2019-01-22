@@ -8,6 +8,7 @@ from location.serializers import AddressBasicSerializer
 from location.models import Address, StateProvince, Country
 from django.db import IntegrityError
 from apiNomad.models import User
+from activity.models import EventOption
 
 
 class ParticipantionBasicSerializer(serializers.ModelSerializer):
@@ -44,14 +45,21 @@ class ParticipantionBasicSerializer(serializers.ModelSerializer):
         ]
 
 
+class EventOptionBasicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.EventOption
+        fields = (
+            'id',
+            'family',
+            'limit_participant',
+        )
+
+
 class EventBasicSerializer(serializers.ModelSerializer):
     """This class represents the Activity model serializer."""
 
     address = serializers.DictField()
-    # guide = UserBasicSerializer(
-    #     read_only=True,
-    #     default=serializers.CurrentUserDefault(),
-    # )
+    option = EventOptionBasicSerializer()
 
     def validate(self, data):
         validated_data = super().validate(data)
@@ -81,14 +89,18 @@ class EventBasicSerializer(serializers.ModelSerializer):
         event.description = validated_data['description']
         event.date_start = validated_data['date_start']
         event.date_end = validated_data['date_end']
-        # event.youtube_link = validated_data['youtube_link']
-        # event.family = validated_data['family']
-        # event.limit_participant = validated_data['limit_participants']
+
+        event_option = validated_data['option']
+        option = EventOption.objects.create(
+            family=event_option['family'],
+            limit_participant=event_option['limit_participant'],
+        )
+        option.save()
+        event.option = option
 
         address_data = validated_data['address']
         country_data = validated_data['address']['country']
         state_province_data = validated_data['address']['state_province']
-
         address_data['country'] = country_data['iso_code']
         address_data['state_province'] = state_province_data['iso_code']
 
@@ -154,6 +166,26 @@ class EventBasicSerializer(serializers.ModelSerializer):
             instance.date_end = validated_data['date_end']
         if 'limit_participants' in validated_data.keys():
             instance.limit_participant = validated_data['limit_participants']
+        if 'option' in validated_data.keys():
+            option_data = validated_data['option']
+
+            try:
+                event_option = Address.objects.get(**option_data)
+            except EventOption.DoesNotExist:
+                try:
+                    event_option = EventOption()
+                    event_option.__dict__.update(validated_data['option'])
+                except IntegrityError as err:
+                    if 'UNIQUE constraint failed' in err.args[0]:
+                        error = {
+                            'message': (
+                                "This options already exists"
+                                if err.args else "Unknown Error"
+                            )
+                        }
+                        raise serializers.ValidationError(error)
+
+            instance.option = event_option
 
         if 'address' in validated_data.keys():
             try:
@@ -241,6 +273,9 @@ class EventBasicSerializer(serializers.ModelSerializer):
         data['address'] = AddressBasicSerializer(
             instance.address
         ).to_representation(instance.address)
+        data['option'] = EventOptionBasicSerializer(
+            instance.option
+        ).to_representation(instance.option)
 
         return data
 
@@ -249,6 +284,7 @@ class EventBasicSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'guide',
+            'option',
             'address',
             'date_start',
             'date_end',
