@@ -10,7 +10,7 @@ from django.utils import timezone
 # from location.models import Address, StateProvince, Country
 from apiNomad.factories import UserFactory, AdminFactory
 from location.models import Address, StateProvince, Country
-from activity.models import Event
+from activity.models import Event, EventOption
 
 
 class EventsTests(APITestCase):
@@ -138,7 +138,7 @@ class EventsTests(APITestCase):
 
         # Check the system doesn't return attributes not expected
         attributes = ['id', 'date_start', 'date_end', 'guide',
-                      'title', 'description', 'address', ]
+                      'title', 'description', 'address']
 
         for key in content.keys():
             self.assertTrue(
@@ -184,7 +184,7 @@ class EventsTests(APITestCase):
                 'country': {
                     'iso_code': 'NC',
                     'name': 'New Country',
-                },
+                }
             },
             'date_start': date_start,
             'date_end': date_end,
@@ -203,7 +203,6 @@ class EventsTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(content['date_start'], date_start_str)
         self.assertEqual(content['date_end'], date_end_str)
-        # self.assertEqual(content['guide']['id'], self.admin.id)
         self.assertEqual(content['title'], title)
         self.assertEqual(content['description'], description)
 
@@ -334,7 +333,7 @@ class EventsTests(APITestCase):
 
         # Check the system doesn't return attributes not expected
         attributes = ['id', 'date_start', 'date_end', 'guide',
-                      'title', 'description', 'address', ]
+                      'title', 'description', 'address']
 
         for key in content['results'][0].keys():
             self.assertTrue(
@@ -382,7 +381,7 @@ class EventsTests(APITestCase):
 
         # Check the system doesn't return attributes not expected
         attributes = ['id', 'date_start', 'date_end', 'guide',
-                      'title', 'description', 'address', ]
+                      'title', 'description', 'address']
 
         for key in content['results'][0].keys():
             self.assertTrue(

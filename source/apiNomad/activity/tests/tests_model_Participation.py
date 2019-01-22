@@ -1,14 +1,10 @@
-from datetime import timedelta
 from unittest import mock
 
-from decimal import Decimal
 from rest_framework.test import APIClient, APITransactionTestCase
 
 from django.db import IntegrityError
 from django.utils import timezone
 
-# from apiNomad.factories import UserFactory, AdminFactory
-# from location.models import Address, StateProvince, Country
 from apiNomad.factories import UserFactory, AdminFactory
 from location.models import Address, StateProvince, Country
 from activity.models import Event, Participation

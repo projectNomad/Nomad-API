@@ -1,22 +1,15 @@
 import json
 
-import os.path
-
-from unittest import mock
-from django.conf import settings
-
 from rest_framework import status
 from rest_framework.test import APIClient, APITestCase
 
 from django.urls import reverse
 from django.utils import timezone
 from django.test.utils import override_settings
-from django.contrib.auth.models import Permission
 
 from apiNomad.factories import UserFactory, AdminFactory
 from location.models import Address, StateProvince, Country
-from ..models import Event, Participation
-from django.core import mail
+from ..models import Event, Participation, EventOption
 
 
 @override_settings(EMAIL_BACKEND='anymail.backends.test.EmailBackend')

@@ -1,13 +1,12 @@
 from rest_framework import serializers
-import json
+from django.utils.translation import ugettext_lazy as _
+from django.db import IntegrityError
 
 from . import models
-from django.utils.translation import ugettext_lazy as _
 from apiNomad.serializers import UserPublicSerializer, UserBasicSerializer
 from location.serializers import AddressBasicSerializer
 from location.models import Address, StateProvince, Country
-from django.db import IntegrityError
-from apiNomad.models import User
+from activity.models import EventOption
 
 
 class ParticipantionBasicSerializer(serializers.ModelSerializer):
@@ -44,14 +43,25 @@ class ParticipantionBasicSerializer(serializers.ModelSerializer):
         ]
 
 
+class EventOptionBasicSerializer(serializers.ModelSerializer):
+    """This class represents the option Activity model serializer."""
+
+    option = serializers.DictField()
+
+    class Meta:
+        model = models.EventOption
+        fields = (
+            'id',
+            'event',
+            'family',
+            'limit_participant',
+        )
+
+
 class EventBasicSerializer(serializers.ModelSerializer):
     """This class represents the Activity model serializer."""
 
     address = serializers.DictField()
-    # guide = UserBasicSerializer(
-    #     read_only=True,
-    #     default=serializers.CurrentUserDefault(),
-    # )
 
     def validate(self, data):
         validated_data = super().validate(data)
@@ -81,14 +91,10 @@ class EventBasicSerializer(serializers.ModelSerializer):
         event.description = validated_data['description']
         event.date_start = validated_data['date_start']
         event.date_end = validated_data['date_end']
-        # event.youtube_link = validated_data['youtube_link']
-        # event.family = validated_data['family']
-        # event.limit_participant = validated_data['limit_participants']
 
         address_data = validated_data['address']
         country_data = validated_data['address']['country']
         state_province_data = validated_data['address']['state_province']
-
         address_data['country'] = country_data['iso_code']
         address_data['state_province'] = state_province_data['iso_code']
 
@@ -152,8 +158,6 @@ class EventBasicSerializer(serializers.ModelSerializer):
             instance.date_start = validated_data['date_start']
         if 'date_end' in validated_data.keys():
             instance.date_end = validated_data['date_end']
-        if 'limit_participants' in validated_data.keys():
-            instance.limit_participant = validated_data['limit_participants']
 
         if 'address' in validated_data.keys():
             try:

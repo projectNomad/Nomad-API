@@ -36,6 +36,7 @@ class Event(generics.ListCreateAPIView):
         return queryset
 
     def post(self, request, *args, **kwargs):
+
         if self.request.user.has_perm("activity.add_event"):
             return self.create(request, *args, **kwargs)
         content = {
