@@ -8,7 +8,7 @@ from django.utils import timezone
 
 from apiNomad.factories import UserFactory, AdminFactory
 from location.models import Address, StateProvince, Country
-from ..models import Event, EventOption
+from ..models import Event
 
 
 class EventsIdTests(APITestCase):
@@ -40,10 +40,6 @@ class EventsIdTests(APITestCase):
             state_province=self.random_state_province,
             country=self.random_country,
         )
-        self.event_option = EventOption.objects.create(
-            family=True,
-            limit_participant=5
-        )
         date_start = timezone.now() + timezone.timedelta(
             minutes=100,
         )
@@ -56,7 +52,6 @@ class EventsIdTests(APITestCase):
             title='event title1',
             description='description event',
             address=self.address,
-            option=self.event_option,
             date_start=date_start,
             date_end=date_end,
         )

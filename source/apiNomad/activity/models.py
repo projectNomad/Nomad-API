@@ -5,21 +5,6 @@ from location.models import Address
 from apiNomad.models import User
 
 
-class EventOption(models.Model):
-    """
-    This class represent the options Events model
-
-    """
-    class Meta:
-        verbose_name_plural = 'EventOptions'
-
-    family = models.BooleanField(default=True)
-    limit_participant = models.PositiveIntegerField(
-        verbose_name="number of limit participants",
-        default=0
-    )
-
-
 class Event(models.Model):
 
     class Meta:
@@ -30,11 +15,6 @@ class Event(models.Model):
         User,
         on_delete=models.CASCADE,
         verbose_name="Guides",
-    )
-    option = models.ForeignKey(
-        EventOption,
-        blank=False,
-        on_delete=models.CASCADE,
     )
     address = models.ForeignKey(
         Address,
@@ -134,6 +114,26 @@ class Event(models.Model):
     @property
     def nb_participants(self):
         return self.participants.count()
+
+
+class EventOption(models.Model):
+    """
+    This class represent the options Events model
+
+    """
+    class Meta:
+        verbose_name_plural = 'EventOptions'
+
+    event = models.ForeignKey(
+        Event,
+        blank=False,
+        on_delete=models.CASCADE,
+    )
+    family = models.BooleanField(default=True)
+    limit_participant = models.PositiveIntegerField(
+        verbose_name="number of limit participants",
+        default=0
+    )
 
 
 class Participation(models.Model):

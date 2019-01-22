@@ -52,17 +52,12 @@ class ParticipationsTests(APITestCase):
         date_end = date_start + timezone.timedelta(
             minutes=50,
         )
-        self.event_option = EventOption.objects.create(
-            family=True,
-            limit_participant=5
-        )
 
         self.event = Event.objects.create(
             guide=self.user,
             title='event title1',
             description='description event',
             address=self.address,
-            option=self.event_option,
             date_start=date_start,
             date_end=date_end,
         )
@@ -74,7 +69,6 @@ class ParticipationsTests(APITestCase):
             address=self.address,
             date_start=date_start,
             date_end=date_end,
-            option=self.event_option,
         )
 
         self.participation = Participation.objects.create(

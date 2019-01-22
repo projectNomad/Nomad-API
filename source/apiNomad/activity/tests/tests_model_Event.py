@@ -5,7 +5,7 @@ from django.utils import timezone
 
 from apiNomad.factories import UserFactory, AdminFactory
 from location.models import Address, StateProvince, Country
-from activity.models import Event, Participation, EventOption
+from activity.models import Event, Participation
 
 
 class EventTests(APITransactionTestCase):
@@ -43,10 +43,6 @@ class EventTests(APITransactionTestCase):
             state_province=self.random_state_province,
             country=self.random_country,
         )
-        self.event_option = EventOption.objects.create(
-            family=True,
-            limit_participant=5
-        )
 
     def test_create_event(self):
         """
@@ -64,7 +60,6 @@ class EventTests(APITransactionTestCase):
             address=self.address,
             date_start=date_start,
             date_end=date_end,
-            option=self.event_option,
         )
         self.assertEqual(event.date_start, date_start)
         self.assertEqual(event.date_end, date_end)
@@ -83,7 +78,6 @@ class EventTests(APITransactionTestCase):
             title=self.TITLE,
             address=self.address,
             description=self.DESCRIPTION,
-            option=self.event_option,
             date_start=date_start,
             date_end=date_end,
         )
@@ -103,7 +97,6 @@ class EventTests(APITransactionTestCase):
             guide_id=self.user.id,
             title=self.TITLE,
             address=self.address,
-            option=self.event_option,
             description=self.DESCRIPTION,
             date_start=date_start,
             date_end=date_end,
@@ -124,7 +117,6 @@ class EventTests(APITransactionTestCase):
             guide=self.user,
             title=self.TITLE,
             address=self.address,
-            option=self.event_option,
             description=self.DESCRIPTION,
             date_start=date_start,
             date_end=date_end,
@@ -143,7 +135,6 @@ class EventTests(APITransactionTestCase):
             guide=self.user,
             title=self.TITLE,
             address=self.address,
-            option=self.event_option,
             description=self.DESCRIPTION,
             date_start=date_start,
             date_end=date_end,
@@ -168,7 +159,6 @@ class EventTests(APITransactionTestCase):
             guide=self.user,
             title=self.TITLE,
             address=self.address,
-            option=self.event_option,
             description=self.DESCRIPTION,
             date_start=date_start,
             date_end=date_end,
@@ -185,7 +175,6 @@ class EventTests(APITransactionTestCase):
             guide=self.user,
             title=self.TITLE,
             address=self.address,
-            option=self.event_option,
             description=self.DESCRIPTION,
             date_start=date_start,
             date_end=date_end,
@@ -222,7 +211,6 @@ class EventTests(APITransactionTestCase):
             guide=self.user,
             title=self.TITLE,
             address=self.address,
-            option=self.event_option,
             description=self.DESCRIPTION,
             date_start=date_start,
             date_end=date_end,
@@ -243,7 +231,6 @@ class EventTests(APITransactionTestCase):
             guide=self.user,
             title=self.TITLE,
             address=self.address,
-            option=self.event_option,
             description=self.DESCRIPTION,
             date_start=date_start,
             date_end=date_end,
@@ -264,7 +251,6 @@ class EventTests(APITransactionTestCase):
             guide=self.user,
             title=self.TITLE,
             address=self.address,
-            option=self.event_option,
             description=self.DESCRIPTION,
             date_start=date_start,
             date_end=date_end,
