@@ -1,6 +1,6 @@
 from django.conf import settings
-from django.core.mail import send_mail
 
+from django.core.mail import send_mail
 
 def service_send_mail(emails, subject, plain_msg, msg_html):
     """
@@ -22,3 +22,5 @@ def service_send_mail(emails, subject, plain_msg, msg_html):
             results.append(email)
 
     return results
+
+
