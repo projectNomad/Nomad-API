@@ -8,7 +8,7 @@ from apiNomad.models import User
 class Event(models.Model):
 
     class Meta:
-        verbose_name_plural = 'Évènement'
+        verbose_name_plural = 'Events'
         ordering = ('date_start',)
 
     guide = models.ForeignKey(

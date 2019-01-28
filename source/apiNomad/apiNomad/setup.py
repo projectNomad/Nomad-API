@@ -5,10 +5,12 @@ from activity.models import Event, Participation, EventOption
 from apiNomad.models import User, Profile
 from . import settings
 
+
 # initialize all groups
 def service_save_groupe_users():
     init_tourist_group()
     init_guide_group()
+
 
 # initialize the guide group
 def init_tourist_group():
@@ -27,13 +29,15 @@ def init_tourist_group():
         if permission.name == 'Can view event':
             group_tourist.permissions.add(permission)
 
-    content_type_participation = ContentType.objects.get_for_model(Participation)
+    content_type_participation = \
+        ContentType.objects.get_for_model(Participation)
     all_permissions_participation = Permission.objects.filter(
         content_type=content_type_participation
     )
     for permission in all_permissions_participation:
         if permission.name == 'Can add participation':
             group_tourist.permissions.add(permission)
+
 
 # initialize the guide group
 def init_guide_group():
@@ -50,19 +54,22 @@ def init_guide_group():
     for permission in all_permissions_event:
         group_guide.permissions.add(permission)
 
-    content_type_participation = ContentType.objects.get_for_model(Participation)
+    content_type_participation = \
+        ContentType.objects.get_for_model(Participation)
     all_permissions_participation = Permission.objects.filter(
         content_type=content_type_participation
     )
     for permission in all_permissions_participation:
         group_guide.permissions.add(permission)
 
-    content_type_eventoption = ContentType.objects.get_for_model(EventOption)
+    content_type_eventoption = \
+        ContentType.objects.get_for_model(EventOption)
     all_permissions_eventoption = Permission.objects.filter(
         content_type=content_type_eventoption
     )
     for permission in all_permissions_eventoption:
         group_guide.permissions.add(permission)
+
 
 # define user permission for tourist group and guide group
 def init_user_group(group):

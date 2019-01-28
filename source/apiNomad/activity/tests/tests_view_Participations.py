@@ -9,7 +9,7 @@ from django.test.utils import override_settings
 
 from apiNomad.factories import UserFactory, AdminFactory
 from location.models import Address, StateProvince, Country
-from ..models import Event, Participation, EventOption
+from activity.models import Event, Participation, EventOption
 
 
 @override_settings(EMAIL_BACKEND='anymail.backends.test.EmailBackend')

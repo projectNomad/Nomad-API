@@ -6,8 +6,8 @@ from rest_framework.test import APIClient, APITestCase
 from django.urls import reverse
 from django.test.utils import override_settings
 
-from ..models import ActionToken, User
-from ..factories import UserFactory, AdminFactory
+from apiNomad.models import ActionToken, User
+from apiNomad.factories import UserFactory, AdminFactory
 from django.core import mail
 
 from anymail.exceptions import AnymailCancelSend

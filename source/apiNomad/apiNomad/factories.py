@@ -1,7 +1,7 @@
 # coding: utf-8
 
 import factory
-from .models import User
+from apiNomad.models import User
 
 
 class UserFactory(factory.DjangoModelFactory):

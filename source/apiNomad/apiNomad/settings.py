@@ -16,7 +16,7 @@ parser = RawConfigParser()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-parser.read_file(open(os.path.join(BASE_DIR, 'local.ini')))
+parser.read_file(open(os.path.join(BASE_DIR, 'prod.ini')))
 
 
 # Quick-start development settings - unsuitable for production
@@ -216,10 +216,13 @@ CONSTANT = {
         "TOURIST_GROUP": "group_tourist",
     },
     "FRONTEND_INTEGRATION": {
-        "ACTIVATION_URL": parser.get('global', 'client_host') +
-                          "/activate?activation_token={{token}}",
-        "FORGOT_PASSWORD_URL": parser.get('global', 'client_host') +
-                               "/reset-password/{{token}}",
+        "ACTIVATION_URL":
+            parser.get(
+                'global',
+                'client_host'
+            ) + "/activate?activation_token={{token}}",
+        "FORGOT_PASSWORD_URL":
+            parser.get('global', 'client_host') + "/reset-password/{{token}}",
     },
     "CLIENT_HOST": "localhost:4200/"
 }
