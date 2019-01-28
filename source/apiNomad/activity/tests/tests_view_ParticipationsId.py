@@ -11,7 +11,7 @@ from django.contrib.auth.models import Permission
 
 from apiNomad.factories import UserFactory, AdminFactory
 from location.models import Address, StateProvince, Country
-from ..models import Event, Participation
+from activity.models import Event, Participation
 
 
 class ParticipationsIdTests(APITestCase):

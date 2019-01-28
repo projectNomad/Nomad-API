@@ -6,7 +6,7 @@ from rest_framework.test import APIClient, APITestCase
 from django.urls import reverse
 
 from apiNomad.factories import UserFactory, AdminFactory
-from ..models import Address, StateProvince, Country
+from location.models import Address, StateProvince, Country
 
 
 class AddressesIdTests(APITestCase):

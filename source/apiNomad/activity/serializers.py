@@ -11,6 +11,7 @@ from activity.models import EventOption
 
 class ParticipantionBasicSerializer(serializers.ModelSerializer):
     """This class represents the ActivityConstraint model serializer."""
+
     user = UserBasicSerializer(
         read_only=True,
         default=serializers.CurrentUserDefault(),
@@ -146,6 +147,22 @@ class EventBasicSerializer(serializers.ModelSerializer):
 
         event.address = event_address
         event.save()
+
+        if event.id:
+            event_option = EventOption.objects.create(
+                event=event,
+                family=False,
+                limit_participant=0,
+            )
+            event_option.save()
+        else:
+            error = {
+                'message': (
+                    "The options for your event are not "
+                    "created because your event was not created"
+                )
+            }
+            raise models.IntegrityError(error)
 
         return event
 

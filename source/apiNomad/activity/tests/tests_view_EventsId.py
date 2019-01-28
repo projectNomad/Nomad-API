@@ -8,7 +8,7 @@ from django.utils import timezone
 
 from apiNomad.factories import UserFactory, AdminFactory
 from location.models import Address, StateProvince, Country
-from ..models import Event
+from activity.models import Event
 
 
 class EventsIdTests(APITestCase):

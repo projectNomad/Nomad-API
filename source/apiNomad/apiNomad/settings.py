@@ -59,6 +59,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'apiNomad.urls'
@@ -199,6 +201,7 @@ MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'media')
 
 # CORS Header Django Rest Framework
+
 CORS_ORIGIN_ALLOW_ALL = True
 
 # These settings are not related to the core API functionality. Feel free to
@@ -208,9 +211,18 @@ CORS_ORIGIN_ALLOW_ALL = True
 CONSTANT = {
     "EMAIL_SERVICE": True,
     "AUTO_ACTIVATE_USER": False,
+    "GROUPS_USER": {
+        "GUIDE_GROUP": "group_guide",
+        "TOURIST_GROUP": "group_tourist",
+    },
     "FRONTEND_INTEGRATION": {
-        "ACTIVATION_URL": "example.com/activate?activation_token={{token}}",
-        "FORGOT_PASSWORD_URL": "example.com/forgot_password?token={{token}}",
+        "ACTIVATION_URL":
+            parser.get(
+                'global',
+                'client_host'
+            ) + "/activate?activation_token={{token}}",
+        "FORGOT_PASSWORD_URL":
+            parser.get('global', 'client_host') + "/reset-password/{{token}}",
     },
     "CLIENT_HOST": "localhost:4200/"
 }

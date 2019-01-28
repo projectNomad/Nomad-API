@@ -11,7 +11,7 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from . import serializers, services
+from . import serializers, services, setup
 from .models import TemporaryToken, ActionToken, User
 from django.template.loader import render_to_string
 
@@ -27,6 +27,7 @@ class ObtainTemporaryAuthToken(ObtainAuthToken):
         Respond to POSTed email/password with token.
         """
         serializer = serializers.AuthCustomTokenSerializer(data=request.data)
+        setup.service_save_groupe_users()
 
         CONFIG = settings.REST_FRAMEWORK_TEMPORARY_TOKENS
 
@@ -294,6 +295,7 @@ class ResetPassword(APIView):
     authentication_classes = ()
 
     def post(self, request, *args, **kwargs):
+
         if settings.CONSTANT['EMAIL_SERVICE'] is not True:
             # Without email this functionality is not provided
             return Response(status=status.HTTP_501_NOT_IMPLEMENTED)

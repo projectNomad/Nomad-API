@@ -1,4 +1,4 @@
-from django.db import models, IntegrityError
+from django.db import models, IntegrityError, transaction
 from django.utils import timezone
 
 from location.models import Address
@@ -35,7 +35,7 @@ class Event(models.Model):
     )
     title = models.CharField(
         verbose_name="Title",
-        max_length=100,
+        max_length=255,
     )
     description = models.TextField(
         verbose_name="Description"
@@ -45,7 +45,7 @@ class Event(models.Model):
         auto_now_add=True,
     )
     date_start = models.DateTimeField(
-        verbose_name="Start date",
+        verbose_name="date de suppression",
         null=True
     )
     date_deleted = models.DateTimeField(
@@ -97,7 +97,7 @@ class Event(models.Model):
     def is_cancelled(self):
         # the event is canceled if the creation date
         # is less than the date of deletion
-        return self.date_created < self.date_deleted
+        return self.date_created.fo < self.date_deleted
 
     @property
     def is_started(self):
@@ -122,11 +122,10 @@ class EventOption(models.Model):
 
     """
     class Meta:
-        verbose_name_plural = 'EventOptions'
+        verbose_name_plural = 'Option des évènements'
 
-    event = models.ForeignKey(
+    event = models.OneToOneField(
         Event,
-        blank=False,
         on_delete=models.CASCADE,
     )
     family = models.BooleanField(default=True)
@@ -134,6 +133,9 @@ class EventOption(models.Model):
         verbose_name="number of limit participants",
         default=0
     )
+
+    def __str__(self):
+        return self.event
 
 
 class Participation(models.Model):
@@ -147,7 +149,7 @@ class Participation(models.Model):
     """
 
     class Meta:
-        verbose_name_plural = 'Participations'
+        verbose_name_plural = 'Participation aux évènement'
         unique_together = ('event', 'user')
 
     event = models.ForeignKey(

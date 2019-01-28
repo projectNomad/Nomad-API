@@ -5,8 +5,8 @@ from rest_framework.test import APIClient, APITestCase
 
 from django.urls import reverse
 
-from ..factories import UserFactory
-from ..models import ActionToken, User
+from apiNomad.factories import UserFactory
+from apiNomad.models import ActionToken, User
 
 
 class UsersActivationTests(APITestCase):

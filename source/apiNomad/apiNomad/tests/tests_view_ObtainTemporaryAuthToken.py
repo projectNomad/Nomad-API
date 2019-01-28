@@ -6,8 +6,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from ..models import User
-from apiNomad.models import TemporaryToken
+from apiNomad.models import User, TemporaryToken
 from apiNomad.factories import UserFactory
 
 

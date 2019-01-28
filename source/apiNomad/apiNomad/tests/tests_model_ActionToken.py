@@ -1,8 +1,8 @@
 from rest_framework.test import APITestCase
 from django.utils import timezone
 
-from ..models import ActionToken
-from ..factories import UserFactory
+from apiNomad.models import ActionToken
+from apiNomad.factories import UserFactory
 
 
 class ActionTokenTests(APITestCase):
