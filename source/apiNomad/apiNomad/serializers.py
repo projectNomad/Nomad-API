@@ -1,12 +1,11 @@
-import re
-
-from rest_framework import serializers
-from rest_framework.validators import UniqueValidator
-
+from . import settings
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth import authenticate, password_validation
+from django.contrib.auth.models import Group
 
+from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 from .models import ActionToken, Profile, User
 
 
@@ -55,6 +54,7 @@ class UserBasicSerializer(serializers.ModelSerializer):
             'password',
             'new_password',
             'gender',
+            'group',
         )
         write_only_fields = (
             'password',
@@ -66,6 +66,7 @@ class UserBasicSerializer(serializers.ModelSerializer):
             'is_active',
             'date_joined',
             'date_updated',
+            'group',
         )
 
     email = serializers.EmailField(
@@ -82,12 +83,16 @@ class UserBasicSerializer(serializers.ModelSerializer):
     )
     first_name = serializers.CharField(required=True)
     last_name = serializers.CharField(required=True)
-
     password = serializers.CharField(required=True, write_only=True)
     new_password = serializers.CharField(required=False, write_only=True)
+
     gender = serializers.CharField(
         required=False,
         source='profile.gender',
+    )
+    group = serializers.CharField(
+        required=False,
+        source='group.group',
     )
 
     def create(self, validated_data):
@@ -101,7 +106,9 @@ class UserBasicSerializer(serializers.ModelSerializer):
                 })
 
         profile_data = None
+        group_data = None
         error_profile = False
+        error_group = False
 
         if 'profile' in validated_data.keys():
             profile_data = validated_data.pop('profile')
@@ -111,7 +118,15 @@ class UserBasicSerializer(serializers.ModelSerializer):
         else:
             error_profile = True
 
-        if error_profile:
+        if 'group' in validated_data.keys():
+            group_data = validated_data.pop('group')
+
+            if 'group' not in profile_data:
+                error_group = True
+        else:
+            error_group = True
+
+        if error_profile and error_group:
             raise serializers.ValidationError({
                 "non_field_errors": [
                     'This field is required.'
@@ -128,6 +143,20 @@ class UserBasicSerializer(serializers.ModelSerializer):
 
         user.save()
 
+        # add user group
+        if group_data:
+            if group_data['group'] == 'g':
+                group, created = Group.objects.get_or_create(
+                    name=settings.CONSTANT["GROUPS_USER"]["GUIDE_GROUP"]
+                )
+            elif group_data['group'] == 't':
+                group, created = Group.objects.get_or_create(
+                    name=settings.CONSTANT["GROUPS_USER"]["TOURIST_GROUP"]
+                )
+
+            user.groups.add(group)
+
+        # create profil user
         if profile_data:
             Profile.objects.create(
                 user=user,
