@@ -136,20 +136,13 @@ class Users(generics.ListCreateAPIView):
                     type='account_activation',
                 ).key
 
-                # Setup the url for the activation button in the email
-                activation_url = FRONTEND_SETTINGS['ACTIVATION_URL']\
-                    .replace(
-                        "{{token}}",
-                        activate_token
-                )
-
                 # data for email activation
                 msg_html_css = render_to_string('css/confirm_sign_up.css')
                 merge_data = {
                     'ACTIVATION_URL':
                         FRONTEND_SETTINGS['ACTIVATION_URL'].replace(
                             "{{token}}",
-                            activation_url
+                            activate_token
                         ),
                     'CSS_STYLE': msg_html_css
                 }
@@ -245,6 +238,7 @@ class UsersActivation(APIView):
         """
         Respond to POSTed email/password with token.
         """
+        print("uuuu1")
         activation_token = request.data.get('activation_token')
 
         token = ActionToken.objects.filter(
