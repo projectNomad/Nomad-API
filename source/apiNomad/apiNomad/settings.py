@@ -212,15 +212,12 @@ CONSTANT = {
     "EMAIL_SERVICE": True,
     "AUTO_ACTIVATE_USER": False,
     "GROUPS_USER": {
-        "GUIDE_GROUP": "group_guide",
-        "TOURIST_GROUP": "group_tourist",
+        "GUIDE": "guide",
+        "TRAVELER": "traveler",
     },
     "FRONTEND_INTEGRATION": {
         "ACTIVATION_URL":
-            parser.get(
-                'global',
-                'client_host'
-            ) + "/activate?activation_token={{token}}",
+            parser.get('global', 'client_host') + "/register/activate/{{token}}",
         "FORGOT_PASSWORD_URL":
             parser.get('global', 'client_host') + "/reset-password/{{token}}",
     },

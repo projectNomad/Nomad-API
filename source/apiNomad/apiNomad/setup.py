@@ -16,10 +16,10 @@ def service_save_groupe_users():
 def init_tourist_group():
     # create permission group for guide
     group_tourist, created = Group.objects.get_or_create(
-        name=settings.CONSTANT["GROUPS_USER"]["TOURIST_GROUP"]
+        name=settings.CONSTANT["GROUPS_USER"]["TRAVELER"]
     )
 
-    init_user_group(settings.CONSTANT["GROUPS_USER"]["TOURIST_GROUP"])
+    init_user_group(settings.CONSTANT["GROUPS_USER"]["TRAVELER"])
 
     content_type_event = ContentType.objects.get_for_model(Event)
     all_permissions_event = Permission.objects.filter(
@@ -42,10 +42,10 @@ def init_tourist_group():
 # initialize the guide group
 def init_guide_group():
     group_guide, created = Group.objects.get_or_create(
-        name=settings.CONSTANT["GROUPS_USER"]["GUIDE_GROUP"]
+        name=settings.CONSTANT["GROUPS_USER"]["GUIDE"]
     )
 
-    init_user_group(settings.CONSTANT["GROUPS_USER"]["GUIDE_GROUP"])
+    init_user_group(settings.CONSTANT["GROUPS_USER"]["GUIDE"])
 
     content_type_event = ContentType.objects.get_for_model(Event)
     all_permissions_event = Permission.objects.filter(
@@ -74,13 +74,13 @@ def init_guide_group():
 # define user permission for tourist group and guide group
 def init_user_group(group):
 
-    if group == settings.CONSTANT["GROUPS_USER"]["TOURIST_GROUP"]:
+    if group == settings.CONSTANT["GROUPS_USER"]["TRAVELER"]:
         group, created = Group.objects.get_or_create(
-            name=settings.CONSTANT["GROUPS_USER"]["TOURIST_GROUP"]
+            name=settings.CONSTANT["GROUPS_USER"]["TRAVELER"]
         )
     else:
         group, created = Group.objects.get_or_create(
-            name=settings.CONSTANT["GROUPS_USER"]["GUIDE_GROUP"]
+            name=settings.CONSTANT["GROUPS_USER"]["GUIDE"]
         )
 
     content_type_user = ContentType.objects.get_for_model(User)

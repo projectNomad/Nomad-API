@@ -97,7 +97,7 @@ class Users(generics.ListCreateAPIView):
         return User.objects.all()
 
     def get(self, request, *args, **kwargs):
-        if self.request.user.has_perm('apiVolontaria.list_user'):
+        if self.request.user.has_perm('apiNomad.list_user'):
             return self.list(request, *args, **kwargs)
 
         content = {
@@ -195,9 +195,15 @@ class UsersId(generics.RetrieveUpdateAPIView):
     def get(self, request, *args, **kwargs):
         if 'profile' in self.kwargs.keys():
             self.kwargs['pk'] = self.request.user.id
+            # is_group_tourist = self.request.user.groups.filter(name='group_guide').exists()
+            # if (is_group_tourist):
+            #     self.serializer_class.group = settings.CONSTANT["GROUPS_USER"]["GUIDE_GROUP"]
+            # else:
+            #     self.serializer_class.group = settings.CONSTANT["GROUPS_USER"]["TOURIST_GROUP"]
+            print(self.serializer_class)
             return self.retrieve(request, *args, **kwargs)
 
-        elif self.request.user.has_perm('apiVolontaria.get_user'):
+        elif self.request.user.has_perm('apiNomad.get_user'):
             return self.retrieve(request, *args, **kwargs)
 
         content = {
@@ -211,7 +217,7 @@ class UsersId(generics.RetrieveUpdateAPIView):
             self.kwargs['pk'] = self.request.user.id
             return self.partial_update(request, *args, **kwargs)
 
-        elif self.request.user.has_perm('apiVolontaria.change_user'):
+        elif self.request.user.has_perm('apiNomad.change_user'):
             return self.partial_update(request, *args, **kwargs)
 
         content = {
@@ -238,7 +244,6 @@ class UsersActivation(APIView):
         """
         Respond to POSTed email/password with token.
         """
-        print("uuuu1")
         activation_token = request.data.get('activation_token')
 
         token = ActionToken.objects.filter(

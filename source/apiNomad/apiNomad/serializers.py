@@ -6,7 +6,7 @@ from django.contrib.auth.models import Group
 
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
-from .models import ActionToken, Profile, User
+from .models import ActionToken, User, Profile
 
 
 class AuthCustomTokenSerializer(serializers.Serializer):
@@ -40,6 +40,11 @@ class AuthCustomTokenSerializer(serializers.Serializer):
         return attrs
 
 
+class GroupBasicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = ('name',)
+
 class UserBasicSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -55,6 +60,8 @@ class UserBasicSerializer(serializers.ModelSerializer):
             'new_password',
             'gender',
             'group',
+            'groups',
+            'date_joined',
         )
         write_only_fields = (
             'password',
@@ -66,7 +73,8 @@ class UserBasicSerializer(serializers.ModelSerializer):
             'is_active',
             'date_joined',
             'date_updated',
-            'group',
+            'date_joined',
+            'groups',
         )
 
     email = serializers.EmailField(
@@ -85,6 +93,8 @@ class UserBasicSerializer(serializers.ModelSerializer):
     last_name = serializers.CharField(required=True)
     password = serializers.CharField(required=True, write_only=True)
     new_password = serializers.CharField(required=False, write_only=True)
+    date_joined = serializers.DateTimeField(required=False)
+    groups = GroupBasicSerializer(many=True, read_only=True)
 
     gender = serializers.CharField(
         required=False,
@@ -96,6 +106,7 @@ class UserBasicSerializer(serializers.ModelSerializer):
     )
 
     def create(self, validated_data):
+        print(validated_data)
         try:
             password_validation.validate_password(
                 password=validated_data['password']
@@ -121,7 +132,7 @@ class UserBasicSerializer(serializers.ModelSerializer):
         if 'group' in validated_data.keys():
             group_data = validated_data.pop('group')
 
-            if 'group' not in profile_data:
+            if 'group' not in group_data:
                 error_group = True
         else:
             error_group = True
@@ -146,12 +157,12 @@ class UserBasicSerializer(serializers.ModelSerializer):
         # add user group
         if group_data:
             if group_data['group'] == 'g':
-                group, created = Group.objects.get_or_create(
-                    name=settings.CONSTANT["GROUPS_USER"]["GUIDE_GROUP"]
+                group = Group.objects.get(
+                    name=settings.CONSTANT["GROUPS_USER"]["GUIDE"]
                 )
             elif group_data['group'] == 't':
-                group, created = Group.objects.get_or_create(
-                    name=settings.CONSTANT["GROUPS_USER"]["TOURIST_GROUP"]
+                group = Group.objects.get(
+                    name=settings.CONSTANT["GROUPS_USER"]["TRAVELER"]
                 )
 
             user.groups.add(group)
@@ -203,6 +214,19 @@ class UserBasicSerializer(serializers.ModelSerializer):
             UserBasicSerializer,
             self
         ).update(instance, validated_data)
+    #
+    # def to_representation(self, instance):
+    #     data = dict()
+    #     data['id'] = instance.id
+    #     data['last_name'] = instance.last_name,
+    #     data['first_name'] = instance.last_name,
+    #     data['email'] = instance.last_name,
+    #     data['is_active'] = instance.is_active,
+    #     data['groups'] = GroupSerializer(
+    #         instance.groups
+    #     ).to_representation(instance.groups)
+    #
+    #     return data
 
 
 class UserPublicSerializer(serializers.ModelSerializer):

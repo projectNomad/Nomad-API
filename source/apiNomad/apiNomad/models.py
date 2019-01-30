@@ -7,10 +7,10 @@ from django.conf import settings
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
+from django.contrib.auth.models import Group
+
 from rest_framework.authtoken.models import Token
-
 from cuser.models import AbstractCUser
-
 from .managers import ActionTokenManager
 
 
@@ -131,7 +131,7 @@ class Profile(models.Model):
         ('F', _('Femme')),
     )
 
-    user = models.ForeignKey(
+    user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='profile',
