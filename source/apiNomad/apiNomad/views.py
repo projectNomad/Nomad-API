@@ -195,12 +195,6 @@ class UsersId(generics.RetrieveUpdateAPIView):
     def get(self, request, *args, **kwargs):
         if 'profile' in self.kwargs.keys():
             self.kwargs['pk'] = self.request.user.id
-            # is_group_tourist = self.request.user.groups.filter(name='group_guide').exists()
-            # if (is_group_tourist):
-            #     self.serializer_class.group = settings.CONSTANT["GROUPS_USER"]["GUIDE_GROUP"]
-            # else:
-            #     self.serializer_class.group = settings.CONSTANT["GROUPS_USER"]["TOURIST_GROUP"]
-            print(self.serializer_class)
             return self.retrieve(request, *args, **kwargs)
 
         elif self.request.user.has_perm('apiNomad.get_user'):
@@ -215,6 +209,7 @@ class UsersId(generics.RetrieveUpdateAPIView):
     def patch(self, request, *args, **kwargs):
         if 'profile' in self.kwargs.keys():
             self.kwargs['pk'] = self.request.user.id
+
             return self.partial_update(request, *args, **kwargs)
 
         elif self.request.user.has_perm('apiNomad.change_user'):

@@ -424,6 +424,9 @@ class UsersTests(APITestCase):
         attributes = [
             'id',
             'email',
+            'gender',
+            'groups',
+            'date_joined',
             'first_name',
             'last_name',
             'is_active',

@@ -45,6 +45,7 @@ class GroupBasicSerializer(serializers.ModelSerializer):
         model = Group
         fields = ('name',)
 
+
 class UserBasicSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -106,7 +107,7 @@ class UserBasicSerializer(serializers.ModelSerializer):
     )
 
     def create(self, validated_data):
-        print(validated_data)
+
         try:
             password_validation.validate_password(
                 password=validated_data['password']
@@ -214,19 +215,6 @@ class UserBasicSerializer(serializers.ModelSerializer):
             UserBasicSerializer,
             self
         ).update(instance, validated_data)
-    #
-    # def to_representation(self, instance):
-    #     data = dict()
-    #     data['id'] = instance.id
-    #     data['last_name'] = instance.last_name,
-    #     data['first_name'] = instance.last_name,
-    #     data['email'] = instance.last_name,
-    #     data['is_active'] = instance.is_active,
-    #     data['groups'] = GroupSerializer(
-    #         instance.groups
-    #     ).to_representation(instance.groups)
-    #
-    #     return data
 
 
 class UserPublicSerializer(serializers.ModelSerializer):
