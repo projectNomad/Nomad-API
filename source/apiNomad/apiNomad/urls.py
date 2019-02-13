@@ -91,6 +91,11 @@ urlpatterns = [
         r'^location/',
         include('location.urls', namespace="location"),
     ),
+    # Videos
+    url(
+        r'^videos/',
+        include('video.urls', namespace="video"),
+    ),
 ]
 
 if settings.DEBUG:
