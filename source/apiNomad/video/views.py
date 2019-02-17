@@ -1,7 +1,9 @@
 from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser
 from rest_framework.response import Response
 from . import models, serializers
-from rest_framework import generics, status, views
+from rest_framework import generics, status
+from django.utils.translation import ugettext_lazy as _
+from . import functions
 
 
 class Video(generics.ListAPIView):
@@ -15,13 +17,27 @@ class Video(generics.ListAPIView):
     parser_classes = (MultiPartParser, FormParser, FileUploadParser)
 
     def post(self, request, *args, **kwargs):
-        file_serializer = serializers.VideoBasicSerializer(data=request.data)
+        if(functions.checkVideoUpload(request.data["file"])):
+            file_serializer = serializers.VideoBasicSerializer(data=request.data)
 
-        if file_serializer.is_valid():
-            file_serializer.save()
-            return Response(file_serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            if file_serializer.is_valid():
+                file_serializer.save()
+                return Response(
+                    file_serializer.data,
+                    status=status.HTTP_201_CREATED
+                )
+            else:
+                return Response(
+                    file_serializer.errors,
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+        return Response(
+            _("video invalide. \n Revoyer les critères d'acceptation de projet pour "
+              "vous assurer que vous êtes en confirmité. Si le probléme persiste, "
+              "merci de contacter l'administration"),
+            status=status.HTTP_400_BAD_REQUEST
+        )
 
 class VideoId(generics.RetrieveUpdateDestroyAPIView):
     """

@@ -1,7 +1,9 @@
 import os, random, time, string
+from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils.deconstruct import deconstructible
+
 from uuid import uuid4
 
 
@@ -22,11 +24,13 @@ class Video(models.Model):
                 random.choice(string.ascii_lowercase + string.digits) for i in range(7))
             filename = '{}_{}{}.{}'.format(f_name, rand_strings, uuid4().hex, ext)
 
-            return os.path.join(self.path, filename)
+            path_video = os.path.join(self.path, filename)
+
+            return path_video
 
     def upload_video_validator(upload_video_obj):
         ext = os.path.splitext(upload_video_obj.name)[1]
-        valid_extension = ['.mp4']
+        valid_extension = ['.mp4', '.webm']
         if not ext in valid_extension:
             raise ValidationError(
                 u'Unsupported file extension, ' + ', '.join(valid_extension) +' only'
@@ -42,7 +46,7 @@ class Video(models.Model):
         upload_to=PathAndRename('uploads/videos/{}'.format(time.strftime("%Y/%m/%d"))),
         blank=False,
         null=False,
-        validators=[upload_video_validator]
+        validators=[FileExtensionValidator(allowed_extensions=['mp4', 'webm'])]
     )
     description = models.TextField(
         verbose_name="Description",
@@ -53,4 +57,7 @@ class Video(models.Model):
         verbose_name="Creation date",
         auto_now_add=True,
     )
+
+    def __str__(self):
+        return self.title
 
