@@ -1,4 +1,4 @@
-import sys
+import sys, os
 from django.conf import settings
 import ffmpeg
 
@@ -32,3 +32,6 @@ def checkVideoUpload(videoTemporyUpload):
     print(video_stream)
 
     return True
+
+
+
