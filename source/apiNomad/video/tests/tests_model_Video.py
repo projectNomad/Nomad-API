@@ -32,12 +32,21 @@ class EventTests(APITransactionTestCase):
         path_video = 'media/upload/2019/01/15/video.mp4'
 
         video = Video.objects.create(
+            owner = self.user,
             title = self.TITLE,
             description = self.DESCRIPTION,
             file = path_video,
+            duration = 100000,
+            width = 720,
+            height = 1080,
+            size = 20000,
         )
 
         self.assertEqual(video.title, self.TITLE)
         self.assertEqual(video.description, self.DESCRIPTION)
         self.assertEqual(video.file, path_video)
+        self.assertEqual(video.duration, 100000)
+        self.assertEqual(video.width, 720)
+        self.assertEqual(video.height, 1080)
+        self.assertEqual(video.size, 20000)
 

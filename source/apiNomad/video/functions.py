@@ -1,13 +1,22 @@
-import sys, os
 from django.conf import settings
 import ffmpeg
 
 
-def checkVideoUpload(videoTemporyUpload):
+def checkVideoUpload(infos_video):
+
+    if infos_video['width'] < settings.CONSTANT["VIDEO"]["WIDTH"] \
+            and infos_video['height'] < settings.CONSTANT["VIDEO"]["HEIGHT"]:
+        return False
+
+    return True
+
+def getInformationsVideo(videoTemporyUpload):
+    infos_video = {}
+
     try:
         probe = ffmpeg.probe(videoTemporyUpload.temporary_file_path())
     except ffmpeg.Error as e:
-        return False
+        return infos_video
         # print(e.stderr, file=sys.stderr)
         # sys.exit(1)
 
@@ -17,21 +26,14 @@ def checkVideoUpload(videoTemporyUpload):
         None
     )
     if video_stream is None:
-        return False
+        return infos_video
         # print('No video stream found', file=sys.stderr)
         # sys.exit(1)
 
-    width = int(video_stream['width'])
-    height = int(video_stream['height'])
-    num_frames = int(video_stream['nb_frames'])
+    infos_video['width'] = int(video_stream['width'])
+    infos_video['height'] = int(video_stream['height'])
+    infos_video['duration'] = float(video_stream['duration'])
+    infos_video['num_frame'] = int(video_stream['nb_frames'])
+    infos_video['size'] = videoTemporyUpload.size
 
-    if width < settings.CONSTANT["VIDEO"]["WIDTH"] \
-            and height < settings.CONSTANT["VIDEO"]["HEIGHT"]:
-        return False
-
-    print(video_stream)
-
-    return True
-
-
-
+    return infos_video

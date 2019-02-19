@@ -3,10 +3,9 @@ from rest_framework.response import Response
 from . import models, serializers
 from rest_framework import generics, status
 from django.utils.translation import ugettext_lazy as _
-from . import functions
 
 
-class Video(generics.ListAPIView):
+class Video(generics.ListCreateAPIView):
     """
     get:
     Return a list of all the existing events.
@@ -15,22 +14,15 @@ class Video(generics.ListAPIView):
     Create a new events.
     """
     parser_classes = (MultiPartParser, FormParser, FileUploadParser)
+    serializer_class = serializers.VideoBasicSerializer
 
     def post(self, request, *args, **kwargs):
-        if(functions.checkVideoUpload(request.data["file"])):
-            file_serializer = serializers.VideoBasicSerializer(data=request.data)
 
-            if file_serializer.is_valid():
-                file_serializer.save()
-                return Response(
-                    file_serializer.data,
-                    status=status.HTTP_201_CREATED
-                )
-            else:
-                return Response(
-                    file_serializer.errors,
-                    status=status.HTTP_400_BAD_REQUEST
-                )
+        if self.request.user.has_perm("video.add_video"):
+
+            request.data['owner'] = self.request.user.id
+
+            return self.create(request, *args, **kwargs)
 
         return Response(
             _("video invalide. \n Revoyer les critères d'acceptation de projet pour "

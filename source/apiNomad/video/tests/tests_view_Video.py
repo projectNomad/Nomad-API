@@ -1,13 +1,8 @@
-from io import StringIO
-from django.core.files.storage import Storage
 from django.urls import reverse
 
 from rest_framework.test import APIClient, APITestCase
 from apiNomad.factories import AdminFactory, UserFactory
-import json, mock
-
-from unittest.mock import patch
-from video.models import Video
+import json
 
 
 class VideosTests(APITestCase):
@@ -42,10 +37,8 @@ class VideosTests(APITestCase):
     #     response = self.client.post(
     #         reverse('video:videos'),
     #         data,
-    #         format='json',
+    #         # format='json',
     #         content_type='application/x-www-form-urlencoded',
     #     )
     #
     #     content = json.loads(response.content)
-    #
-    #     print(content)

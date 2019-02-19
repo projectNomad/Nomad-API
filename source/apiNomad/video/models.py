@@ -2,15 +2,18 @@ import os, random, time, string
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 from django.utils.deconstruct import deconstructible
 
 from uuid import uuid4
+
+from apiNomad.models import User
 
 
 class Video(models.Model):
     class Meta:
         verbose_name_plural = 'Videos'
-        ordering = ('date_created',)
+        ordering = ('is_created',)
 
     @deconstructible
     class PathAndRename(object):
@@ -28,14 +31,31 @@ class Video(models.Model):
 
             return path_video
 
-    def upload_video_validator(upload_video_obj):
-        ext = os.path.splitext(upload_video_obj.name)[1]
-        valid_extension = ['.mp4', '.webm']
-        if not ext in valid_extension:
-            raise ValidationError(
-                u'Unsupported file extension, ' + ', '.join(valid_extension) +' only'
-            )
-
+    owner = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name="Owners",
+    )
+    duration = models.FloatField(
+        verbose_name='duration',
+        blank=False,
+        null=False,
+    )
+    width = models.PositiveIntegerField(
+        verbose_name='width',
+        blank=False,
+        null=False,
+    )
+    height = models.PositiveIntegerField(
+        verbose_name='height',
+        blank=False,
+        null=False,
+    )
+    size = models.PositiveIntegerField(
+        verbose_name='size',
+        blank=False,
+        null=False,
+    )
     title = models.CharField(
         verbose_name="Title",
         max_length=255,
@@ -53,11 +73,30 @@ class Video(models.Model):
         blank=True,
         null=True
     )
-    date_created = models.DateTimeField(
-        verbose_name="Creation date",
+    is_created = models.DateTimeField(
+        verbose_name="Cree le",
         auto_now_add=True,
+    )
+    is_deleted = models.DateTimeField(
+        verbose_name="Date de suppression",
+        auto_now_add=True,
+    )
+    is_actived = models.DateTimeField(
+        verbose_name="visible",
+        default='1960-01-01',
+        blank=False,
+        null=False
     )
 
     def __str__(self):
-        return self.title
+        return "{} - {}".format(self.title, self.is_created)
+
+    @property
+    def is_actived(self):
+        return self.is_actived > self.is_created
+
+    # todo
+    # @property
+    # def is_deleted(self):
+    #     return self.is_actived. ==
 
