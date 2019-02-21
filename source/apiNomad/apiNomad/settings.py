@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'apiNomad',
     'location',
     'activity',
+    'video',
 ]
 
 MIDDLEWARE = [
@@ -203,6 +204,8 @@ MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'media')
 # CORS Header Django Rest Framework
 
 CORS_ORIGIN_ALLOW_ALL = True
+DATA_UPLOAD_MAX_NUMBER_FIELDS = None
+FILE_UPLOAD_HANDLERS = ['django.core.files.uploadhandler.TemporaryFileUploadHandler',]
 
 # These settings are not related to the core API functionality. Feel free to
 # edit them to your needs.
@@ -217,9 +220,19 @@ CONSTANT = {
     },
     "FRONTEND_INTEGRATION": {
         "ACTIVATION_URL":
-            parser.get('global', 'client_host') + "/register/activate/{{token}}",
+            parser.get(
+                'global',
+                'client_host'
+            ) + "/register/activate/{{token}}",
         "FORGOT_PASSWORD_URL":
-            parser.get('global', 'client_host') + "/reset-password/{{token}}",
+            parser.get(
+                'global',
+                'client_host'
+            ) + "/reset-password/{{token}}",
     },
-    "CLIENT_HOST": "localhost:4200/"
+    "VIDEO": {
+        "WIDTH": 1280,
+        "HEIGHT": 720,
+    },
+
 }

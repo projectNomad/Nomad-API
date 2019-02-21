@@ -1,8 +1,8 @@
 from rest_framework.response import Response
 from rest_framework import status, generics
 from django.utils.translation import ugettext_lazy as _
-from . import models
 
+from . import models
 from . import serializers
 from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
 from .permissions import ParticipationIsManager, EventIsManager

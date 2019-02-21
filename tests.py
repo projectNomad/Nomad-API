@@ -110,6 +110,7 @@ class Test:
                "--include="\
                + PROJECT_PATH + "/apiNomad/*," \
                + PROJECT_PATH + "/location/*," \
+               + PROJECT_PATH + "/video/*," \
                "--omit=*__init__*,*migrations/*,*tests/* "\
                + PROJECT_PATH + "/manage.py test source/apiNomad"
 

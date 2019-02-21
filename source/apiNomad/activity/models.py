@@ -1,4 +1,4 @@
-from django.db import models, IntegrityError, transaction
+from django.db import models, IntegrityError
 from django.utils import timezone
 
 from location.models import Address

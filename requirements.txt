@@ -10,3 +10,4 @@ factory-boy==2.10.0
 django-anymail==4.2
 configparser==3.5.0
 drfdocs==0.0.11
+ffmpeg-python==0.1.17

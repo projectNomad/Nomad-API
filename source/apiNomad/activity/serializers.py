@@ -3,7 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.db import IntegrityError
 
 from . import models
-from apiNomad.serializers import UserPublicSerializer, UserBasicSerializer
+from apiNomad.serializers import UserBasicSerializer
 from location.serializers import AddressBasicSerializer
 from location.models import Address, StateProvince, Country
 from activity.models import EventOption
