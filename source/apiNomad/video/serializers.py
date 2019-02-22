@@ -1,3 +1,4 @@
+import os
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 
@@ -5,22 +6,6 @@ from apiNomad.serializers import UserBasicSerializer
 from . import models, functions
 
 class VideoBasicSerializer(serializers.ModelSerializer):
-
-    def get_queryset(self):
-        if self.request.user.has_perm('activity.add_event'):
-            queryset = models.Video.objects.all()
-        else:
-            queryset = models.Video.objects.all()
-
-            list_exclude = list()
-            for video in queryset:
-                # if not event.is_active:
-                list_exclude.append(video)
-
-            queryset = queryset.\
-                exclude(pk__in=[video.pk for video in list_exclude])
-
-        return queryset
 
     def create(self, validated_data):
 

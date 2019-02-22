@@ -16,10 +16,25 @@ class Video(generics.ListCreateAPIView):
     parser_classes = (MultiPartParser, FormParser, FileUploadParser)
     serializer_class = serializers.VideoBasicSerializer
 
+    def get_queryset(self):
+        if self.request.user.has_perm('video.add_video'):
+            queryset = models.Video.objects.all()
+        else:
+            queryset = models.Video.objects.all()
+
+            list_exclude = list()
+            for video in queryset:
+                # if not event.is_active:
+                list_exclude.append(video)
+
+            queryset = queryset.\
+                exclude(pk__in=[video.pk for video in list_exclude])
+
+        return queryset
+
     def post(self, request, *args, **kwargs):
 
         if self.request.user.has_perm("video.add_video"):
-
             request.data['owner'] = self.request.user.id
 
             return self.create(request, *args, **kwargs)
