@@ -102,7 +102,7 @@ class Video(models.Model):
     )
     is_deleted = models.DateTimeField(
         verbose_name="Date de suppression",
-        auto_now_add=True,
+        default='1960-01-01',
         blank=False,
         null=False
     )
@@ -117,12 +117,13 @@ class Video(models.Model):
         return "{} - {}".format(self.title, self.is_created)
 
     @property
-    def is_actived(self):
-        return self.is_actived > self.is_created
+    def is_active(self):
+        return self.is_actived >= self.is_created
 
     @property
-    def is_deleted(self):
-        return self.is_deleted > self.is_created
+    def is_delete(self):
+        return self.is_deleted >= self.is_created
 
-    def pathAbsolute(self):
+    @property
+    def is_path_file(self):
         return settings.MEDIA_ROOT +'/'+ self.file.name

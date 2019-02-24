@@ -1,5 +1,8 @@
+from django.utils import timezone
 from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser
 from rest_framework.response import Response
+
+from video.serializers import VideoBasicSerializer
 from . import models, serializers
 from rest_framework import generics, status
 from django.utils.translation import ugettext_lazy as _
@@ -17,18 +20,22 @@ class Video(generics.ListCreateAPIView):
     serializer_class = serializers.VideoBasicSerializer
 
     def get_queryset(self):
-        if self.request.user.has_perm('video.add_video'):
-            queryset = models.Video.objects.all()
-        else:
-            queryset = models.Video.objects.all()
 
+        if 'param' in self.request.query_params.keys():
+            queryset = models.Video.objects.filter(owner=self.request.user)
             list_exclude = list()
             for video in queryset:
-                # if not event.is_active:
-                list_exclude.append(video)
+                if video.is_delete:
+                    list_exclude.append(video)
+        else:
+            queryset = models.Video.objects.all()
+            list_exclude = list()
+            for video in queryset:
+                if video.is_delete and not video.is_active:
+                    list_exclude.append(video)
 
-            queryset = queryset.\
-                exclude(pk__in=[video.pk for video in list_exclude])
+        queryset = queryset.\
+            exclude(pk__in=[video.pk for video in list_exclude])
 
         return queryset
 
@@ -64,6 +71,11 @@ class VideoId(generics.RetrieveUpdateDestroyAPIView):
         return models.Video.objects.filter()
 
     def patch(self, request, *args, **kwargs):
+
+        if 'file' in request.data.keys() or 'owner' in request.data.keys():
+            del request.data['file']
+            del request.data['owner']
+
         if self.request.user.has_perm('video.change_video'):
             return self.partial_update(request, *args, **kwargs)
 

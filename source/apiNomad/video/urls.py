@@ -15,7 +15,7 @@ urlpatterns = format_suffix_patterns(
             name='videos',
         ),
         url(
-            r'^update/(?P<pk>\d+)$',
+            r'^(?P<pk>\d+)$',
             views.VideoId.as_view(),
             name='videos_id',
         ),

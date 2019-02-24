@@ -5,6 +5,7 @@ from rest_framework import serializers
 from apiNomad.serializers import UserBasicSerializer
 from . import models, functions
 
+
 class VideoBasicSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
@@ -25,8 +26,8 @@ class VideoBasicSerializer(serializers.ModelSerializer):
             try:
                 video.save()
             except Exception as e:
-                if os.path.exists(video.pathAbsolute()):
-                    functions.deleteEmptyRepository(video.pathAbsolute())
+                if os.path.exists(video.is_path_file()):
+                    functions.deleteEmptyRepository(video.is_path_file())
 
                 error = {
                     'message': (
@@ -60,6 +61,8 @@ class VideoBasicSerializer(serializers.ModelSerializer):
             'title',
             'description',
             'is_created',
+            'is_deleted',
+            'is_actived',
         )
         read_only_fields = [
             'id',
