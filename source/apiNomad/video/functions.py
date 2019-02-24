@@ -1,3 +1,4 @@
+import os
 from django.conf import settings
 import ffmpeg
 
@@ -37,3 +38,35 @@ def getInformationsVideo(videoTemporyUpload):
     infos_video['size'] = videoTemporyUpload.size
 
     return infos_video
+
+def deleteEmptyRepository(path):
+    """
+    delete all empty folders from the media folder
+
+    :param path: path
+    :return: nothing
+    """
+    # delete file
+    os.remove(path)
+
+    # delete day folder
+    path_tab = path.split('/')
+    del path_tab[len(path_tab) - 1]
+    new_path = '/'.join(path_tab)
+    list_elts = os.listdir(new_path)
+    # delete month folder
+    if len(list_elts) == 0:
+        os.rmdir(new_path)
+        path_tab = new_path.split('/')
+        del path_tab[len(path_tab) - 1]
+        new_path = '/'.join(path_tab)
+        list_elts = os.listdir(new_path)
+        # delete year folder
+        if len(list_elts) == 0:
+            os.rmdir(new_path)
+            path_tab = new_path.split('/')
+            del path_tab[len(path_tab) - 1]
+            new_path = '/'.join(path_tab)
+            list_elts = os.listdir(new_path)
+            if len(list_elts) == 0:
+                os.rmdir(new_path)

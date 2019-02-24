@@ -22,7 +22,21 @@ class VideoBasicSerializer(serializers.ModelSerializer):
             video.size = infos_video['size']
             video.duration = infos_video['duration']
 
-            video.save()
+            try:
+                video.save()
+            except Exception as e:
+                if os.path.exists(video.pathAbsolute()):
+                    functions.deleteEmptyRepository(video.pathAbsolute())
+
+                error = {
+                    'message': (
+                        _("Erreur du serveur. Si cela persiste, "
+                          "s'il vous plait veiller contacter "
+                          "nos services.")
+                    )
+                }
+
+                raise serializers.ValidationError(error)
 
             return video
 
