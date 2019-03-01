@@ -1,13 +1,32 @@
+import datetime
 import os, random, time, string
 from django.core.validators import FileExtensionValidator
 from django.db import models
-from django.core.exceptions import ValidationError
-from django.utils import timezone
 from django.utils.deconstruct import deconstructible
+from django.conf import settings
 
 from uuid import uuid4
-
 from apiNomad.models import User
+
+
+class Genre(models.Model):
+    class Meta:
+        verbose_name_plural = 'Genre'
+
+    label = models.CharField(
+        verbose_name="Title",
+        max_length=255,
+        blank=False,
+        null=False
+    )
+    description = models.TextField(
+        verbose_name="Description",
+        blank=True,
+        null=True
+    )
+
+    def __str__(self):
+        return self.label
 
 
 class Video(models.Model):
@@ -40,6 +59,11 @@ class Video(models.Model):
         verbose_name='duration',
         blank=False,
         null=False,
+    )
+    genres = models.ManyToManyField(
+        Genre,
+        related_name='videos',
+        blank=True
     )
     width = models.PositiveIntegerField(
         verbose_name='width',
@@ -79,24 +103,32 @@ class Video(models.Model):
     )
     is_deleted = models.DateTimeField(
         verbose_name="Date de suppression",
-        auto_now_add=True,
+        default='1960-01-01 00:00:00',
+        blank=False,
+        null=False
     )
     is_actived = models.DateTimeField(
         verbose_name="visible",
-        default='1960-01-01',
+        default='1960-01-01 00:00:00',
         blank=False,
         null=False
     )
 
     def __str__(self):
+
         return "{} - {}".format(self.title, self.is_created)
 
     @property
-    def is_actived(self):
-        return self.is_actived > self.is_created
+    def is_active(self):
+        try:
+            return self.is_actived >= self.is_created
+        except TypeError:
+            pass
 
-    # todo
-    # @property
-    # def is_deleted(self):
-    #     return self.is_actived. ==
+    @property
+    def is_delete(self):
+        return self.is_deleted >= self.is_created
 
+    @property
+    def is_path_file(self):
+        return settings.MEDIA_ROOT +'/'+ self.file.name
