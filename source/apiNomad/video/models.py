@@ -1,3 +1,4 @@
+import datetime
 import os, random, time, string
 from django.core.validators import FileExtensionValidator
 from django.db import models
@@ -102,23 +103,27 @@ class Video(models.Model):
     )
     is_deleted = models.DateTimeField(
         verbose_name="Date de suppression",
-        default='1960-01-01',
+        default='1960-01-01 00:00:00',
         blank=False,
         null=False
     )
     is_actived = models.DateTimeField(
         verbose_name="visible",
-        default='1960-01-01',
+        default='1960-01-01 00:00:00',
         blank=False,
         null=False
     )
 
     def __str__(self):
+
         return "{} - {}".format(self.title, self.is_created)
 
     @property
     def is_active(self):
-        return self.is_actived >= self.is_created
+        try:
+            return self.is_actived >= self.is_created
+        except TypeError:
+            pass
 
     @property
     def is_delete(self):
