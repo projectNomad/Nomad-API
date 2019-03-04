@@ -16,7 +16,7 @@ parser = RawConfigParser()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-parser.read_file(open(os.path.join(BASE_DIR, 'prod.ini')))
+parser.read_file(open(os.path.join(BASE_DIR, 'local.ini')))
 
 
 # Quick-start development settings - unsuitable for production
@@ -233,6 +233,7 @@ CONSTANT = {
     "VIDEO": {
         "WIDTH": 1280,
         "HEIGHT": 720,
+        "SIZE": 783504130,
     },
 
 }

@@ -69,18 +69,7 @@ class VideoBasicSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Video
         fields = (
-            'id',
-            'owner',
-            'duration',
-            'size',
-            'width',
-            'height',
-            'file',
-            'title',
-            'description',
-            'is_created',
-            'is_deleted',
-            'is_actived',
+            '__all__'
         )
         read_only_fields = [
             'id',
@@ -93,7 +82,6 @@ class VideoBasicSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = dict()
-        print(instance.id)
 
         data['id'] = instance.id
         data['owner'] = UserBasicSerializer(
@@ -102,8 +90,10 @@ class VideoBasicSerializer(serializers.ModelSerializer):
         data['title'] = instance.title
         data['description'] = instance.description
         data['is_created'] = instance.is_created
-        data['is_active'] = instance.is_active
         data['is_actived'] = instance.is_actived
+        data['is_active'] = instance.is_active
+        data['is_deleted'] = instance.is_deleted
+        data['is_delete'] = instance.is_delete
         data['width'] = instance.width
         data['height'] = instance.height
         data['size'] = instance.size

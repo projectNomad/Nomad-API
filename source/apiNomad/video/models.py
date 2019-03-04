@@ -120,10 +120,12 @@ class Video(models.Model):
 
     @property
     def is_active(self):
-        try:
+        """
+        the video is enable if not deleted and she is actived
+        """
+        if self.is_delete:
             return self.is_actived >= self.is_created
-        except TypeError:
-            pass
+        return False
 
     @property
     def is_delete(self):
