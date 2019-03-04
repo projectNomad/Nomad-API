@@ -1,5 +1,7 @@
-import datetime
-import os, random, time, string
+import os
+import random
+import time
+import string
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils.deconstruct import deconstructible
@@ -41,10 +43,23 @@ class Video(models.Model):
 
         def __call__(self, instance, filename):
             ext = filename.split('.')[-1]
-            f_name = '-'.join(filename.replace(ext, '').split())
+            f_name = '-'.join(
+                filename.replace(
+                    ext,
+                    ''
+                ).split()
+            )
             rand_strings = ''.join(
-                random.choice(string.ascii_lowercase + string.digits) for i in range(7))
-            filename = '{}_{}{}.{}'.format(f_name, rand_strings, uuid4().hex, ext)
+                random.choice(
+                    string.ascii_lowercase +
+                    string.digits) for i in range(7)
+            )
+            filename = '{}_{}{}.{}'.format(
+                f_name,
+                rand_strings,
+                uuid4().hex,
+                ext
+            )
 
             path_video = os.path.join(self.path, filename)
 
@@ -87,10 +102,16 @@ class Video(models.Model):
         null=True
     )
     file = models.FileField(
-        upload_to=PathAndRename('uploads/videos/{}'.format(time.strftime("%Y/%m/%d"))),
+        upload_to=PathAndRename(
+            'uploads/videos/{}'.format(time.strftime("%Y/%m/%d"))
+        ),
         blank=False,
         null=False,
-        validators=[FileExtensionValidator(allowed_extensions=['mp4', 'webm'])]
+        validators=[
+            FileExtensionValidator(
+                allowed_extensions=['mp4', 'webm']
+            )
+        ]
     )
     description = models.TextField(
         verbose_name="Description",
@@ -133,4 +154,4 @@ class Video(models.Model):
 
     @property
     def is_path_file(self):
-        return settings.MEDIA_ROOT +'/'+ self.file.name
+        return settings.MEDIA_ROOT + '/' + self.file.name

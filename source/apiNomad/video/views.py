@@ -1,5 +1,8 @@
 from django.utils import timezone
-from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser
+from rest_framework.parsers \
+    import MultiPartParser, \
+    FormParser, \
+    FileUploadParser
 from rest_framework.response import Response
 
 from video.serializers import VideoBasicSerializer
@@ -53,11 +56,14 @@ class Video(generics.ListCreateAPIView):
             return self.create(request, *args, **kwargs)
 
         return Response(
-            _("video invalide. \n Revoyer les critères d'acceptation de projet pour "
-              "vous assurer que vous êtes en confirmité. Si le probléme persiste, "
+            _("video invalide. \n Revoyer les critères "
+              "d'acceptation de projet pour "
+              "vous assurer que vous êtes en confirmité. "
+              "Si le probléme persiste, "
               "merci de contacter l'administration"),
             status=status.HTTP_400_BAD_REQUEST
         )
+
 
 class VideoId(generics.RetrieveUpdateDestroyAPIView):
     """

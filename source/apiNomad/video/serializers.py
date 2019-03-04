@@ -24,8 +24,10 @@ class VideoBasicSerializer(serializers.ModelSerializer):
 
         infos_video = functions.getInformationsVideo(file)
 
-        if infos_video['width'] < settings.CONSTANT["VIDEO"]["WIDTH"] \
-                and infos_video['height'] < settings.CONSTANT["VIDEO"]["HEIGHT"]:
+        if infos_video['width'] < \
+                settings.CONSTANT["VIDEO"]["WIDTH"] \
+                and infos_video['height'] < \
+                settings.CONSTANT["VIDEO"]["HEIGHT"]:
             error = {
                 'message': (
                     _("Dimentions of Video is not valide")

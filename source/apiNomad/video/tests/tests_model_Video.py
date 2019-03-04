@@ -1,10 +1,13 @@
-import os, mock
+import os
+import mock
 from django.core.files import File
 
-from rest_framework.test import APIClient, APITransactionTestCase
+from rest_framework.test \
+    import APIClient, APITransactionTestCase
 
 from apiNomad.factories import UserFactory, AdminFactory
 from video.models import Video
+
 
 class EventTests(APITransactionTestCase):
     TITLE = 'event title'
@@ -32,14 +35,14 @@ class EventTests(APITransactionTestCase):
         path_video = 'media/upload/2019/01/15/video.mp4'
 
         video = Video.objects.create(
-            owner = self.user,
-            title = self.TITLE,
-            description = self.DESCRIPTION,
-            file = path_video,
-            duration = 100000,
-            width = 720,
-            height = 1080,
-            size = 20000,
+            owner=self.user,
+            title=self.TITLE,
+            description=self.DESCRIPTION,
+            file=path_video,
+            duration=100000,
+            width=720,
+            height=1080,
+            size=20000,
         )
 
         self.assertEqual(video.title, self.TITLE)
@@ -49,4 +52,3 @@ class EventTests(APITransactionTestCase):
         self.assertEqual(video.width, 720)
         self.assertEqual(video.height, 1080)
         self.assertEqual(video.size, 20000)
-

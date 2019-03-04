@@ -41,14 +41,14 @@ class VideosTests(APITestCase):
             mock_now.return_value = subscription_date
 
             self.video_admin = Video.objects.create(
-                title = 'video test 1',
-                description = 'description test 1',
-                owner = self.admin,
-                duration = 1415.081748,
-                width = settings.CONSTANT["VIDEO"]["WIDTH"],
-                height = settings.CONSTANT["VIDEO"]["HEIGHT"],
-                file = '/upload/videos/2018/10/01/video.mp4',
-                size = settings.CONSTANT["VIDEO"]["SIZE"]
+                title='video test 1',
+                description='description test 1',
+                owner=self.admin,
+                duration=1415.081748,
+                width=settings.CONSTANT["VIDEO"]["WIDTH"],
+                height=settings.CONSTANT["VIDEO"]["HEIGHT"],
+                file='/upload/videos/2018/10/01/video.mp4',
+                size=settings.CONSTANT["VIDEO"]["SIZE"]
             )
 
             self.video_user = Video.objects.create(
@@ -162,7 +162,7 @@ class VideosTests(APITestCase):
 
         self.assertEqual(result['id'], self.video_admin.id)
         self.assertEqual(result['title'], title)
-        self.assertEqual(result['description'],description)
+        self.assertEqual(result['description'], description)
         self.assertEqual(
             result['is_created'],
             self.video_admin.is_created.strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
@@ -241,7 +241,6 @@ class VideosTests(APITestCase):
         except FileNotFoundError:
             pass
 
-
     def test_delete_video_without_permission(self):
         """
         Ensure we can't delete a specific video without permission.
@@ -277,7 +276,6 @@ class VideosTests(APITestCase):
         finally:
             signals.pre_delete.disconnect(pre_delete_handler)
 
-
     def test_delete_video_that_doesnt_exist(self):
         """
         Ensure we can't delete a specific video if it doesn't exist
@@ -308,7 +306,6 @@ class VideosTests(APITestCase):
             pass
         finally:
             signals.pre_delete.disconnect(pre_delete_handler)
-
 
     def tearDown(self):
         """

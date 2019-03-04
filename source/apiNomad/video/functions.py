@@ -11,6 +11,7 @@ def checkVideoUpload(infos_video):
 
     return True
 
+
 def getInformationsVideo(videoTemporyUpload):
     infos_video = {}
 
@@ -38,6 +39,7 @@ def getInformationsVideo(videoTemporyUpload):
     infos_video['size'] = videoTemporyUpload.size
 
     return infos_video
+
 
 def deleteEmptyRepository(path):
     """

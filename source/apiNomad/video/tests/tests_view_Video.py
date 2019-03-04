@@ -35,14 +35,14 @@ class VideosTests(APITestCase):
             mock_now.return_value = subscription_date
 
             self.video_admin = Video.objects.create(
-                title = 'video test 1',
-                description = 'description test 1',
-                owner = self.admin,
-                duration = 1415.081748,
-                width = settings.CONSTANT["VIDEO"]["WIDTH"],
-                height = settings.CONSTANT["VIDEO"]["HEIGHT"],
-                file = '/upload/videos/2018/10/01/video.mp4',
-                size = settings.CONSTANT["VIDEO"]["SIZE"]
+                title='video test 1',
+                description='description test 1',
+                owner=self.admin,
+                duration=1415.081748,
+                width=settings.CONSTANT["VIDEO"]["WIDTH"],
+                height=settings.CONSTANT["VIDEO"]["HEIGHT"],
+                file='/upload/videos/2018/10/01/video.mp4',
+                size=settings.CONSTANT["VIDEO"]["SIZE"]
             )
 
             self.video_user = Video.objects.create(
@@ -81,7 +81,7 @@ class VideosTests(APITestCase):
                 is_deleted=subscription_date
             )
 
-    # test for create video
+    # TODO: create video test
     # def test_create_new_video_with_permission(self):
         # path_video = 'media/upload/2019/01/15/video.mp4'
 
@@ -98,7 +98,8 @@ class VideosTests(APITestCase):
         #         data,
         #         format='json',
         #         # content_type=client.MULTIPART_CONTENT,
-        #         Content_disposition = 'form-data; name="file"; filename="video.mp4"'
+        #         Content_disposition =
+        #   'form-data; name="file"; filename="video.mp4"'
         #     )
         #
         #     print(response.data)
@@ -140,7 +141,8 @@ class VideosTests(APITestCase):
 
     def test_list_active_videos(self):
         """
-        Ensure we can list all videos actived. (ordered by date_created by default)
+        Ensure we can list all videos actived.
+        (ordered by date_created by default)
         """
         self.client.force_authenticate(user=self.admin)
 
@@ -179,7 +181,8 @@ class VideosTests(APITestCase):
 
     def test_list_active_videos(self):
         """
-        Ensure we can list all videos deleted. (ordered by date_created by default)
+        Ensure we can list all videos deleted.
+        (ordered by date_created by default)
         """
         self.client.force_authenticate(user=self.admin)
 

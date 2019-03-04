@@ -17,6 +17,4 @@ def signal_file_delete_before_delete_video(sender, instance, **kwargs):
     :return:
     """
 
-    deleteEmptyRepository(settings.MEDIA_ROOT +'/'+ instance.file.name)
-
-
+    deleteEmptyRepository(settings.MEDIA_ROOT + '/' + instance.file.name)
