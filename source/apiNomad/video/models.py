@@ -1,11 +1,15 @@
+import datetime
 import os
 import random
 import time
 import string
+
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils.deconstruct import deconstructible
 from django.conf import settings
+from django.utils import timezone
+import pytz
 
 from uuid import uuid4
 from apiNomad.models import User
@@ -19,12 +23,11 @@ class Genre(models.Model):
         verbose_name="Title",
         max_length=255,
         blank=False,
-        null=False
     )
     description = models.TextField(
         verbose_name="Description",
         blank=True,
-        null=True
+        null=True,
     )
 
     def __str__(self):
@@ -36,34 +39,34 @@ class Video(models.Model):
         verbose_name_plural = 'Videos'
         ordering = ('is_created',)
 
-    @deconstructible
-    class PathAndRename(object):
-        def __init__(self, sub_path):
-            self.path = sub_path
-
-        def __call__(self, instance, filename):
-            ext = filename.split('.')[-1]
-            f_name = '-'.join(
-                filename.replace(
-                    ext,
-                    ''
-                ).split()
-            )
-            rand_strings = ''.join(
-                random.choice(
-                    string.ascii_lowercase +
-                    string.digits) for i in range(7)
-            )
-            filename = '{}_{}{}.{}'.format(
-                f_name,
-                rand_strings,
-                uuid4().hex,
-                ext
-            )
-
-            path_video = os.path.join(self.path, filename)
-
-            return path_video
+    # @deconstructible
+    # class PathAndRename(object):
+    #     def __init__(self, sub_path):
+    #         self.path = sub_path
+    #
+    #     def __call__(self, instance, filename):
+    #         ext = filename.split('.')[-1]
+    #         f_name = '-'.join(
+    #             filename.replace(
+    #                 ext,
+    #                 ''
+    #             ).split()
+    #         )
+    #         rand_strings = ''.join(
+    #             random.choice(
+    #                 string.ascii_lowercase +
+    #                 string.digits) for i in range(7)
+    #         )
+    #         filename = '{}_{}{}.{}'.format(
+    #             f_name,
+    #             rand_strings,
+    #             uuid4().hex,
+    #             ext
+    #         )
+    #
+    #         path_video = os.path.join(self.path, filename)
+    #
+    #         return path_video
 
     owner = models.ForeignKey(
         User,
@@ -72,8 +75,6 @@ class Video(models.Model):
     )
     duration = models.FloatField(
         verbose_name='duration',
-        blank=False,
-        null=False,
     )
     genres = models.ManyToManyField(
         Genre,
@@ -82,31 +83,24 @@ class Video(models.Model):
     )
     width = models.PositiveIntegerField(
         verbose_name='width',
-        blank=False,
-        null=False,
     )
     height = models.PositiveIntegerField(
         verbose_name='height',
-        blank=False,
-        null=False,
     )
     size = models.PositiveIntegerField(
         verbose_name='size',
-        blank=False,
-        null=False,
     )
     title = models.CharField(
         verbose_name="Title",
         max_length=255,
         blank=True,
-        null=True
+        null=True,
     )
     file = models.FileField(
-        upload_to=PathAndRename(
-            'uploads/videos/{}'.format(time.strftime("%Y/%m/%d"))
-        ),
+        # upload_to=PathAndRename(
+        #     'uploads/videos/{}'.format(time.strftime("%Y/%m/%d"))
+        # ),
         blank=False,
-        null=False,
         validators=[
             FileExtensionValidator(
                 allowed_extensions=['mp4', 'webm']
@@ -116,7 +110,7 @@ class Video(models.Model):
     description = models.TextField(
         verbose_name="Description",
         blank=True,
-        null=True
+        null=True,
     )
     is_created = models.DateTimeField(
         verbose_name="Cree le",
@@ -124,19 +118,14 @@ class Video(models.Model):
     )
     is_deleted = models.DateTimeField(
         verbose_name="Date de suppression",
-        default='1960-01-01 00:00:00',
-        blank=False,
-        null=False
+        default=datetime.datetime(1990, 1, 1, 0, 0, 0, 127325, tzinfo=pytz.UTC),
     )
     is_actived = models.DateTimeField(
         verbose_name="visible",
-        default='1960-01-01 00:00:00',
-        blank=False,
-        null=False
+        default=datetime.datetime(1990, 1, 1, 0, 0, 0, 127325, tzinfo=pytz.UTC),
     )
 
     def __str__(self):
-
         return "{} - {}".format(self.title, self.is_created)
 
     @property
