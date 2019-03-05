@@ -112,6 +112,12 @@ class Video(models.Model):
         blank=True,
         null=True,
     )
+    genre = models.ManyToManyField(
+        Genre,
+        verbose_name="genres",
+        related_name="genres",
+        blank=True,
+    )
     is_created = models.DateTimeField(
         verbose_name="Cree le",
         auto_now_add=True,
@@ -133,7 +139,7 @@ class Video(models.Model):
         """
         the video is enable if not deleted and she is actived
         """
-        if self.is_delete:
+        if not self.is_delete:
             return self.is_actived >= self.is_created
         return False
 

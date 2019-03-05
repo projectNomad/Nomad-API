@@ -1,11 +1,9 @@
-from django.utils import timezone
 from rest_framework.parsers \
     import MultiPartParser, \
     FormParser, \
     FileUploadParser
 from rest_framework.response import Response
 
-from video.serializers import VideoBasicSerializer
 from . import models, serializers
 from rest_framework import generics, status
 from django.utils.translation import ugettext_lazy as _
@@ -51,7 +49,7 @@ class Video(generics.ListCreateAPIView):
     def post(self, request, *args, **kwargs):
 
         if self.request.user.has_perm("video.add_video"):
-            request.data['owner'] = self.request.user.id
+            # request.data['owner'] = self.request.user.id
 
             return self.create(request, *args, **kwargs)
 
@@ -84,9 +82,12 @@ class VideoId(generics.RetrieveUpdateDestroyAPIView):
 
     def patch(self, request, *args, **kwargs):
 
-        if 'file' in request.data.keys() or 'owner' in request.data.keys():
+        if 'file' in request.data.keys():
             del request.data['file']
+        if 'owner' in request.data.keys():
             del request.data['owner']
+
+        print(request.data)
 
         if self.request.user.has_perm('video.change_video'):
             return self.partial_update(request, *args, **kwargs)

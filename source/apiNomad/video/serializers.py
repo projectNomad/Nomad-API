@@ -7,7 +7,33 @@ from apiNomad.serializers import UserBasicSerializer
 from . import models, functions
 
 
+class GenreBasicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Genre
+        fields = (
+            '__all__'
+        )
+        read_only_fields = [
+            'id',
+        ]
+
+
 class VideoBasicSerializer(serializers.ModelSerializer):
+    owner = UserBasicSerializer(
+        read_only=True
+    )
+    genres = GenreBasicSerializer(
+        many=True
+    )
+    is_active = serializers.SerializerMethodField()
+    is_delete = serializers.SerializerMethodField()
+
+    def get_is_active(self, obj):
+        return obj.is_active
+
+    def get_is_delete(self, obj):
+        return obj.is_delete
+
     def validate(self, data):
         validated_data = super().validate(data)
 
@@ -43,7 +69,7 @@ class VideoBasicSerializer(serializers.ModelSerializer):
 
         video = models.Video()
 
-        video.owner = validated_data['owner']
+        video.owner = self.context['request'].user
         video.file = validated_data['file']
         video.width = infos_video['width']
         video.height = infos_video['height']
@@ -80,26 +106,5 @@ class VideoBasicSerializer(serializers.ModelSerializer):
             'size',
             'width',
             'height',
+            'owner',
         ]
-
-    def to_representation(self, instance):
-        data = dict()
-
-        data['id'] = instance.id
-        data['owner'] = UserBasicSerializer(
-            instance.owner
-        ).to_representation(instance.owner)
-        data['title'] = instance.title
-        data['description'] = instance.description
-        data['is_created'] = instance.is_created
-        data['is_actived'] = instance.is_actived
-        data['is_active'] = instance.is_active
-        data['is_deleted'] = instance.is_deleted
-        data['is_delete'] = instance.is_delete
-        data['width'] = instance.width
-        data['height'] = instance.height
-        data['size'] = instance.size
-        data['duration'] = instance.duration
-        data['file'] = instance.file.name
-
-        return data
