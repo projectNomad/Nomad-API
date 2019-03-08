@@ -9,10 +9,22 @@ from rest_framework import generics, status
 from django.utils.translation import ugettext_lazy as _
 
 
+class Genre(generics.ListAPIView):
+    """
+    get:
+    Return a list of all the existing genres.
+    """
+    serializer_class = serializers.GenreBasicSerializer
+
+    def get_queryset(self):
+        queryset = models.Genre.objects.all()
+        return queryset
+
+
 class Video(generics.ListCreateAPIView):
     """
     get:
-    Return a list of all the existing events.
+    Return a list of all the existing genres.
 
     post:
     Create a new events.
@@ -21,9 +33,12 @@ class Video(generics.ListCreateAPIView):
     serializer_class = serializers.VideoBasicSerializer
 
     def get_queryset(self):
+        # setup.service_save_groupe_users()
 
-        if 'params' in self.request.query_params.keys():
-            queryset = models.Video.objects.filter(owner=self.request.user)
+        if 'param' in self.request.query_params.keys():
+            queryset = models.Video.objects.filter(
+                owner=self.request.user
+            )
             list_exclude = list()
             for video in queryset:
                 if video.is_delete:
@@ -66,13 +81,13 @@ class Video(generics.ListCreateAPIView):
 class VideoId(generics.RetrieveUpdateDestroyAPIView):
     """
     get:
-    Return the detail of a specific cycle.
+    Return the detail of a specific video.
 
     patch:
-    Update a specific cycle.
+    Update a specific video.
 
     delete:
-    Delete a specific cycle.
+    Delete a specific video.
     """
 
     serializer_class = serializers.VideoBasicSerializer
@@ -86,8 +101,8 @@ class VideoId(generics.RetrieveUpdateDestroyAPIView):
             del request.data['file']
         if 'owner' in request.data.keys():
             del request.data['owner']
-
-        print(request.data)
+        if request.data['genres'] is None:
+            del request.data['genres']
 
         if self.request.user.has_perm('video.change_video'):
             return self.partial_update(request, *args, **kwargs)

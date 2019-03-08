@@ -25,14 +25,19 @@ class VideoBasicSerializer(serializers.ModelSerializer):
     genres = GenreBasicSerializer(
         many=True
     )
+
     is_active = serializers.SerializerMethodField()
     is_delete = serializers.SerializerMethodField()
+    is_path_file = serializers.SerializerMethodField()
 
     def get_is_active(self, obj):
         return obj.is_active
 
     def get_is_delete(self, obj):
         return obj.is_delete
+
+    def get_is_path_file(self, obj):
+        return obj.is_path_file
 
     def validate(self, data):
         validated_data = super().validate(data)
@@ -62,6 +67,27 @@ class VideoBasicSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(error)
 
         return data
+
+    def update(self, instance, validated_data):
+
+        if 'title' in validated_data.keys():
+            instance.title = validated_data['title']
+        if 'description' in validated_data.keys():
+            instance.description = validated_data['description']
+        if 'is_deleted' in validated_data.keys():
+            instance.is_deleted = validated_data['is_deleted']
+        if 'is_actived' in validated_data.keys():
+            instance.is_actived = validated_data['is_actived']
+        if 'genres' in validated_data.keys():
+            for genre in validated_data['genres']:
+                genre = models.Genre.objects.filter(
+                    label=genre.get("label")
+                )[:1].get()
+                instance.genres.add(genre)
+
+        instance.save()
+
+        return instance
 
     def create(self, validated_data):
 
