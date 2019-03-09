@@ -24,5 +24,10 @@ urlpatterns = format_suffix_patterns(
             views.Genre.as_view(),
             name='genre',
         ),
+        url(
+            r'^genres/delete$',
+            views.VideoGenreId.as_view(),
+            name='genresVideos_id',
+        ),
     ]
 )

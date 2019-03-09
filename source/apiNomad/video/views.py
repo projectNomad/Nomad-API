@@ -21,6 +21,39 @@ class Genre(generics.ListAPIView):
         return queryset
 
 
+class VideoGenreId(generics.UpdateAPIView):
+
+    """
+
+    patch:
+    Will delete genre of a video
+
+    """
+    def patch(self, request, *args, **kwargs):
+
+        if self.request.user.has_perm("video.uodate_video"):
+            if 'genre' in request.data.keys() and \
+                    'video' in request.data.keys():
+                video_id = request.data['video']
+                genre_id = request.data['genre']
+
+                video = models.Video.objects.filter(
+                        id=video_id
+                    )[:1].get()
+                genre = models.Genre.objects.filter(
+                        id=genre_id
+                    )[:1].get()
+
+                if video and genre:
+                    video.genres.remove(genre)
+                    return Response(genre.label, status=status.HTTP_200_OK)
+
+        content = {
+            'detail': _("You are not authorized to update a given video."),
+        }
+        return Response(content, status=status.HTTP_403_FORBIDDEN)
+
+
 class Video(generics.ListCreateAPIView):
     """
     get:

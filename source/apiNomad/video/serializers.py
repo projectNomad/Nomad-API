@@ -86,7 +86,6 @@ class VideoBasicSerializer(serializers.ModelSerializer):
                 instance.genres.add(genre)
 
         instance.save()
-
         return instance
 
     def create(self, validated_data):
