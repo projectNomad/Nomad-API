@@ -16,7 +16,7 @@ parser = RawConfigParser()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-parser.read_file(open(os.path.join(BASE_DIR, 'prod.ini')))
+parser.read_file(open(os.path.join(BASE_DIR, 'local.ini')))
 
 
 # Quick-start development settings - unsuitable for production
@@ -217,8 +217,8 @@ CONSTANT = {
     "EMAIL_SERVICE": True,
     "AUTO_ACTIVATE_USER": False,
     "GROUPS_USER": {
-        "GUIDE": "guide",
-        "TRAVELER": "traveler",
+        "PRODUCER": "producer",
+        "VIEWER": "viewer",
     },
     "FRONTEND_INTEGRATION": {
         "ACTIVATION_URL":

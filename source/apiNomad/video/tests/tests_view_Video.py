@@ -8,7 +8,7 @@ from rest_framework import status
 from rest_framework.test import APIClient, APITestCase
 
 from apiNomad.factories import AdminFactory, UserFactory
-from video.models import Video
+from video.models import Video, Genre
 
 
 class VideosTests(APITestCase):
@@ -29,8 +29,17 @@ class VideosTests(APITestCase):
         self.user_event_manager.set_password('Test123!')
         self.user_event_manager.save()
 
-        subscription_date = timezone.now()
+        self.genre1 = Genre.objects.create(
+            label='genre_1',
+            description='description genre_1',
+        )
 
+        self.genre2 = Genre.objects.create(
+            label='genre_2',
+            description='description genre_2',
+        )
+
+        subscription_date = timezone.now()
         with mock.patch('django.utils.timezone.now') as mock_now:
             mock_now.return_value = subscription_date
 
@@ -42,8 +51,10 @@ class VideosTests(APITestCase):
                 width=settings.CONSTANT["VIDEO"]["WIDTH"],
                 height=settings.CONSTANT["VIDEO"]["HEIGHT"],
                 file='/upload/videos/2018/10/01/video.mp4',
-                size=settings.CONSTANT["VIDEO"]["SIZE"]
+                size=settings.CONSTANT["VIDEO"]["SIZE"],
             )
+            self.video_admin.genres.add(self.genre1)
+            self.video_admin.genres.add(self.genre2)
 
             self.video_user = Video.objects.create(
                 title='video test 2',
@@ -115,6 +126,7 @@ class VideosTests(APITestCase):
             format='json',
         )
         content = json.loads(response.content)
+        print(content)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(content['count'], 4)
@@ -122,7 +134,8 @@ class VideosTests(APITestCase):
         # Check the system doesn't return attributes not expected
         attributes = ['id', 'title', 'owner', 'description', 'height',
                       'is_created', 'is_active', 'is_delete', 'width',
-                      'size', 'duration', 'is_actived', 'is_deleted', 'file']
+                      'size', 'duration', 'is_actived', 'is_deleted',
+                      'file', 'genres', 'is_path_file']
 
         for key in content['results'][0].keys():
             self.assertTrue(
@@ -202,7 +215,8 @@ class VideosTests(APITestCase):
         # Check the system doesn't return attributes not expected
         attributes = ['id', 'title', 'owner', 'description', 'height',
                       'is_created', 'is_active', 'is_delete', 'width',
-                      'size', 'duration', 'is_actived', 'is_deleted', 'file']
+                      'size', 'duration', 'is_actived', 'is_deleted',
+                      'file', 'genres', 'is_path_file']
 
         for key in content['results'][0].keys():
             self.assertTrue(
