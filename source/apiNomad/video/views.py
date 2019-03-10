@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from . import models, serializers
 from rest_framework import generics, status
 from django.utils.translation import ugettext_lazy as _
+from apiNomad.setup import service_init_database
 
 
 class Genre(generics.ListAPIView):
@@ -66,7 +67,7 @@ class Video(generics.ListCreateAPIView):
     serializer_class = serializers.VideoBasicSerializer
 
     def get_queryset(self):
-        # setup.service_save_groupe_users()
+        # service_init_database()
 
         if 'param' in self.request.query_params.keys():
             queryset = models.Video.objects.filter(

@@ -1,88 +1,64 @@
 from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
 
-from activity.models import Event, Participation, EventOption
+from video.models import Video
 from apiNomad.models import User, Profile
 from video.models import Genre
 from . import settings
 
 
 # initialize all groups
-def service_save_groupe_users():
-    init_tourist_group()
-    init_guide_group()
+# def service_init_database(app_config, verbosity=2, interactive=True, **kwargs):
+def service_init_database():
+    init_viewer_group()
+    init_producer_group()
     init_genre()
 
 
-# initialize the guide group
-def init_tourist_group():
-    # create permission group for guide
-    group_tourist, created = Group.objects.get_or_create(
-        name=settings.CONSTANT["GROUPS_USER"]["TRAVELER"]
+# initialize the PRODUCER group
+def init_viewer_group():
+    # create permission group for PRODUCER
+    group_viewer, created = Group.objects.get_or_create(
+        name=settings.CONSTANT["GROUPS_USER"]["VIEWER"]
     )
 
-    init_user_group(settings.CONSTANT["GROUPS_USER"]["TRAVELER"])
+    init_user_group(settings.CONSTANT["GROUPS_USER"]["VIEWER"])
 
-    content_type_event = ContentType.objects.get_for_model(Event)
+    content_type_video = ContentType.objects.get_for_model(Video)
     all_permissions_event = Permission.objects.filter(
-        content_type=content_type_event
+        content_type=content_type_video
     )
     for permission in all_permissions_event:
-        if permission.name == 'Can view event':
-            group_tourist.permissions.add(permission)
-
-    content_type_participation = \
-        ContentType.objects.get_for_model(Participation)
-    all_permissions_participation = Permission.objects.filter(
-        content_type=content_type_participation
-    )
-    for permission in all_permissions_participation:
-        if permission.name == 'Can add participation':
-            group_tourist.permissions.add(permission)
+        if permission.name == 'Can view video':
+            group_viewer.permissions.add(permission)
 
 
-# initialize the guide group
-def init_guide_group():
-    group_guide, created = Group.objects.get_or_create(
-        name=settings.CONSTANT["GROUPS_USER"]["GUIDE"]
+# initialize the PRODUCER group
+def init_producer_group():
+    group_producer, created = Group.objects.get_or_create(
+        name=settings.CONSTANT["GROUPS_USER"]["PRODUCER"]
     )
 
-    init_user_group(settings.CONSTANT["GROUPS_USER"]["GUIDE"])
+    init_user_group(settings.CONSTANT["GROUPS_USER"]["PRODUCER"])
 
-    content_type_event = ContentType.objects.get_for_model(Event)
-    all_permissions_event = Permission.objects.filter(
-        content_type=content_type_event
+    content_type_video = ContentType.objects.get_for_model(Video)
+    all_permissions_video = Permission.objects.filter(
+        content_type=content_type_video
     )
-    for permission in all_permissions_event:
-        group_guide.permissions.add(permission)
-
-    content_type_participation = \
-        ContentType.objects.get_for_model(Participation)
-    all_permissions_participation = Permission.objects.filter(
-        content_type=content_type_participation
-    )
-    for permission in all_permissions_participation:
-        group_guide.permissions.add(permission)
-
-    content_type_eventoption = \
-        ContentType.objects.get_for_model(EventOption)
-    all_permissions_eventoption = Permission.objects.filter(
-        content_type=content_type_eventoption
-    )
-    for permission in all_permissions_eventoption:
-        group_guide.permissions.add(permission)
+    for permission in all_permissions_video:
+        group_producer.permissions.add(permission)
 
 
-# define user permission for tourist group and guide group
+# define user permission for viewer group and producer group
 def init_user_group(group):
 
-    if group == settings.CONSTANT["GROUPS_USER"]["TRAVELER"]:
+    if group == settings.CONSTANT["GROUPS_USER"]["VIEWER"]:
         group, created = Group.objects.get_or_create(
-            name=settings.CONSTANT["GROUPS_USER"]["TRAVELER"]
+            name=settings.CONSTANT["GROUPS_USER"]["VIEWER"]
         )
     else:
         group, created = Group.objects.get_or_create(
-            name=settings.CONSTANT["GROUPS_USER"]["GUIDE"]
+            name=settings.CONSTANT["GROUPS_USER"]["PRODUCER"]
         )
 
     content_type_user = ContentType.objects.get_for_model(User)
@@ -101,6 +77,7 @@ def init_user_group(group):
         if permission.name != 'Can view profile':
             group.permissions.add(permission)
 
+# start init movie genre
 def init_genre():
     genres = [
         Genre(

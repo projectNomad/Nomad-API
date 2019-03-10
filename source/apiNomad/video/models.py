@@ -79,8 +79,6 @@ class Video(models.Model):
     genres = models.ManyToManyField(
         Genre,
         related_name='videos',
-        blank=True,
-        null=True,
     )
     width = models.PositiveIntegerField(
         verbose_name='width',

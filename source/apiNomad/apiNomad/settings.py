@@ -217,8 +217,8 @@ CONSTANT = {
     "EMAIL_SERVICE": True,
     "AUTO_ACTIVATE_USER": False,
     "GROUPS_USER": {
-        "GUIDE": "guide",
-        "TRAVELER": "traveler",
+        "PRODUCER": "producer",
+        "VIEWER": "viewer",
     },
     "FRONTEND_INTEGRATION": {
         "ACTIVATION_URL":
