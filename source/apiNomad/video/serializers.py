@@ -7,7 +7,38 @@ from apiNomad.serializers import UserBasicSerializer
 from . import models, functions
 
 
+class GenreBasicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Genre
+        fields = (
+            '__all__'
+        )
+        read_only_fields = [
+            'id',
+        ]
+
+
 class VideoBasicSerializer(serializers.ModelSerializer):
+    owner = UserBasicSerializer(
+        read_only=True
+    )
+    genres = GenreBasicSerializer(
+        many=True
+    )
+
+    is_active = serializers.SerializerMethodField()
+    is_delete = serializers.SerializerMethodField()
+    is_path_file = serializers.SerializerMethodField()
+
+    def get_is_active(self, obj):
+        return obj.is_active
+
+    def get_is_delete(self, obj):
+        return obj.is_delete
+
+    def get_is_path_file(self, obj):
+        return obj.is_path_file
+
     def validate(self, data):
         validated_data = super().validate(data)
 
@@ -37,13 +68,33 @@ class VideoBasicSerializer(serializers.ModelSerializer):
 
         return data
 
+    def update(self, instance, validated_data):
+
+        if 'title' in validated_data.keys():
+            instance.title = validated_data['title']
+        if 'description' in validated_data.keys():
+            instance.description = validated_data['description']
+        if 'is_deleted' in validated_data.keys():
+            instance.is_deleted = validated_data['is_deleted']
+        if 'is_actived' in validated_data.keys():
+            instance.is_actived = validated_data['is_actived']
+        if 'genres' in validated_data.keys():
+            for genre in validated_data['genres']:
+                genre = models.Genre.objects.filter(
+                    label=genre.get("label")
+                )[:1].get()
+                instance.genres.add(genre)
+
+        instance.save()
+        return instance
+
     def create(self, validated_data):
 
         infos_video = functions.getInformationsVideo(validated_data["file"])
 
         video = models.Video()
 
-        video.owner = validated_data['owner']
+        video.owner = self.context['request'].user
         video.file = validated_data['file']
         video.width = infos_video['width']
         video.height = infos_video['height']
@@ -80,26 +131,5 @@ class VideoBasicSerializer(serializers.ModelSerializer):
             'size',
             'width',
             'height',
+            'owner',
         ]
-
-    def to_representation(self, instance):
-        data = dict()
-
-        data['id'] = instance.id
-        data['owner'] = UserBasicSerializer(
-            instance.owner
-        ).to_representation(instance.owner)
-        data['title'] = instance.title
-        data['description'] = instance.description
-        data['is_created'] = instance.is_created
-        data['is_actived'] = instance.is_actived
-        data['is_active'] = instance.is_active
-        data['is_deleted'] = instance.is_deleted
-        data['is_delete'] = instance.is_delete
-        data['width'] = instance.width
-        data['height'] = instance.height
-        data['size'] = instance.size
-        data['duration'] = instance.duration
-        data['file'] = instance.file.name
-
-        return data
