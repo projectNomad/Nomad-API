@@ -107,7 +107,7 @@ ENV/
 *.sqlite3
 
 # Project
-source/apiNomad/local.ini
+source/apiNomad/env.ini
 
 # Media
 source/media

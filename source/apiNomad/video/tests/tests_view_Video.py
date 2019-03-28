@@ -126,7 +126,6 @@ class VideosTests(APITestCase):
             format='json',
         )
         content = json.loads(response.content)
-        print(content)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(content['count'], 4)

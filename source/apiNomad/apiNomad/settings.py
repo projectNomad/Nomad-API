@@ -16,7 +16,7 @@ parser = RawConfigParser()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-parser.read_file(open(os.path.join(BASE_DIR, 'local.ini')))
+parser.read_file(open(os.path.join(BASE_DIR, 'env.ini.exple')))
 
 
 # Quick-start development settings - unsuitable for production
