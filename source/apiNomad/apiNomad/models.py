@@ -140,7 +140,8 @@ class Profile(models.Model):
     gender = models.CharField(
         max_length=1,
         choices=GENDER_STATUS,
-        default=GENDER_STATUS[0][0],
+        blank=True,
+        null=True
     )
 
     def save(self, *args, **kwargs):

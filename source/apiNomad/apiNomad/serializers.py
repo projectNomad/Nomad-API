@@ -98,7 +98,6 @@ class UserBasicSerializer(serializers.ModelSerializer):
     groups = GroupBasicSerializer(many=True, read_only=True)
 
     gender = serializers.CharField(
-        required=False,
         source='profile.gender',
     )
     group = serializers.CharField(
@@ -107,7 +106,6 @@ class UserBasicSerializer(serializers.ModelSerializer):
     )
 
     def create(self, validated_data):
-
         try:
             password_validation.validate_password(
                 password=validated_data['password']
