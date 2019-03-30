@@ -125,10 +125,14 @@ class User(AbstractCUser):
 
 
 class Profile(models.Model):
+    IDONTKNOW = 'A'
+    MALE = 'M'
+    FEMALE = 'F'
+
     GENDER_STATUS = (
-        ('I', _('Inconnu')),
-        ('M', _('Homme')),
-        ('F', _('Femme')),
+        (IDONTKNOW, _("Do not wish to identify myself")),
+        (MALE, _('Homme')),
+        (FEMALE, _('Femme')),
     )
 
     user = models.OneToOneField(
@@ -140,8 +144,7 @@ class Profile(models.Model):
     gender = models.CharField(
         max_length=1,
         choices=GENDER_STATUS,
-        blank=True,
-        null=True
+        default=IDONTKNOW,
     )
 
     def save(self, *args, **kwargs):
