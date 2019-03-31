@@ -34,39 +34,40 @@ class Genre(models.Model):
         return self.label
 
 
+@deconstructible
+class PathAndRename(object):
+    def __init__(self, sub_path):
+        self.path = sub_path
+
+    def __call__(self, instance, filename):
+        ext = filename.split('.')[-1]
+        f_name = '-'.join(
+            filename.replace(
+                ext,
+                ''
+            ).split()
+        )
+        rand_strings = ''.join(
+            random.choice(
+                string.ascii_lowercase +
+                string.digits) for i in range(7)
+        )
+        filename = '{}_{}{}.{}'.format(
+            f_name,
+            rand_strings,
+            uuid4().hex,
+            ext
+        )
+
+        path_video = os.path.join(self.path, filename)
+
+        return path_video
+
+
 class Video(models.Model):
     class Meta:
         verbose_name_plural = 'Videos'
         ordering = ('is_created',)
-
-    @deconstructible
-    class PathAndRename(object):
-        def __init__(self, sub_path):
-            self.path = sub_path
-
-        def __call__(self, instance, filename):
-            ext = filename.split('.')[-1]
-            f_name = '-'.join(
-                filename.replace(
-                    ext,
-                    ''
-                ).split()
-            )
-            rand_strings = ''.join(
-                random.choice(
-                    string.ascii_lowercase +
-                    string.digits) for i in range(7)
-            )
-            filename = '{}_{}{}.{}'.format(
-                f_name,
-                rand_strings,
-                uuid4().hex,
-                ext
-            )
-
-            path_video = os.path.join(self.path, filename)
-
-            return path_video
 
     owner = models.ForeignKey(
         User,
@@ -95,6 +96,7 @@ class Video(models.Model):
         blank=True,
         null=True,
     )
+
     file = models.FileField(
         upload_to=PathAndRename(
             'uploads/videos/{}'.format(time.strftime("%Y/%m/%d"))
@@ -117,11 +119,15 @@ class Video(models.Model):
     )
     is_deleted = models.DateTimeField(
         verbose_name="Date de suppression",
-        default=datetime.datetime(1990, 1, 1, 0, 0, 0, 127325, tzinfo=pytz.UTC),
+        default=datetime.datetime(
+            1990, 1, 1, 0, 0, 0, 127325, tzinfo=pytz.UTC
+        ),
     )
     is_actived = models.DateTimeField(
         verbose_name="visible",
-        default=datetime.datetime(1990, 1, 1, 0, 0, 0, 127325, tzinfo=pytz.UTC),
+        default=datetime.datetime(
+            1990, 1, 1, 0, 0, 0, 127325, tzinfo=pytz.UTC
+        ),
     )
 
     def __str__(self):

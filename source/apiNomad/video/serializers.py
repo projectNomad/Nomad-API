@@ -114,16 +114,13 @@ class VideoBasicSerializer(serializers.ModelSerializer):
                       "nos services.")
                 )
             }
-
             raise serializers.ValidationError(error)
 
         return video
 
     class Meta:
         model = models.Video
-        fields = (
-            '__all__'
-        )
+        fields = ('__all__')
         read_only_fields = [
             'id',
             'is_created',

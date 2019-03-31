@@ -11,3 +11,4 @@ django-anymail==4.2
 configparser==3.5.0
 drfdocs==0.0.11
 ffmpeg-python==0.1.17
+python-decouple==3.1

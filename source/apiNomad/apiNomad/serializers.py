@@ -98,7 +98,6 @@ class UserBasicSerializer(serializers.ModelSerializer):
     groups = GroupBasicSerializer(many=True, read_only=True)
 
     gender = serializers.CharField(
-        required=False,
         source='profile.gender',
     )
     group = serializers.CharField(
@@ -107,7 +106,6 @@ class UserBasicSerializer(serializers.ModelSerializer):
     )
 
     def create(self, validated_data):
-
         try:
             password_validation.validate_password(
                 password=validated_data['password']
@@ -159,11 +157,11 @@ class UserBasicSerializer(serializers.ModelSerializer):
         if group_data:
             if group_data['group'] == 'g':
                 group = Group.objects.get(
-                    name=settings.CONSTANT["GROUPS_USER"]["GUIDE"]
+                    name=settings.CONSTANT["GROUPS_USER"]["PRODUCER"]
                 )
             elif group_data['group'] == 't':
                 group = Group.objects.get(
-                    name=settings.CONSTANT["GROUPS_USER"]["TRAVELER"]
+                    name=settings.CONSTANT["GROUPS_USER"]["VIEWER"]
                 )
 
             user.groups.add(group)

@@ -81,11 +81,6 @@ urlpatterns = [
         r'^accounts/',
         include('django.contrib.auth.urls')
     ),
-    # Activities
-    url(
-        r'^activity/',
-        include('activity.urls', namespace="activity"),
-    ),
     # Location
     url(
         r'^location/',

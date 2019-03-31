@@ -9,24 +9,22 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
-
 import os
-from configparser import RawConfigParser
-parser = RawConfigParser()
+from decouple import config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-parser.read_file(open(os.path.join(BASE_DIR, 'env.ini.exple')))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = parser.get('global', 'secret_key')
+SECRET_KEY = config(
+    'SECRET_KEY', default="qwertyuiopasdfghjklzxcvbnm", cast=str
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = parser.get('global', 'debug')
+DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = []
 
@@ -47,7 +45,6 @@ INSTALLED_APPS = [
     'cuser',
     'apiNomad',
     'location',
-    'activity',
     'video',
 ]
 
@@ -164,7 +161,9 @@ CUSER = {
 # Refer to Anymail's documentation for configuration details.
 
 ANYMAIL = {
-    "SENDINBLUE_API_KEY": parser.get('anymail', 'sendinblue_api_key'),
+    "SENDINBLUE_API_KEY": config(
+        'SENDINBLUE_API_KEY', default="qwertyuiopasdfghjklzxcvbnm", cast=str
+    ),
     'TEMPLATES': {
         "CONFIRM_SIGN_UP": "example_template_id",
         "FORGOT_PASSWORD": "example_template_id",
@@ -179,7 +178,7 @@ DEFAULT_FROM_EMAIL = 'noreply@noreply.org'
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Montreal'
 
 USE_I18N = True
 
@@ -221,16 +220,12 @@ CONSTANT = {
         "VIEWER": "viewer",
     },
     "FRONTEND_INTEGRATION": {
-        "ACTIVATION_URL":
-            parser.get(
-                'global',
-                'client_host'
-            ) + "/register/activate/{{token}}",
-        "FORGOT_PASSWORD_URL":
-            parser.get(
-                'global',
-                'client_host'
-            ) + "/reset-password/{{token}}",
+        "ACTIVATION_URL": "{}/register/activate/{{token}}".format(
+                config('CLIENT_HOST', default="", cast=str)
+             ),
+        "FORGOT_PASSWORD_URL": "{}/reset-password/{{token}}".format(
+                 config('CLIENT_HOST', default="", cast=str)
+             ),
     },
     "VIDEO": {
         "WIDTH": 1280,

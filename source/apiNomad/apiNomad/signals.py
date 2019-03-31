@@ -17,10 +17,10 @@ def my_callback(sender, **kwargs):
     print(group)
     pass
 
+
 class OuziyaConfig(AppConfig):
     name = 'Ouziya'
     verbose_name = 'The Ouziya app'
 
     def ready(self):
         post_migrate.connect(my_callback, sender=self)
-

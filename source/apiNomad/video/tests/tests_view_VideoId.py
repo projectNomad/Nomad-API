@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.conf import settings
 from django.utils import timezone
 from video.signals import signal_file_delete_before_delete_video
+from django.test.utils import override_settings
 from django.db.models import signals
 
 from rest_framework import status
@@ -106,6 +107,9 @@ class VideosTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(json.loads(response.content), content)
 
+    @override_settings(
+        TIME_ZONE='UTC'
+    )
     def test_retrieve_video(self):
         """
         Ensure we can retrieve an event.
@@ -132,11 +136,13 @@ class VideosTests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+    @override_settings(
+        TIME_ZONE='UTC'
+    )
     def test_update_video_with_permission(self):
         """
         Ensure we can update a specific video.
         """
-
         title = 'new title video'
         description = 'new description video'
         data_post = {

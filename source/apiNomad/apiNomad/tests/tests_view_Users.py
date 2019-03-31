@@ -117,6 +117,7 @@ class UsersTests(APITestCase):
             'password': 'test123!',
             'first_name': 'Chuck',
             'last_name': 'Norris',
+            'gender': 'A'
         }
 
         response = self.client.post(
@@ -138,6 +139,7 @@ class UsersTests(APITestCase):
             'email': 'John@mailinator.com',
             'first_name': 'Chuck',
             'last_name': 'Norris',
+            'gender': 'A'
         }
 
         response = self.client.post(
@@ -160,6 +162,7 @@ class UsersTests(APITestCase):
             'password': '19274682736',
             'first_name': 'Chuck',
             'last_name': 'Norris',
+            'gender': 'A',
         }
 
         response = self.client.post(
@@ -183,6 +186,7 @@ class UsersTests(APITestCase):
             'password': 'test123!',
             'first_name': 'Chuck',
             'last_name': 'Norris',
+            'gender': 'A',
         }
 
         user = UserFactory()
