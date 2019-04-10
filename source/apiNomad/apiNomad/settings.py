@@ -21,14 +21,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config(
-    'SECRET_KEY', default="qwertyuiopasdfghjklzxcvbnm", cast=str
-)
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default="False", cast=bool)
+DEBUG = config('DEBUG', default="True", cast=bool)
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [config('ALLOWED_HOSTS')]
 
 
 # Application definition
@@ -63,8 +61,6 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     # 'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
-# if config('ENV') == 'PROD':
-#     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 ROOT_URLCONF = 'apiNomad.urls'
 
@@ -165,9 +161,7 @@ CUSER = {
 # Refer to Anymail's documentation for configuration details.
 
 ANYMAIL = {
-    "SENDINBLUE_API_KEY": config(
-        'SENDINBLUE_API_KEY', default="qwertyuiopasdfghjklzxcvbnm", cast=str
-    ),
+    "SENDINBLUE_API_KEY": config('SENDINBLUE_API_KEY'),
     'TEMPLATES': {
         "CONFIRM_SIGN_UP": "example_template_id",
         "FORGOT_PASSWORD": "example_template_id",
@@ -225,10 +219,10 @@ CONSTANT = {
     },
     "FRONTEND_INTEGRATION": {
         "ACTIVATION_URL": "{}/register/activate/{{token}}".format(
-                config('CLIENT_HOST', default="", cast=str)
+                config('CLIENT_HOST')
              ),
         "FORGOT_PASSWORD_URL": "{}/reset-password/{{token}}".format(
-                 config('CLIENT_HOST', default="", cast=str)
+                 config('CLIENT_HOST')
              ),
     },
     "VIDEO": {
