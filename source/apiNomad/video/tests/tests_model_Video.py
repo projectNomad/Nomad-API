@@ -1,7 +1,3 @@
-import os
-import mock
-from django.core.files import File
-
 from rest_framework.test \
     import APIClient, APITransactionTestCase
 

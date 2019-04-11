@@ -11,8 +11,6 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 import os
 from decouple import config
-# import dj_database_url
-import django_heroku
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -26,7 +24,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default="True", cast=bool)
 
-ALLOWED_HOSTS = [config('ALLOWED_HOSTS')]
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.split(',')])
 
 
 # Application definition
@@ -59,7 +57,6 @@ MIDDLEWARE = [
     'django.middleware.locale.LocaleMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-    # 'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'apiNomad.urls'
@@ -202,6 +199,8 @@ MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'media')
 # CORS Header Django Rest Framework
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+# Conf for upload files
 DATA_UPLOAD_MAX_NUMBER_FIELDS = None
 FILE_UPLOAD_HANDLERS = [
     'django.core.files.uploadhandler.TemporaryFileUploadHandler',
@@ -233,5 +232,3 @@ CONSTANT = {
         "SIZE": 783504130,
     },
 }
-
-django_heroku.settings(locals())
