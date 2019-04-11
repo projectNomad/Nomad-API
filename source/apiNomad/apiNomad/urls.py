@@ -33,12 +33,12 @@ urlpatterns = [
         r'^admin/',
         admin.site.urls
     ),
-# DOCUMENTATION SWAGGER
+    # DOCUMENTATION SWAGGER
     path(
         'docs/',
         include_docs_urls(
             title=settings.CONSTANT['ORGANIZATION'] + " API",
-            authentication_classes=[],
+            # authentication_classes=[],
             permission_classes=[]
         )
     ),

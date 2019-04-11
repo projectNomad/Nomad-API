@@ -1,3 +1,5 @@
+import coreapi
+import coreschema
 from django.core.exceptions import ValidationError
 from django.contrib.auth import authenticate, password_validation
 # from django.contrib.auth.models import User
@@ -9,6 +11,7 @@ from rest_framework import generics, status
 from rest_framework.authtoken.views import ObtainAuthToken
 
 from rest_framework.response import Response
+from rest_framework.schemas import ManualSchema
 from rest_framework.views import APIView
 
 from . import serializers, services
@@ -21,11 +24,36 @@ class ObtainTemporaryAuthToken(ObtainAuthToken):
     Enables email/password exchange for expiring token.
     """
     model = TemporaryToken
+    if coreapi is not None and coreschema is not None:
+        schema = ManualSchema(
+            fields=[
+                coreapi.Field(
+                    name="login",
+                    required=True,
+                    location='form',
+                    schema=coreschema.String(
+                        title="Login",
+                        description="Valid email for authentication",
+                    ),
+                ),
+                coreapi.Field(
+                    name="password",
+                    required=True,
+                    location='form',
+                    schema=coreschema.String(
+                        title="Password",
+                        description="Valid password for authentication",
+                    ),
+                ),
+            ],
+            encoding="application/json",
+        )
 
     def post(self, request):
         """
         Respond to POSTed email/password with token.
         """
+
         serializer = serializers.AuthCustomTokenSerializer(data=request.data)
 
         CONFIG = settings.REST_FRAMEWORK_TEMPORARY_TOKENS
