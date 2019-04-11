@@ -130,3 +130,12 @@ class VideoBasicSerializer(serializers.ModelSerializer):
             'height',
             'owner',
         ]
+
+
+class VideoGenreIdBasicSerializer(serializers.ModelSerializer):
+    genre = GenreBasicSerializer(required=True)
+    video = VideoBasicSerializer(required=True)
+
+    class Meta:
+        model = models.Video
+        fields = ('__all__')
