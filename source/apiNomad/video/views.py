@@ -30,6 +30,8 @@ class VideoGenreId(generics.UpdateAPIView):
     Will delete genre of a video
 
     """
+    serializer_class = serializers.VideoGenreIdBasicSerializer
+
     def patch(self, request, *args, **kwargs):
 
         if self.request.user.has_perm("video.uodate_video"):

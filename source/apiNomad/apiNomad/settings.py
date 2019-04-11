@@ -132,6 +132,7 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.'
                                 'LimitOffsetPagination',
+    'HIDE_DOCS': config('DEBUG'),
     'PAGE_SIZE': 100,
 }
 
@@ -211,6 +212,7 @@ FILE_UPLOAD_HANDLERS = [
 # NOTE: "{{token}}" is a placeholder for the real activation token. It will be
 #       dynamically replaced by the real "token".
 CONSTANT = {
+    "ORGANIZATION": "UZIYA",
     "EMAIL_SERVICE": True,
     "AUTO_ACTIVATE_USER": False,
     "GROUPS_USER": {
