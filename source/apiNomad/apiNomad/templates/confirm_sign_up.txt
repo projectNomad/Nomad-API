@@ -1,7 +1,7 @@
 Confirmation d'achat
 ------------------------------------------------------------------------
 
-Ton compte bénévole a bien été créé et il ne te reste plus qu'à l'activer:
+Ton compte a bien été créé et il ne te reste plus qu'à l'activer:
 
 
 
@@ -10,5 +10,4 @@ Activer mon compte: {{ACTIVATION_URL}}
 
 À très bientôt
 
-© 2018 NousRire
-Propulsé par Volontaria.
+© 2018 Uziya
