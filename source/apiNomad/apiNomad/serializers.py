@@ -155,11 +155,11 @@ class UserBasicSerializer(serializers.ModelSerializer):
 
         # add user group
         if group_data:
-            if group_data['group'] == 'g':
+            if group_data['group'] == 'producer':
                 group = Group.objects.get(
                     name=settings.CONSTANT["GROUPS_USER"]["PRODUCER"]
                 )
-            elif group_data['group'] == 't':
+            elif group_data['group'] == 'viewer':
                 group = Group.objects.get(
                     name=settings.CONSTANT["GROUPS_USER"]["VIEWER"]
                 )
