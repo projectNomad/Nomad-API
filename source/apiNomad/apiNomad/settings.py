@@ -26,7 +26,6 @@ DEBUG = config('DEBUG', default="True", cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.split(',')])
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -219,10 +218,10 @@ CONSTANT = {
         "VIEWER": "viewer",
     },
     "FRONTEND_INTEGRATION": {
-        "ACTIVATION_URL": "{}/register/activate/{{token}}".format(
+        "ACTIVATION_URL": "{}/auth/register/activate/token".format(
                 config('CLIENT_HOST')
              ),
-        "FORGOT_PASSWORD_URL": "{}/reset-password/{{token}}".format(
+        "FORGOT_PASSWORD_URL": "{}/auth/reset-password/token".format(
                  config('CLIENT_HOST')
              ),
     },

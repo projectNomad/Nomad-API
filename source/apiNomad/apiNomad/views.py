@@ -168,7 +168,7 @@ class Users(generics.ListCreateAPIView):
                 merge_data = {
                     'ACTIVATION_URL':
                         FRONTEND_SETTINGS['ACTIVATION_URL'].replace(
-                            "{{token}}",
+                            "token",
                             activate_token
                         ),
                     'CSS_STYLE': msg_html_css
@@ -364,7 +364,7 @@ class ResetPassword(APIView):
 
             merge_data = {
                 'FORGOT_URL': FRONTEND_SETTINGS['FORGOT_PASSWORD_URL'].replace(
-                    "{{token}}",
+                    "token",
                     str(token)
                 ),
                 'CSS_STYLE': msg_html_css
