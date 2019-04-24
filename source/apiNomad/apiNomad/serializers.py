@@ -29,10 +29,10 @@ class AuthCustomTokenSerializer(serializers.Serializer):
                                 email=login, password=password)
 
             if not user:
-                msg = _('Unable to log in with provided credentials.')
+                msg = _('Impossible de se connecter avec les informations d\'identification fournies.')
                 raise serializers.ValidationError(msg, code='authorization')
         else:
-            msg = _('Must include "login" and "password".')
+            msg = _('Doit inclure "login" et "mot de passe".')
             raise serializers.ValidationError(msg, code='authorization')
 
         attrs['user'] = user
@@ -139,7 +139,7 @@ class UserBasicSerializer(serializers.ModelSerializer):
         if error_profile and error_group:
             raise serializers.ValidationError({
                 "non_field_errors": [
-                    'This field is required.'
+                    _('Ce champs est requis.')
                 ],
             })
 
@@ -187,7 +187,7 @@ class UserBasicSerializer(serializers.ModelSerializer):
                 old_pw = validated_data.pop('password')
             except KeyError:
                 raise serializers.ValidationError(
-                    'Missing "password" field. Cannot update password.'
+                    _('Champ "mot de passe" manquant. Impossible de mettre à jour le mot de passe.')
                 )
             new_pw = validated_data.pop('new_password')
 
@@ -200,7 +200,7 @@ class UserBasicSerializer(serializers.ModelSerializer):
                         })
                 instance.set_password(new_pw)
             else:
-                msg = "Bad password"
+                msg = _("Mauvais mot de passe.")
                 raise serializers.ValidationError(msg)
 
         if 'profile' in validated_data.keys():
