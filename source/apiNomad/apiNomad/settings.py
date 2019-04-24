@@ -60,6 +60,10 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'apiNomad.urls'
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+   "django.template.context_processors.i18n",
+)
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -171,7 +175,7 @@ DEFAULT_FROM_EMAIL = 'noreply@noreply.org'
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'fr-fr'
 
 TIME_ZONE = 'America/Montreal'
 
@@ -180,6 +184,13 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+gettext = lambda x: x
+
+LANGUAGES = (
+   ('fr', gettext('French')),
+   ('en', gettext('English')),
+)
 
 # Local path
 LOCALE_PATHS = (

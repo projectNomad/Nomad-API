@@ -21,6 +21,7 @@ from django.conf.urls import include, url
 from django.contrib.auth.views import LoginView
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.static import serve
+from django.conf.urls.i18n import i18n_patterns
 
 from .views import (ObtainTemporaryAuthToken, Users, UsersId, UsersActivation,
                     ResetPassword, ChangePassword)
@@ -28,11 +29,6 @@ from .views import (ObtainTemporaryAuthToken, Users, UsersId, UsersActivation,
 from cuser.forms import AuthenticationForm
 
 urlpatterns = [
-    # Admin panel
-    url(
-        r'^admin/',
-        admin.site.urls
-    ),
     # DOCUMENTATION SWAGGER
     path(
         'docs/',
@@ -42,6 +38,14 @@ urlpatterns = [
             permission_classes=[]
         )
     ),
+    # Admin panel
+    url(
+        r'^admin/',
+        admin.site.urls
+    )
+]
+
+urlpatterns += i18n_patterns(
     # Token authentification
     url(
         r'^authentication$',
@@ -102,7 +106,7 @@ urlpatterns = [
         r'^videos/',
         include('video.urls', namespace="video"),
     ),
-]
+)
 
 if settings.DEBUG:
     urlpatterns = [

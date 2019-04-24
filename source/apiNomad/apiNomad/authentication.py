@@ -19,13 +19,13 @@ class TemporaryTokenAuthentication(TokenAuthentication):
         try:
             token = self.models.objects.get(key=key)
         except self.models.DoesNotExist:
-            raise exceptions.AuthenticationFailed('Invalid token')
+            raise exceptions.AuthenticationFailed('Token invalide')
 
         if not token.user.is_active:
-            raise exceptions.AuthenticationFailed('User inactive or deleted')
+            raise exceptions.AuthenticationFailed('Utilisateur inactif ou supprimé')
 
         if token.expired:
-            raise exceptions.AuthenticationFailed('Token has expired')
+            raise exceptions.AuthenticationFailed('Token expiré')
 
         if settings.REST_FRAMEWORK_TEMPORARY_TOKENS['RENEW_ON_SUCCESS']:
             # Reset the token expiration time on successful authentication

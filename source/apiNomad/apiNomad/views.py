@@ -2,7 +2,6 @@ import coreapi
 import coreschema
 from django.core.exceptions import ValidationError
 from django.contrib.auth import authenticate, password_validation
-# from django.contrib.auth.models import User
 from django.conf import settings
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
@@ -67,7 +66,6 @@ class ObtainTemporaryAuthToken(ObtainAuthToken):
                 user = serializer.validated_data['user']
             except KeyError:
                 if ('email' in request.data and 'password' in request.data):
-
                     user = authenticate(
                         email=request.data['email'],
                         password=request.data['password']
@@ -101,7 +99,7 @@ class ObtainTemporaryAuthToken(ObtainAuthToken):
                 data = {'token': token.key}
                 return Response(data)
             else:
-                error = _("Could not authenticate user.")
+                error = _("Impossible d'authentifier l'utilisateur.")
                 return Response(
                     {'error': error},
                     status=status.HTTP_400_BAD_REQUEST
@@ -128,7 +126,7 @@ class Users(generics.ListCreateAPIView):
             return self.list(request, *args, **kwargs)
 
         content = {
-            'detail': _("You are not authorized to list users."),
+            'detail': _("Vous n'êtes pas autorisé à répertorier les utilisateurs."),
         }
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
@@ -183,24 +181,23 @@ class Users(generics.ListCreateAPIView):
 
                 if len(emails_not_sent) <= 0:
                     content = {
-                        'detail': _("The account was created but no email was "
-                                    "sent. If your account is not "
-                                    "activated, contact the administration."),
+                        'detail': _("Le compte a été créé mais aucun "
+                                    "email n'a été envoyé. Si votre compte "
+                                    "n'est pas activé, contactez l'administration."),
                     }
                     return Response(content, status=status.HTTP_201_CREATED)
 
                 content = {
-                    'detail': _("The account was created and an "
-                                "email was sent with your "
-                                "activation code."),
+                    'detail': _("Le compte a été créé et un email a été "
+                                "envoyé avec votre code d'activation."),
                 }
                 return Response(content, status=status.HTTP_201_CREATED)
             else:
                 content = {
-                    'detail': _("The account was created but no email was "
-                                "sent (email service deactivated). If your "
-                                "account is not activated, contact the "
-                                "administration."),
+                    'detail': _("Le compte a été créé mais aucun email "
+                                "n'a été envoyé (service de messagerie "
+                                "désactivé). Si votre compte n'est pas "
+                                "activé, contactez l\'administration."),
                 }
                 return Response(content, status=status.HTTP_201_CREATED)
 
@@ -228,8 +225,8 @@ class UsersId(generics.RetrieveUpdateAPIView):
             return self.retrieve(request, *args, **kwargs)
 
         content = {
-            'detail': _("You are not authorized to get "
-                        "detail of a given user."),
+            'detail': _("Vous n'êtes pas autorisé à obtenir "
+                        "détail d'un utilisateur donné."),
         }
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
@@ -243,13 +240,14 @@ class UsersId(generics.RetrieveUpdateAPIView):
             return self.partial_update(request, *args, **kwargs)
 
         content = {
-            'detail': _("You are not authorized to update a given user."),
+            'detail': _("Vous n'êtes pas autorisé à mettre à jour "
+                        "un utilisateur donné."),
         }
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
     def put(self, request, *args, **kwargs):
         content = {
-            'non_field_errors': _("Method \"PUT\" not allowed.")
+            'non_field_errors': _("Méthode \"PUT\" non alloué.")
         }
         return Response(content, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
@@ -290,8 +288,7 @@ class UsersActivation(APIView):
 
         # There is no reference to this token
         elif len(token) == 0:
-            error = '"{0}" is not a valid activation_token.'. \
-                format(activation_token)
+            error = _('"%s" is not a valid activation_token.') % activation_token
 
             return Response(
                 {'non_field_errors': error},
@@ -299,8 +296,8 @@ class UsersActivation(APIView):
             )
         # We have multiple token with the same key (impossible)
         else:
-            error = _("The system have a problem, please contact us, "
-                      "it is not your fault.")
+            error = _("Le système a un problème, "
+                      "s'il vous plaît contactez-nous")
             return Response(
                 {'non_field_errors': error},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -326,9 +323,8 @@ class ResetPassword(APIView):
         serializer.is_valid(raise_exception=True)
 
         text_error_not_email_send = {
-                    'detail': _("Your token has been created but no email "
-                                "has been sent. Please contact the "
-                                "administration."),
+                    'detail': _("Votre jeton a été créé mais, aucun email a été "
+                                "envoyé. Veuillez contacter l\'administration."),
                 }
 
         # get user from the email given in data
@@ -336,7 +332,7 @@ class ResetPassword(APIView):
             user = User.objects.get(email=request.data["email"])
         except Exception:
             content = {
-                'non_field_errors': _("No account with this email."),
+                'non_field_errors': _("Aucun compte avec cet email."),
             }
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
@@ -435,7 +431,7 @@ class ChangePassword(APIView):
 
         # There is no reference to this token
         elif len(tokens) == 0:
-            error = '{0} is not a valid token.'.format(token)
+            error = _('%s is not a valid token.') % token
 
             return Response(
                 {'non_field_errors': error},
@@ -444,8 +440,7 @@ class ChangePassword(APIView):
 
         # We have multiple token with the same key (impossible)
         else:
-            error = _("The system has a problem, please contact us, "
-                      "it is not your fault.")
+            error = _("Le système a un problème, s'il vous plaît contactez-nous.")
             return Response(
                 {'non_field_errors': error},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR

@@ -1,9 +1,6 @@
 from django.apps import AppConfig
 from django.contrib.auth.models import Group
 from django.db.models.signals import post_migrate
-from django.dispatch import receiver
-
-from . import setup
 
 
 # @receiver(post_migrate)
@@ -19,8 +16,8 @@ def my_callback(sender, **kwargs):
 
 
 class OuziyaConfig(AppConfig):
-    name = 'Ouziya'
-    verbose_name = 'The Ouziya app'
+    name = 'Uziya'
+    verbose_name = 'The Uziya app'
 
     def ready(self):
         post_migrate.connect(my_callback, sender=self)
