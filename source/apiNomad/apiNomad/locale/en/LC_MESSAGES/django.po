@@ -1,0 +1,200 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-04-19 21:23-0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: source/apiNomad/apiNomad/models.py:18
+msgid "Activation de compte"
+msgstr ""
+
+#: source/apiNomad/apiNomad/models.py:19
+msgid "Change mot de passe"
+msgstr ""
+
+#: source/apiNomad/apiNomad/models.py:38
+msgid "Type d'action"
+msgstr ""
+
+#: source/apiNomad/apiNomad/models.py:50
+msgid "User"
+msgstr ""
+
+#: source/apiNomad/apiNomad/models.py:54
+msgid "Date de création"
+msgstr ""
+
+#: source/apiNomad/apiNomad/models.py:59 source/apiNomad/apiNomad/models.py:95
+msgid "Date d'expiration"
+msgstr ""
+
+#: source/apiNomad/apiNomad/models.py:120
+msgid "Date de modification"
+msgstr ""
+
+#: source/apiNomad/apiNomad/models.py:133
+msgid "Sexe non identifié"
+msgstr ""
+
+#: source/apiNomad/apiNomad/models.py:134
+msgid "Homme"
+msgstr ""
+
+#: source/apiNomad/apiNomad/models.py:135
+msgid "Femme"
+msgstr ""
+
+#: source/apiNomad/apiNomad/serializers.py:32
+msgid ""
+"Impossible de se connecter avec les informations d'identification fournies."
+msgstr ""
+
+#: source/apiNomad/apiNomad/serializers.py:35
+msgid "Doit inclure \"login\" et \"mot de passe\"."
+msgstr ""
+
+#: source/apiNomad/apiNomad/serializers.py:87
+msgid "An account for the specified email address already exists."
+msgstr ""
+
+#: source/apiNomad/apiNomad/serializers.py:142
+msgid "Ce champs est requis."
+msgstr ""
+
+#: source/apiNomad/apiNomad/serializers.py:190
+msgid ""
+"Champ \"mot de passe\" manquant. Impossible de mettre à jour le mot de passe."
+msgstr ""
+
+#: source/apiNomad/apiNomad/serializers.py:203
+msgid "Mauvais mot de passe."
+msgstr ""
+
+#: source/apiNomad/apiNomad/settings.py:191
+msgid "French"
+msgstr ""
+
+#: source/apiNomad/apiNomad/settings.py:192
+msgid "English"
+msgstr ""
+
+#: source/apiNomad/apiNomad/templates/confirm_sign_up.html:19
+msgid "Bienvenue dans l'équipe Uziya!"
+msgstr ""
+
+#: source/apiNomad/apiNomad/templates/confirm_sign_up.html:23
+msgid "Ton compte a bien été créé et il ne te reste plus qu'à l'activer:"
+msgstr ""
+
+#: source/apiNomad/apiNomad/templates/confirm_sign_up.html:26
+msgid "Activer mon compte"
+msgstr ""
+
+#: source/apiNomad/apiNomad/templates/confirm_sign_up.html:28
+msgid "À très bientôt"
+msgstr ""
+
+#: source/apiNomad/apiNomad/templates/reset_password.html:18
+msgid "Réinitialisation de ton mot de passe"
+msgstr ""
+
+#: source/apiNomad/apiNomad/templates/reset_password.html:21
+msgid "Salut!"
+msgstr ""
+
+#: source/apiNomad/apiNomad/templates/reset_password.html:22
+msgid ""
+"Voici le lien sur lequel tu dois cliquer pour pouvoir réinitialiser ton mot "
+"de passe :"
+msgstr ""
+
+#: source/apiNomad/apiNomad/templates/reset_password.html:24
+msgid "Réinitialiser"
+msgstr ""
+
+#: source/apiNomad/apiNomad/views.py:102
+msgid "Impossible d'authentifier l'utilisateur."
+msgstr ""
+
+#: source/apiNomad/apiNomad/views.py:129
+msgid "Vous n'êtes pas autorisé à répertorier les utilisateurs."
+msgstr ""
+
+#: source/apiNomad/apiNomad/views.py:179
+msgid "Confirmation d'enregistrement."
+msgstr ""
+
+#: source/apiNomad/apiNomad/views.py:184
+msgid ""
+"Le compte a été créé mais aucun email n'a été envoyé. Si votre compte n'est "
+"pas activé, contactez l'administration."
+msgstr ""
+
+#: source/apiNomad/apiNomad/views.py:191
+msgid ""
+"Le compte a été créé et un email a été envoyé avec votre code d'activation."
+msgstr ""
+
+#: source/apiNomad/apiNomad/views.py:197
+msgid ""
+"Le compte a été créé mais aucun email n'a été envoyé (service de messagerie "
+"désactivé). Si votre compte n'est pas activé, contactez l'administration."
+msgstr ""
+
+#: source/apiNomad/apiNomad/views.py:228
+msgid "Vous n'êtes pas autorisé à obtenir détail d'un utilisateur donné."
+msgstr ""
+
+#: source/apiNomad/apiNomad/views.py:243
+msgid "Vous n'êtes pas autorisé à mettre à jour un utilisateur donné."
+msgstr ""
+
+#: source/apiNomad/apiNomad/views.py:250
+msgid "Méthode \"PUT\" non alloué."
+msgstr ""
+
+#: source/apiNomad/apiNomad/views.py:291
+#, python-format
+msgid "\"%s\" is not a valid activation_token."
+msgstr ""
+
+#: source/apiNomad/apiNomad/views.py:299
+msgid "Le système a un problème, s'il vous plaît contactez-nous"
+msgstr ""
+
+#: source/apiNomad/apiNomad/views.py:326
+msgid ""
+"Votre jeton a été créé mais, aucun email a été envoyé. Veuillez contacter "
+"l'administration."
+msgstr ""
+
+#: source/apiNomad/apiNomad/views.py:335
+msgid "Aucun compte avec cet email."
+msgstr ""
+
+#: source/apiNomad/apiNomad/views.py:372
+msgid "Mise à jour du mot de passe."
+msgstr ""
+
+#: source/apiNomad/apiNomad/views.py:434
+#, python-format
+msgid "%s is not a valid token."
+msgstr ""
+
+#: source/apiNomad/apiNomad/views.py:443
+msgid "Le système a un problème, s'il vous plaît contactez-nous."
+msgstr ""

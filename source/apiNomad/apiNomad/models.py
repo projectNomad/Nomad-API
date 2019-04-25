@@ -15,8 +15,8 @@ from .managers import ActionTokenManager
 
 
 ACTIONS_TYPE = [
-    ('account_activation', _('Account activation')),
-    ('password_change', _('Password change')),
+    ('account_activation', _('Activation de compte')),
+    ('password_change', _('Change mot de passe')),
 ]
 
 
@@ -35,7 +35,7 @@ class ActionToken(models.Model):
     )
 
     type = models.CharField(
-        verbose_name='Type of action',
+        verbose_name=_('Type d\'action'),
         max_length=100,
         choices=ACTIONS_TYPE,
         null=False,
@@ -51,12 +51,12 @@ class ActionToken(models.Model):
     )
 
     created = models.DateTimeField(
-        verbose_name=_("Creation date"),
+        verbose_name=_("Date de création"),
         auto_now_add=True
     )
 
     expires = models.DateTimeField(
-        verbose_name=_("Expiration date"),
+        verbose_name=_("Date d\'expiration"),
         blank=True,
     )
 
@@ -92,7 +92,7 @@ class ActionToken(models.Model):
 class TemporaryToken(Token):
     """Subclass of Token to add an expiration time."""
     expires = models.DateTimeField(
-        verbose_name=_("Expiration date"),
+        verbose_name=_("Date d\'expiration"),
         blank=True,
     )
 
@@ -117,7 +117,7 @@ class TemporaryToken(Token):
 
 class User(AbstractCUser):
     date_updated = models.DateTimeField(
-        _('date updated'),
+        _('Date de modification'),
         default=timezone.now)
 
     class Meta(AbstractCUser.Meta):
@@ -130,7 +130,7 @@ class Profile(models.Model):
     FEMALE = 'F'
 
     GENDER_STATUS = (
-        (IDONTKNOW, _("Do not wish to identify myself")),
+        (IDONTKNOW, _("Sexe non identifié")),
         (MALE, _('Homme')),
         (FEMALE, _('Femme')),
     )
