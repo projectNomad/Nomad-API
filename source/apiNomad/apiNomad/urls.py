@@ -24,7 +24,7 @@ from django.views.static import serve
 from django.conf.urls.i18n import i18n_patterns
 
 from .views import (ObtainTemporaryAuthToken, Users, UsersId, UsersActivation,
-                    ResetPassword, ChangePassword)
+                    ResetPassword, ChangePassword, UpdatePassword)
 
 from cuser.forms import AuthenticationForm
 
@@ -68,6 +68,11 @@ urlpatterns += i18n_patterns(
         r'^users$',
         Users.as_view(),
         name='users'
+    ),
+    url(
+        r'^users/update_password$',
+        UpdatePassword.as_view(),
+        name='users_update_password',
     ),
     url(
         r'^users/activate$',

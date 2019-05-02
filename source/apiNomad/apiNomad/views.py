@@ -71,14 +71,6 @@ class ObtainTemporaryAuthToken(ObtainAuthToken):
                         password=request.data['password']
                     )
 
-                elif ('email' in request.data and
-                        'password' in request.data):
-
-                    user = authenticate(
-                        email=request.data['email'],
-                        password=request.data['password']
-                    )
-
             token = None
             if user:
                 token, _created = TemporaryToken.objects.get_or_create(
@@ -232,6 +224,13 @@ class UsersId(generics.RetrieveUpdateAPIView):
 
     def patch(self, request, *args, **kwargs):
         if 'profile' in self.kwargs.keys():
+            if 'password' in request.data.keys() \
+                    and 'newPassword' in request.data.keys():
+                content = {
+                    'detail': _("mot de passe ne peut pas être modifier ici."),
+                }
+                return Response(content, status=status.HTTP_400_BAD_REQUEST)
+
             self.kwargs['pk'] = self.request.user.id
 
             return self.partial_update(request, *args, **kwargs)
@@ -445,3 +444,31 @@ class ChangePassword(APIView):
                 {'non_field_errors': error},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+
+class UpdatePassword(generics.UpdateAPIView):
+    """
+    patch: update user password
+    """
+
+    def patch(self, request, *args, **kwargs):
+        if 'password' in request.data.keys() \
+                and 'newPassword' in request.data.keys():
+            user = authenticate(
+                email=self.request.user.email,
+                password=request.data['password']
+            )
+
+            if user:
+                user.set_password(request.data['newPassword'])
+                user.save()
+
+                content = {
+                    'detail': _("Mot de passe modifié"),
+                }
+                return Response(content, status=status.HTTP_200_OK)
+
+        content = {
+            'detail': _("Votre mot de passe actuel est invalide"),
+        }
+        return Response(content, status=status.HTTP_400_BAD_REQUEST)

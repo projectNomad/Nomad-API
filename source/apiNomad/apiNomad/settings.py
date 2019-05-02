@@ -19,12 +19,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY')
+SECRET_KEY = config('SECRET_KEY', default=')4dsj5ogd@u=mruvslkn&zv$1799*3po55)udj3=cut3#mbpld')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default="True", cast=bool)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.split(',')])
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.split(',')], default='')
 
 # Application definition
 
@@ -132,7 +132,7 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.'
                                 'LimitOffsetPagination',
-    'HIDE_DOCS': config('DEBUG'),
+    'HIDE_DOCS': config('DEBUG', default='True', cast=bool),
     'PAGE_SIZE': 100,
 }
 
@@ -162,7 +162,7 @@ CUSER = {
 # Refer to Anymail's documentation for configuration details.
 
 ANYMAIL = {
-    "SENDINBLUE_API_KEY": config('SENDINBLUE_API_KEY'),
+    "SENDINBLUE_API_KEY": config('SENDINBLUE_API_KEY', default=''),
     'TEMPLATES': {
         "CONFIRM_SIGN_UP": "example_template_id",
         "FORGOT_PASSWORD": "example_template_id",
@@ -230,10 +230,10 @@ CONSTANT = {
     },
     "FRONTEND_INTEGRATION": {
         "ACTIVATION_URL": "{}/auth/register/activate/token".format(
-                config('CLIENT_HOST')
+                config('CLIENT_HOST', default='localhost:8000')
              ),
         "FORGOT_PASSWORD_URL": "{}/auth/reset-password/token".format(
-                 config('CLIENT_HOST')
+                 config('CLIENT_HOST', default='localhost:8000')
              ),
     },
     "VIDEO": {

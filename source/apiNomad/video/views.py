@@ -137,7 +137,7 @@ class VideoId(generics.RetrieveUpdateDestroyAPIView):
             del request.data['file']
         if 'owner' in request.data.keys():
             del request.data['owner']
-        if 'genre' in request.data.keys():
+        if 'genres' in request.data.keys():
             del request.data['genres']
 
         if self.request.user.has_perm('video.change_video'):
