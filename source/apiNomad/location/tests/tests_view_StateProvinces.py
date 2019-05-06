@@ -1,7 +1,7 @@
 import json
 
-from django.utils import timezone
 from django.urls import reverse
+from django.utils.translation import ugettext_lazy as _
 
 from rest_framework import status
 from rest_framework.test import APIClient, APITestCase
@@ -78,7 +78,8 @@ class StateProvincesTests(APITestCase):
         )
 
         err = {
-            'iso_code': ['state province with this iso code already exists.']
+            'iso_code': [_('Un objet state province avec '
+                           'ce champ iso code existe déjà.')]
         }
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

@@ -1,18 +1,18 @@
 import json
 
+from django.urls import reverse
+from django.core import mail
+from django.test.utils import override_settings
+from django.utils.translation import ugettext_lazy as _
+from django.dispatch import receiver
+
 from rest_framework import status
 from rest_framework.test import APIClient, APITestCase
-
-from django.urls import reverse
-from django.test.utils import override_settings
+from anymail.exceptions import AnymailCancelSend
+from anymail.signals import pre_send
 
 from apiNomad.factories import UserFactory
 from apiNomad.models import ActionToken
-
-from django.core import mail
-from anymail.exceptions import AnymailCancelSend
-from anymail.signals import pre_send
-from django.dispatch import receiver
 
 
 @override_settings(EMAIL_BACKEND='anymail.backends.test.EmailBackend')
@@ -90,9 +90,8 @@ class ResetPasswordTests(APITestCase):
             type='password_change',
         )
         content = {
-            'detail': "Your token has been created but no "
-                      "email has been sent. Please contact "
-                      "the administration."
+            'detail': "Votre jeton a été créé mais, aucun email a été "
+                      "envoyé. Veuillez contacter l'administration."
         }
 
         self.assertEqual(json.loads(response.content), content)
@@ -129,7 +128,7 @@ class ResetPasswordTests(APITestCase):
         )
 
         content = {
-            'email': ['This field is required.']
+            'email': [_('This field is required.')]
         }
 
         self.assertEqual(json.loads(response.content), content)
@@ -168,7 +167,7 @@ class ResetPasswordTests(APITestCase):
         )
 
         content = {
-            'email': ["This field may not be blank."],
+            'email': [_("Ce champ ne peut être vide.")],
         }
 
         self.assertEqual(json.loads(response.content), content)
@@ -207,7 +206,7 @@ class ResetPasswordTests(APITestCase):
         )
 
         content = {
-            'email': ["Enter a valid email address."],
+            'email': [_("Saisissez une adresse email valable.")],
         }
         self.assertEqual(json.loads(response.content), content)
 
@@ -332,9 +331,9 @@ class ResetPasswordTests(APITestCase):
         )
 
         content = {
-            'detail': "Your token has been created "
-                      "but no email has been sent. "
-                      "Please contact the administration."
+            'detail': _("Votre jeton a été créé mais, "
+                        "aucun email a été envoyé. "
+                        "Veuillez contacter l'administration.")
         }
 
         self.assertEqual(json.loads(response.content), content)

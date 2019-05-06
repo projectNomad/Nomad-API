@@ -29,7 +29,8 @@ class AuthCustomTokenSerializer(serializers.Serializer):
                                 email=login, password=password)
 
             if not user:
-                msg = _('Impossible de se connecter avec les informations d\'identification fournies.')
+                msg = _('Impossible de se connecter avec les '
+                        'informations d\'identification fournies.')
                 raise serializers.ValidationError(msg, code='authorization')
         else:
             msg = _('Doit inclure "login" et "mot de passe".')
@@ -187,7 +188,8 @@ class UserBasicSerializer(serializers.ModelSerializer):
                 old_pw = validated_data.pop('password')
             except KeyError:
                 raise serializers.ValidationError(
-                    _('Champ "mot de passe" manquant. Impossible de mettre à jour le mot de passe.')
+                    _('Champ "mot de passe" manquant. Impossible de '
+                      'mettre à jour le mot de passe.')
                 )
             new_pw = validated_data.pop('new_password')
 

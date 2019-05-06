@@ -1,9 +1,10 @@
 import json
+
 from unittest import mock
 from django.urls import reverse
 from django.conf import settings
 from django.utils import timezone
-from video.signals import signal_file_delete_before_delete_video
+from django.utils.translation import ugettext_lazy as _
 from django.test.utils import override_settings
 from django.db.models import signals
 
@@ -102,7 +103,7 @@ class VideosTests(APITestCase):
             format='json',
         )
 
-        content = {"detail": "Not found."}
+        content = {"detail": _("Not found.")}
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(json.loads(response.content), content)
@@ -223,7 +224,7 @@ class VideosTests(APITestCase):
             format='json',
         )
 
-        content = {'detail': "Not found."}
+        content = {'detail': _("Not found.")}
 
         self.assertEqual(json.loads(response.content), content)
 
@@ -305,7 +306,7 @@ class VideosTests(APITestCase):
                     kwargs={'pk': 9999},
                 ),
             )
-            content = {'detail': "Not found."}
+            content = {'detail': _("Not found.")}
             self.assertEqual(json.loads(response.content), content)
             self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         except FileNotFoundError:
