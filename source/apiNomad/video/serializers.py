@@ -135,4 +135,3 @@ class VideoBasicSerializer(serializers.ModelSerializer):
 class VideoGenreIdBasicSerializer(serializers.Serializer):
     genre = GenreBasicSerializer(required=True)
     video = VideoBasicSerializer(required=True)
-

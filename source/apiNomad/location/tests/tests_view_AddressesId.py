@@ -1,9 +1,10 @@
 import json
 
+from django.urls import reverse
+from django.utils.translation import ugettext_lazy as _
+
 from rest_framework import status
 from rest_framework.test import APIClient, APITestCase
-
-from django.urls import reverse
 
 from apiNomad.factories import UserFactory, AdminFactory
 from location.models import Address, StateProvince, Country
@@ -52,7 +53,7 @@ class AddressesIdTests(APITestCase):
             )
         )
 
-        content = {"detail": "Not found."}
+        content = {"detail": _("Not found.")}
         self.assertEqual(json.loads(response.content), content)
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
@@ -217,7 +218,7 @@ class AddressesIdTests(APITestCase):
             format='json',
         )
 
-        content = {'detail': "Not found."}
+        content = {'detail': _("Not found.")}
 
         self.assertEqual(json.loads(response.content), content)
 
@@ -272,7 +273,7 @@ class AddressesIdTests(APITestCase):
             ),
         )
 
-        content = {'detail': "Not found."}
+        content = {'detail': _("Not found.")}
 
         self.assertEqual(json.loads(response.content), content)
 

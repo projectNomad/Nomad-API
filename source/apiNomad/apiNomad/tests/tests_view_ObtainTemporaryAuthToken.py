@@ -1,8 +1,9 @@
 import json
 
-from rest_framework.test import APIClient
-
 from django.urls import reverse
+from django.utils.translation import ugettext_lazy as _
+
+from rest_framework.test import APIClient
 from rest_framework import status
 from rest_framework.test import APITestCase
 
@@ -112,7 +113,8 @@ class ObtainTemporaryAuthTokenTests(APITestCase):
 
         content = {
             "non_field_errors": [
-                "Unable to log in with provided credentials."
+                _("Impossible de se connecter avec les "
+                  "informations d'identification fournies.")
                 ]
             }
 
@@ -136,7 +138,7 @@ class ObtainTemporaryAuthTokenTests(APITestCase):
 
         content = {
             'login': [
-                'This field is required.'
+                _('Ce champ est obligatoire.')
                 ]
             }
 
