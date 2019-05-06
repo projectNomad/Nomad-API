@@ -118,7 +118,8 @@ class Users(generics.ListCreateAPIView):
             return self.list(request, *args, **kwargs)
 
         content = {
-            'detail': _("Vous n'êtes pas autorisé à répertorier les utilisateurs."),
+            'detail': _("Vous n'êtes pas autorisé à "
+                        "répertorier les utilisateurs."),
         }
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
@@ -174,8 +175,9 @@ class Users(generics.ListCreateAPIView):
                 if len(emails_not_sent) <= 0:
                     content = {
                         'detail': _("Le compte a été créé mais aucun "
-                                    "email n'a été envoyé. Si votre compte "
-                                    "n'est pas activé, contactez l'administration."),
+                                    "email n'a été envoyé. Si votre "
+                                    "compte n'est pas activé, contactez "
+                                    "l'administration."),
                     }
                     return Response(content, status=status.HTTP_201_CREATED)
 
@@ -287,7 +289,9 @@ class UsersActivation(APIView):
 
         # There is no reference to this token
         elif len(token) == 0:
-            error = _('"%s" is not a valid activation_token.') % activation_token
+            error = _(
+                '"%s" is not a valid activation_token.'
+            ) % activation_token
 
             return Response(
                 {'non_field_errors': error},
@@ -322,8 +326,10 @@ class ResetPassword(APIView):
         serializer.is_valid(raise_exception=True)
 
         text_error_not_email_send = {
-                    'detail': _("Votre jeton a été créé mais, aucun email a été "
-                                "envoyé. Veuillez contacter l\'administration."),
+                    'detail': _(
+                        "Votre jeton a été créé mais, aucun email a été "
+                        "envoyé. Veuillez contacter l\'administration."
+                    ),
                 }
 
         # get user from the email given in data
@@ -439,7 +445,8 @@ class ChangePassword(APIView):
 
         # We have multiple token with the same key (impossible)
         else:
-            error = _("Le système a un problème, s'il vous plaît contactez-nous.")
+            error = _("Le système a un problème, s'il "
+                      "vous plaît contactez-nous.")
             return Response(
                 {'non_field_errors': error},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR

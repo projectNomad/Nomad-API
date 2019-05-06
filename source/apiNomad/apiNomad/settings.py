@@ -19,12 +19,19 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY', default=')4dsj5ogd@u=mruvslkn&zv$1799*3po55)udj3=cut3#mbpld')
+SECRET_KEY = config(
+    'SECRET_KEY',
+    default=')4dsj5ogd@u=mruvslkn&zv$1799*3po55)udj3=cut3#mbpld'
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default="True", cast=bool)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.split(',')], default='')
+ALLOWED_HOSTS = config(
+    'ALLOWED_HOSTS',
+    cast=lambda v: [s.strip() for s in v.split(',')],
+    default=''
+)
 
 # Application definition
 
@@ -61,7 +68,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'apiNomad.urls'
 
 TEMPLATE_CONTEXT_PROCESSORS = (
-   "django.template.context_processors.i18n",
+    "django.template.context_processors.i18n",
 )
 
 TEMPLATES = [
@@ -81,7 +88,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'apiNomad.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
@@ -175,7 +181,7 @@ DEFAULT_FROM_EMAIL = 'noreply@noreply.org'
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
-LANGUAGE_CODE = 'fr-fr'
+LANGUAGE_CODE = 'fr'
 
 TIME_ZONE = 'America/Montreal'
 
@@ -185,11 +191,13 @@ USE_L10N = True
 
 USE_TZ = True
 
-gettext = lambda x: x
+
+def gettext(x): return x
+
 
 LANGUAGES = (
-   ('fr', gettext('French')),
-   ('en', gettext('English')),
+    ('fr', gettext('French')),
+    ('en', gettext('English')),
 )
 
 # Local path
@@ -230,11 +238,11 @@ CONSTANT = {
     },
     "FRONTEND_INTEGRATION": {
         "ACTIVATION_URL": "{}/auth/register/activate/token".format(
-                config('CLIENT_HOST', default='localhost:8000')
-             ),
+            config('CLIENT_HOST', default='localhost:8000')
+        ),
         "FORGOT_PASSWORD_URL": "{}/auth/reset-password/token".format(
-                 config('CLIENT_HOST', default='localhost:8000')
-             ),
+            config('CLIENT_HOST', default='localhost:8000')
+        ),
     },
     "VIDEO": {
         "WIDTH": 1280,

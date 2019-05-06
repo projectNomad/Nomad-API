@@ -5,6 +5,7 @@ from rest_framework.test import APIClient, APITestCase
 
 from django.urls import reverse
 from django.test.utils import override_settings
+from django.utils.translation import ugettext_lazy as _
 
 from apiNomad.models import ActionToken, User
 from apiNomad.factories import UserFactory, AdminFactory
@@ -57,9 +58,10 @@ class UsersTests(APITestCase):
             format='json',
         )
 
-        content = {"detail": "The account was created but no email was sent "
-                             "(email service deactivated). If your account is "
-                             "not activated, contact the administration."}
+        content = {"detail": _("Le compte a été créé mais aucun email "
+                               "n'a été envoyé (service de messagerie "
+                               "désactivé). Si votre compte n'est pas "
+                               "activé, contactez l'administration.")}
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(json.loads(response.content), content)
@@ -128,7 +130,7 @@ class UsersTests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-        content = {"email": ["This field is required."]}
+        content = {"email": [_("Ce champ est obligatoire.")]}
         self.assertEqual(json.loads(response.content), content)
 
     def test_create_new_user_without_password(self):
@@ -150,7 +152,7 @@ class UsersTests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-        content = {"password": ["This field is required."]}
+        content = {"password": [_("Ce champ est obligatoire.")]}
         self.assertEqual(json.loads(response.content), content)
 
     def test_create_new_user_weak_password(self):
@@ -171,9 +173,16 @@ class UsersTests(APITestCase):
             format='json',
         )
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_400_BAD_REQUEST
+        )
 
-        content = {"password": ['This password is entirely numeric.']}
+        content = {
+            "password": [
+                _('Ce mot de passe est entièrement numérique.')
+            ]
+        }
         self.assertEqual(json.loads(response.content), content)
 
     def test_create_new_user_duplicate_email(self):
@@ -281,10 +290,10 @@ class UsersTests(APITestCase):
         self.assertEqual(len(mail.outbox), 0)
 
         content = {
-            'detail': "The account was created but no email "
-                      "was sent (email service deactivated). "
-                      "If your account is not activated, "
-                      "contact the administration.",
+            'detail': _("Le compte a été créé mais aucun "
+                        "email n'a été envoyé (service de messagerie "
+                        "désactivé). Si votre compte n'est pas activé, "
+                        "contactez l'administration."),
         }
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -335,9 +344,10 @@ class UsersTests(APITestCase):
         self.assertEqual(len(mail.outbox), 0)
 
         content = {
-            'detail': 'The account was created but no email was sent. '
-                      'If your account is not activated, contact the '
-                      'administration.',
+            'detail':
+                _('Le compte a été créé mais aucun email n\'a été envoyé. '
+                  'Si votre compte n\'est pas activé, contactez '
+                  'l\'administration.'),
         }
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -380,10 +390,11 @@ class UsersTests(APITestCase):
         )
 
         content = {
-            'detail': "The account was created but no email was "
-                      "sent (email service deactivated). If your "
-                      "account is not activated, contact "
-                      "the administration.",
+            'detail': _(
+                "Le compte a été créé mais aucun email "
+                "n'a été envoyé (service de messagerie "
+                "désactivé). Si votre compte n'est pas "
+                "activé, contactez l'administration."),
         }
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -459,7 +470,9 @@ class UsersTests(APITestCase):
         """
         response = self.client.get(reverse('users'))
 
-        content = {"detail": "Authentication credentials were not provided."}
+        content = {
+            "detail": _("Informations d'authentification non fournies.")
+        }
         self.assertEqual(json.loads(response.content), content)
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -472,7 +485,8 @@ class UsersTests(APITestCase):
 
         response = self.client.get(reverse('users'))
 
-        content = {"detail": "You are not authorized to list users."}
+        content = {"detail": _("Vous n'êtes pas autorisé à "
+                               "répertorier les utilisateurs.")}
         self.assertEqual(json.loads(response.content), content)
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
