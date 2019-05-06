@@ -110,7 +110,7 @@ ENV/
 source/apiNomad/env.ini
 
 # Media
-source/media#
+source/media
 
 Static files
 source/static
