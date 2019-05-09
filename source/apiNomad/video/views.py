@@ -33,7 +33,6 @@ class VideoGenreId(generics.UpdateAPIView):
     serializer_class = serializers.VideoGenreIdBasicSerializer
 
     def patch(self, request, *args, **kwargs):
-
         if self.request.user.has_perm("video.uodate_video"):
             if 'genre' in request.data.keys() and \
                     'video' in request.data.keys():
@@ -132,13 +131,10 @@ class VideoId(generics.RetrieveUpdateDestroyAPIView):
         return models.Video.objects.filter()
 
     def patch(self, request, *args, **kwargs):
-
         if 'file' in request.data.keys():
             del request.data['file']
         if 'owner' in request.data.keys():
             del request.data['owner']
-        if 'genres' in request.data.keys():
-            del request.data['genres']
 
         if self.request.user.has_perm('video.change_video'):
             return self.partial_update(request, *args, **kwargs)

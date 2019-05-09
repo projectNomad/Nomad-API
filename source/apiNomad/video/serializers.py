@@ -25,7 +25,6 @@ class VideoBasicSerializer(serializers.ModelSerializer):
     genres = GenreBasicSerializer(
         many=True
     )
-
     is_active = serializers.SerializerMethodField()
     is_delete = serializers.SerializerMethodField()
     hostPathFile = serializers.SerializerMethodField()
@@ -108,8 +107,8 @@ class VideoBasicSerializer(serializers.ModelSerializer):
         try:
             video.save()
         except Exception as e:
-            if os.path.exists(video.is_path_file()):
-                functions.deleteEmptyRepository(video.is_path_file())
+            if os.path.exists(video.hostPathFile()):
+                functions.deleteEmptyRepository(video.hostPathFile())
 
             error = {
                 'message': (
