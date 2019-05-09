@@ -7,7 +7,6 @@ from rest_framework.response import Response
 from . import models, serializers
 from rest_framework import generics, status
 from django.utils.translation import ugettext_lazy as _
-from apiNomad.setup import service_init_database
 
 
 class Genre(generics.ListAPIView):
@@ -33,8 +32,7 @@ class VideoGenreId(generics.UpdateAPIView):
     serializer_class = serializers.VideoGenreIdBasicSerializer
 
     def patch(self, request, *args, **kwargs):
-
-        if self.request.user.has_perm("video.uodate_video"):
+        if self.request.user.has_perm("video.change_video"):
             if 'genre' in request.data.keys() and \
                     'video' in request.data.keys():
                 video_id = request.data['video']
@@ -100,18 +98,12 @@ class Video(generics.ListCreateAPIView):
     def post(self, request, *args, **kwargs):
 
         if self.request.user.has_perm("video.add_video"):
-            # request.data['owner'] = self.request.user.id
-
             return self.create(request, *args, **kwargs)
 
-        return Response(
-            _("video invalide. \n Revoyer les critères "
-              "d'acceptation de projet pour "
-              "vous assurer que vous êtes en confirmité. "
-              "Si le probléme persiste, "
-              "merci de contacter l'administration"),
-            status=status.HTTP_400_BAD_REQUEST
-        )
+        content = {
+            'detail': _("You are not authorized to update a given video."),
+        }
+        return Response(content, status=status.HTTP_403_FORBIDDEN)
 
 
 class VideoId(generics.RetrieveUpdateDestroyAPIView):
@@ -132,13 +124,10 @@ class VideoId(generics.RetrieveUpdateDestroyAPIView):
         return models.Video.objects.filter()
 
     def patch(self, request, *args, **kwargs):
-
         if 'file' in request.data.keys():
             del request.data['file']
         if 'owner' in request.data.keys():
             del request.data['owner']
-        if 'genres' in request.data.keys():
-            del request.data['genres']
 
         if self.request.user.has_perm('video.change_video'):
             return self.partial_update(request, *args, **kwargs)
@@ -149,4 +138,11 @@ class VideoId(generics.RetrieveUpdateDestroyAPIView):
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
     def delete(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
+        if self.request.user.has_perm('video.delete_video'):
+            return self.destroy(request, *args, **kwargs)
+
+        content = {
+            'detail': _("You are not authorized to update a given video."),
+        }
+        return Response(content, status=status.HTTP_403_FORBIDDEN)
+

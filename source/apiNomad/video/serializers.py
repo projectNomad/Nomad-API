@@ -25,7 +25,6 @@ class VideoBasicSerializer(serializers.ModelSerializer):
     genres = GenreBasicSerializer(
         many=True
     )
-
     is_active = serializers.SerializerMethodField()
     is_delete = serializers.SerializerMethodField()
     hostPathFile = serializers.SerializerMethodField()
@@ -108,8 +107,8 @@ class VideoBasicSerializer(serializers.ModelSerializer):
         try:
             video.save()
         except Exception as e:
-            if os.path.exists(video.is_path_file()):
-                functions.deleteEmptyRepository(video.is_path_file())
+            if os.path.exists(video.hostPathFile()):
+                functions.deleteEmptyRepository(video.hostPathFile())
 
             error = {
                 'message': (
@@ -124,18 +123,9 @@ class VideoBasicSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Video
-        fields = [
-            'id',
-            'title',
-            'durationToHMS',
-            'owner',
-            'description',
-            'is_created',
-            'is_delete',
-            'is_active',
-            'hostPathFile',
-            'genres',
-        ]
+        fields = (
+            '__all__'
+        )
         read_only_fields = [
             'id',
             'is_created',

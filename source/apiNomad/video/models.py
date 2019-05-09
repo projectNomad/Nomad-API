@@ -14,6 +14,8 @@ from uuid import uuid4
 from apiNomad.models import User
 
 
+
+
 class Genre(models.Model):
     class Meta:
         verbose_name_plural = 'Genres'
@@ -59,9 +61,7 @@ class PathAndRename(object):
             ext
         )
 
-        path_video = os.path.join(self.path, filename)
-
-        return path_video
+        return os.path.join(self.path, filename)
 
 
 class Video(models.Model):
