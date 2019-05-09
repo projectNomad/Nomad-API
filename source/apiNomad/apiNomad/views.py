@@ -73,9 +73,13 @@ class ObtainTemporaryAuthToken(ObtainAuthToken):
 
             token = None
             if user:
+                from django.utils import timezone
+
                 token, _created = TemporaryToken.objects.get_or_create(
                     user=user
                 )
+                user.last_login = timezone.now();
+                user.save()
 
             if token and token.expired:
                 # If the token is expired, generate a new one.
