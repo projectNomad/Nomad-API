@@ -134,6 +134,14 @@ class Video(models.Model):
     def __str__(self):
         return "{} - {}".format(self.title, self.is_created)
 
+    def secondesToHMS(self, totalSec):
+        minutes, sec = divmod(totalSec, 60)
+        hours, minutes = divmod(minutes, 60)
+
+        if hours == 0:
+            return "%02d:%02d" % (minutes, sec)
+        return "%d:%02d:%02d" % (hours, minutes, sec)
+
     @property
     def is_active(self):
         """
@@ -150,3 +158,7 @@ class Video(models.Model):
     @property
     def is_path_file(self):
         return settings.MEDIA_ROOT + '/' + self.file.name
+
+    @property
+    def durationToHMS(self):
+        return self.secondesToHMS(self.duration)

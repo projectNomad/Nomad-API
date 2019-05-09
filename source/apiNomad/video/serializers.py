@@ -29,6 +29,7 @@ class VideoBasicSerializer(serializers.ModelSerializer):
     is_active = serializers.SerializerMethodField()
     is_delete = serializers.SerializerMethodField()
     is_path_file = serializers.SerializerMethodField()
+    durationToHMS = serializers.SerializerMethodField()
 
     def get_is_active(self, obj):
         return obj.is_active
@@ -38,6 +39,9 @@ class VideoBasicSerializer(serializers.ModelSerializer):
 
     def get_is_path_file(self, obj):
         return obj.is_path_file
+
+    def get_durationToHMS(self, obj):
+        return obj.durationToHMS
 
     def validate(self, data):
         validated_data = super().validate(data)
@@ -129,6 +133,7 @@ class VideoBasicSerializer(serializers.ModelSerializer):
             'width',
             'height',
             'owner',
+            'durationToHMS',
         ]
 
 
