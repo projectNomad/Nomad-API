@@ -153,7 +153,7 @@ REST_FRAMEWORK_TEMPORARY_TOKENS = {
 # Activation Token
 
 ACTIVATION_TOKENS = {
-    'MINUTES': 2880,
+    'MINUTES': config('ACTIVATION_TOKENS_MINUTES', default=2880),
 }
 
 # config django-username-email plugin
