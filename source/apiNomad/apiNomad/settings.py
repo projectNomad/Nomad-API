@@ -236,12 +236,13 @@ CONSTANT = {
         "PRODUCER": "producer",
         "VIEWER": "viewer",
     },
+    "SERVER_HOST": config('SERVER_HOST', default='localhost:8000'),
     "FRONTEND_INTEGRATION": {
         "ACTIVATION_URL": "{}/auth/register/activate/token".format(
-            config('CLIENT_HOST', default='localhost:8000')
+            config('CLIENT_HOST', default='localhost:4200')
         ),
         "FORGOT_PASSWORD_URL": "{}/auth/reset-password/token".format(
-            config('CLIENT_HOST', default='localhost:8000')
+            config('CLIENT_HOST', default='localhost:4200')
         ),
     },
     "VIDEO": {

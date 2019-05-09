@@ -156,8 +156,9 @@ class Video(models.Model):
         return self.is_deleted >= self.is_created
 
     @property
-    def is_path_file(self):
-        return settings.MEDIA_ROOT + '/' + self.file.name
+    def hostPathFile(self):
+        return settings.CONSTANT['SERVER_HOST'] + '/' + \
+               settings.MEDIA_URL + '/' + self.file.name
 
     @property
     def durationToHMS(self):

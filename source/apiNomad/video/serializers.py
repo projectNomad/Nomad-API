@@ -28,7 +28,7 @@ class VideoBasicSerializer(serializers.ModelSerializer):
 
     is_active = serializers.SerializerMethodField()
     is_delete = serializers.SerializerMethodField()
-    is_path_file = serializers.SerializerMethodField()
+    hostPathFile = serializers.SerializerMethodField()
     durationToHMS = serializers.SerializerMethodField()
 
     def get_is_active(self, obj):
@@ -37,8 +37,8 @@ class VideoBasicSerializer(serializers.ModelSerializer):
     def get_is_delete(self, obj):
         return obj.is_delete
 
-    def get_is_path_file(self, obj):
-        return obj.is_path_file
+    def get_hostPathFile(self, obj):
+        return obj.hostPathFile
 
     def get_durationToHMS(self, obj):
         return obj.durationToHMS
@@ -124,7 +124,18 @@ class VideoBasicSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Video
-        fields = ('__all__')
+        fields = [
+            'id',
+            'title',
+            'durationToHMS',
+            'owner',
+            'description',
+            'is_created',
+            'is_delete',
+            'is_active',
+            'hostPathFile',
+            'genres',
+        ]
         read_only_fields = [
             'id',
             'is_created',
@@ -133,6 +144,7 @@ class VideoBasicSerializer(serializers.ModelSerializer):
             'width',
             'height',
             'owner',
+            'hostPathFile',
             'durationToHMS',
         ]
 
