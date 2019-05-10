@@ -43,7 +43,9 @@ def init_producer_group():
         name=settings.CONSTANT["GROUPS_USER"]["PRODUCER"]
     )
 
-    init_user_group(settings.CONSTANT["GROUPS_USER"]["PRODUCER"])
+    # pas besoin dinitialiser ces permissions dans le groupes
+    # elles sont a tous les utilisateurs
+    # init_user_group(settings.CONSTANT["GROUPS_USER"]["PRODUCER"])
 
     content_type_video = ContentType.objects.get_for_model(Video)
     all_permissions_video = Permission.objects.filter(
@@ -56,11 +58,7 @@ def init_producer_group():
 # define user permission for viewer group and producer group
 def init_user_group(group):
 
-    if group == settings.CONSTANT["GROUPS_USER"]["VIEWER"]:
-        group, created = Group.objects.get_or_create(
-            name=settings.CONSTANT["GROUPS_USER"]["VIEWER"]
-        )
-    else:
+    if group == settings.CONSTANT["GROUPS_USER"]["PRODUCER"]:
         group, created = Group.objects.get_or_create(
             name=settings.CONSTANT["GROUPS_USER"]["PRODUCER"]
         )

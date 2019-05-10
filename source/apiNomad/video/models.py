@@ -14,8 +14,6 @@ from uuid import uuid4
 from apiNomad.models import User
 
 
-
-
 class Genre(models.Model):
     class Meta:
         verbose_name_plural = 'Genres'
@@ -96,6 +94,9 @@ class Video(models.Model):
         max_length=255,
         blank=True,
         null=True,
+    )
+    is_agreed_terms_use = models.BooleanField(
+        verbose_name=''
     )
 
     file = models.FileField(

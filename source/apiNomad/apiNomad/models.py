@@ -66,7 +66,7 @@ class ActionToken(models.Model):
         if not self.key:
             self.key = self.generate_key()
             self.expires = timezone.now() + timezone.timedelta(
-                minutes=settings.ACTIVATION_TOKENS['MINUTES']
+                minutes=int(settings.ACTIVATION_TOKENS['MINUTES'])
             )
         return super(ActionToken, self).save(*args, **kwargs)
 
@@ -99,7 +99,7 @@ class TemporaryToken(Token):
     def save(self, *args, **kwargs):
         if not self.pk:
             self.expires = timezone.now() + timezone.timedelta(
-                minutes=settings.REST_FRAMEWORK_TEMPORARY_TOKENS['MINUTES']
+                minutes=int(settings.REST_FRAMEWORK_TEMPORARY_TOKENS['MINUTES'])
             )
 
         super(TemporaryToken, self).save(*args, **kwargs)
@@ -145,6 +145,11 @@ class Profile(models.Model):
         max_length=1,
         choices=GENDER_STATUS,
         default=IDONTKNOW,
+    )
+
+    is_agreed_terms_use = models.BooleanField(
+        verbose_name=_('Conditions d\'utilisation'),
+        default=False
     )
 
     def save(self, *args, **kwargs):

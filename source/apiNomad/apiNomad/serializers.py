@@ -64,10 +64,12 @@ class UserBasicSerializer(serializers.ModelSerializer):
             'group',
             'groups',
             'date_joined',
+            'is_agreed_terms_use',
         )
         write_only_fields = (
             'password',
             'new_password',
+            'is_agreed_terms_use',
         )
         read_only_fields = (
             'is_staff',
@@ -101,6 +103,9 @@ class UserBasicSerializer(serializers.ModelSerializer):
     gender = serializers.CharField(
         source='profile.gender',
     )
+    is_agreed_terms_use = serializers.BooleanField(
+        source='profile.is_agreed_terms_use'
+    )
     group = serializers.CharField(
         required=False,
         source='group.group',
@@ -118,31 +123,12 @@ class UserBasicSerializer(serializers.ModelSerializer):
 
         profile_data = None
         group_data = None
-        error_profile = False
-        error_group = False
 
         if 'profile' in validated_data.keys():
             profile_data = validated_data.pop('profile')
 
-            if 'gender' not in profile_data:
-                error_profile = True
-        else:
-            error_profile = True
-
         if 'group' in validated_data.keys():
             group_data = validated_data.pop('group')
-
-            if 'group' not in group_data:
-                error_group = True
-        else:
-            error_group = True
-
-        if error_profile and error_group:
-            raise serializers.ValidationError({
-                "non_field_errors": [
-                    _('Ce champs est requis.')
-                ],
-            })
 
         user = User(**validated_data)
 
@@ -159,10 +145,6 @@ class UserBasicSerializer(serializers.ModelSerializer):
             if group_data['group'] == 'producer':
                 group = Group.objects.get(
                     name=settings.CONSTANT["GROUPS_USER"]["PRODUCER"]
-                )
-            elif group_data['group'] == 'viewer':
-                group = Group.objects.get(
-                    name=settings.CONSTANT["GROUPS_USER"]["VIEWER"]
                 )
 
             user.groups.add(group)
