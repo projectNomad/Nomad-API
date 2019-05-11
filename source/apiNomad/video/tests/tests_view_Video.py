@@ -18,15 +18,12 @@ class VideosTests(APITestCase):
         self.client = APIClient()
 
         self.user = UserFactory()
-        self.user.set_password('Test123!')
         self.user.save()
 
         self.admin = AdminFactory()
-        self.admin.set_password('Test123!')
         self.admin.save()
 
         self.user_event_manager = UserFactory()
-        self.user_event_manager.set_password('Test123!')
         self.user_event_manager.save()
 
         self.genre1 = Genre.objects.create(
@@ -88,7 +85,7 @@ class VideosTests(APITestCase):
                 height=settings.CONSTANT["VIDEO"]["HEIGHT"],
                 file='/upload/videos/2018/10/01/video.mp4',
                 size=settings.CONSTANT["VIDEO"]["SIZE"],
-                is_actived=subscription_date,
+                # is_actived=subscription_date,
                 is_deleted=subscription_date
             )
 
@@ -126,6 +123,7 @@ class VideosTests(APITestCase):
             format='json',
         )
         content = json.loads(response.content)
+        # print(content)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(content['count'], 4)
@@ -134,7 +132,8 @@ class VideosTests(APITestCase):
         attributes = ['id', 'title', 'owner', 'description', 'height',
                       'is_created', 'is_active', 'is_delete', 'width',
                       'size', 'duration', 'is_actived', 'is_deleted',
-                      'file', 'genres', 'is_path_file']
+                      'file', 'genres', 'hostPathFile',
+                      'durationToHMS']
 
         for key in content['results'][0].keys():
             self.assertTrue(
@@ -174,48 +173,8 @@ class VideosTests(APITestCase):
         # Check the system doesn't return attributes not expected
         attributes = ['id', 'title', 'owner', 'description', 'height',
                       'is_created', 'is_active', 'is_delete', 'width',
-                      'size', 'duration', 'is_actived', 'is_deleted', 'file']
-
-        for key in content['results'][0].keys():
-            self.assertTrue(
-                key in attributes,
-                'Attribute "{0}" is not expected but is '
-                'returned by the system.'.format(key),
-            )
-            attributes.remove(key)
-
-        # Ensure the system returns all expected attributes
-        self.assertTrue(
-            len(attributes) == 0,
-            'The system failed to return some '
-            'attributes : {0}'.format(attributes),
-        )
-
-    def test_list_active_videos(self):
-        """
-        Ensure we can list all videos deleted.
-        (ordered by date_created by default)
-        """
-        self.client.force_authenticate(user=self.admin)
-
-        response = self.client.get(
-            reverse('video:videos'),
-            data={
-                "is_deleted": True
-            },
-            format='json',
-        )
-
-        content = json.loads(response.content)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(content['count'], 1)
-
-        # Check the system doesn't return attributes not expected
-        attributes = ['id', 'title', 'owner', 'description', 'height',
-                      'is_created', 'is_active', 'is_delete', 'width',
                       'size', 'duration', 'is_actived', 'is_deleted',
-                      'file', 'genres', 'is_path_file']
+                      'file', 'genres', 'hostPathFile', 'durationToHMS']
 
         for key in content['results'][0].keys():
             self.assertTrue(

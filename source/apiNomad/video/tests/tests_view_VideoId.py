@@ -274,7 +274,7 @@ class VideosTests(APITestCase):
             )
 
             content = {
-                'detail': 'You do not have permission to perform this action.'
+                'detail': 'You are not authorized to update a given video.'
             }
             self.assertEqual(json.loads(response.content), content)
             self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

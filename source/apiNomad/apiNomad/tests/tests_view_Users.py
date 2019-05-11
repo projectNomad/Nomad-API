@@ -446,6 +446,7 @@ class UsersTests(APITestCase):
             'last_name',
             'is_active',
             'is_superuser',
+            'is_agreed_terms_use',
         ]
         for key in first_user.keys():
             self.assertTrue(

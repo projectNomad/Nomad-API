@@ -6,7 +6,8 @@ from django.contrib.auth.models import Group
 
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
-from .models import ActionToken, User, Profile
+# from .models import ActionToken, User, Profile
+from .models import ActionToken, User
 
 
 class AuthCustomTokenSerializer(serializers.Serializer):
@@ -100,12 +101,12 @@ class UserBasicSerializer(serializers.ModelSerializer):
     date_joined = serializers.DateTimeField(required=False)
     groups = GroupBasicSerializer(many=True, read_only=True)
 
-    gender = serializers.CharField(
-        source='profile.gender',
-    )
-    is_agreed_terms_use = serializers.BooleanField(
-        source='profile.is_agreed_terms_use'
-    )
+    # gender = serializers.CharField(
+    #     source='profile.gender',
+    # )
+    # is_agreed_terms_use = serializers.BooleanField(
+    #     source='profile.is_agreed_terms_use'
+    # )
     group = serializers.CharField(
         required=False,
         source='group.group',
@@ -121,11 +122,11 @@ class UserBasicSerializer(serializers.ModelSerializer):
                 "password": err.messages
                 })
 
-        profile_data = None
+        # profile_data = None
         group_data = None
 
-        if 'profile' in validated_data.keys():
-            profile_data = validated_data.pop('profile')
+        # if 'profile' in validated_data.keys():
+        #     profile_data = validated_data.pop('profile')
 
         if 'group' in validated_data.keys():
             group_data = validated_data.pop('group')
@@ -150,11 +151,11 @@ class UserBasicSerializer(serializers.ModelSerializer):
             user.groups.add(group)
 
         # create profil user
-        if profile_data:
-            Profile.objects.create(
-                user=user,
-                **profile_data
-            )
+        # if profile_data:
+        #     Profile.objects.create(
+        #         user=user,
+        #         **profile_data
+        #     )
 
         # Create an ActionToken to activate user in the future
         ActionToken.objects.create(
@@ -187,11 +188,11 @@ class UserBasicSerializer(serializers.ModelSerializer):
                 msg = _("Mauvais mot de passe.")
                 raise serializers.ValidationError(msg)
 
-        if 'profile' in validated_data.keys():
-            profile_data = validated_data.pop('profile')
-            profile = Profile.objects.get_or_create(user=instance)
-            profile[0].__dict__.update(profile_data)
-            profile[0].save()
+        # if 'profile' in validated_data.keys():
+        #     profile_data = validated_data.pop('profile')
+        #     profile = Profile.objects.get_or_create(user=instance)
+        #     profile[0].__dict__.update(profile_data)
+        #     profile[0].save()
 
         return super(
             UserBasicSerializer,

@@ -97,9 +97,6 @@ class Video(models.Model):
         blank=True,
         null=True,
     )
-    is_agreed_terms_use = models.BooleanField(
-        verbose_name=''
-    )
 
     file = models.FileField(
         upload_to=PathAndRename(
