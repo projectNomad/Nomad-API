@@ -67,30 +67,29 @@ class Video(generics.ListCreateAPIView):
     serializer_class = serializers.VideoBasicSerializer
 
     def get_queryset(self):
-        # service_init_database()
 
         if 'param' in self.request.query_params.keys():
-            queryset = models.Video.objects.filter(
-                owner=self.request.user
-            )
+            if 'videoUser' in self.request.query_params.keys():
+                queryset = models.Video.objects.filter(
+                    owner=self.request.user
+                )
+            else:
+                queryset = models.Video.objects.all()
+
             list_exclude = list()
             for video in queryset:
-                if video.is_delete:
-                    list_exclude.append(video)
+                if 'is_deleted' in self.request.query_params.keys():
+                    if video.is_delete \
+                            and not self.request.query_params['is_deleted']:
+                        list_exclude.append(video)
+                if 'is_actived' in self.request.query_params.keys():
+                    if not video.is_active and \
+                            self.request.query_params['is_actived']:
+                        list_exclude.append(video)
         else:
             queryset = models.Video.objects.all()
-            list_exclude = list()
 
-            if 'is_deleted' in self.request.query_params.keys():
-                for video in queryset:
-                    if not video.is_delete:
-                        list_exclude.append(video)
-            elif 'is_actived' in self.request.query_params.keys():
-                for video in queryset:
-                    if not video.is_active:
-                        list_exclude.append(video)
-
-        queryset = queryset.\
+        queryset = queryset. \
             exclude(pk__in=[video.pk for video in list_exclude])
 
         return queryset
@@ -128,6 +127,9 @@ class VideoId(generics.RetrieveUpdateDestroyAPIView):
             del request.data['file']
         if 'owner' in request.data.keys():
             del request.data['owner']
+        if 'genres' in request.data.keys():
+            if not request.data['genres']:
+                del request.data['genres']
 
         if self.request.user.has_perm('video.change_video'):
             return self.partial_update(request, *args, **kwargs)

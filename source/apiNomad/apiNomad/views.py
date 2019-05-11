@@ -65,7 +65,7 @@ class ObtainTemporaryAuthToken(ObtainAuthToken):
             try:
                 user = serializer.validated_data['user']
             except KeyError:
-                if ('email' in request.data and 'password' in request.data):
+                if 'email' in request.data and 'password' in request.data:
                     user = authenticate(
                         email=request.data['email'],
                         password=request.data['password']
