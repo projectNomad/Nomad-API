@@ -2,7 +2,7 @@ from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
 
 from video.models import Video
-from apiNomad.models import User, Profile
+# from apiNomad.models import User, Profile
 from video.models import Genre
 from . import settings
 
@@ -63,21 +63,21 @@ def init_user_group(group):
             name=settings.CONSTANT["GROUPS_USER"]["PRODUCER"]
         )
 
-    content_type_user = ContentType.objects.get_for_model(User)
-    all_permissions_user = Permission.objects.filter(
-        content_type=content_type_user
-    )
-    for permission in all_permissions_user:
-        if permission.name != 'Can view user':
-            group.permissions.add(permission)
-
-    content_type_profile = ContentType.objects.get_for_model(Profile)
-    all_permissions_profile = Permission.objects.filter(
-        content_type=content_type_profile
-    )
-    for permission in all_permissions_profile:
-        if permission.name != 'Can view profile':
-            group.permissions.add(permission)
+    # content_type_user = ContentType.objects.get_for_model(User)
+    # all_permissions_user = Permission.objects.filter(
+    #     content_type=content_type_user
+    # )
+    # for permission in all_permissions_user:
+    #     if permission.name != 'Can view user':
+    #         group.permissions.add(permission)
+    #
+    # content_type_profile = ContentType.objects.get_for_model(Profile)
+    # all_permissions_profile = Permission.objects.filter(
+    #     content_type=content_type_profile
+    # )
+    # for permission in all_permissions_profile:
+    #     if permission.name != 'Can view profile':
+    #         group.permissions.add(permission)
 
 
 # start init movie genre

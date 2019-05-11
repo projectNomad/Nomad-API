@@ -116,15 +116,6 @@ class TemporaryToken(Token):
 
 
 class User(AbstractCUser):
-    date_updated = models.DateTimeField(
-        _('Date de modification'),
-        default=timezone.now)
-
-    class Meta(AbstractCUser.Meta):
-        swappable = 'AUTH_USER_MODEL'
-
-
-class Profile(models.Model):
     IDONTKNOW = 'A'
     MALE = 'M'
     FEMALE = 'F'
@@ -135,11 +126,9 @@ class Profile(models.Model):
         (FEMALE, _('Femme')),
     )
 
-    user = models.OneToOneField(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name='profile',
-    )
+    date_updated = models.DateTimeField(
+        _('Date de modification'),
+        default=timezone.now)
 
     gender = models.CharField(
         max_length=1,
@@ -152,9 +141,24 @@ class Profile(models.Model):
         default=False
     )
 
-    def save(self, *args, **kwargs):
-        self.clean()
-        super(Profile, self).save(*args, **kwargs)
+    class Meta(AbstractCUser.Meta):
+        swappable = 'AUTH_USER_MODEL'
 
-    def __str__(self):
-        return str(self.user)
+
+# class Profile(models.Model):
+#
+#
+#     user = models.OneToOneField(
+#         settings.AUTH_USER_MODEL,
+#         on_delete=models.CASCADE,
+#         related_name='profile',
+#     )
+#
+#
+#
+#     def save(self, *args, **kwargs):
+#         self.clean()
+#         super(Profile, self).save(*args, **kwargs)
+#
+#     def __str__(self):
+#         return str(self.user)

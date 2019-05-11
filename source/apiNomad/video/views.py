@@ -68,29 +68,29 @@ class Video(generics.ListCreateAPIView):
 
     def get_queryset(self):
 
-        if 'param' in self.request.query_params.keys():
-            if 'videoUser' in self.request.query_params.keys():
-                queryset = models.Video.objects.filter(
-                    owner=self.request.user
-                )
-            else:
-                queryset = models.Video.objects.all()
-
-            list_exclude = list()
-            for video in queryset:
-                if 'is_deleted' in self.request.query_params.keys():
-                    if video.is_delete \
-                            and not self.request.query_params['is_deleted']:
-                        list_exclude.append(video)
-                if 'is_actived' in self.request.query_params.keys():
-                    if not video.is_active and \
-                            self.request.query_params['is_actived']:
-                        list_exclude.append(video)
+        # if 'param' in self.request.query_params.keys():
+        if 'videoUser' in self.request.query_params.keys():
+            queryset = models.Video.objects.filter(
+                owner=self.request.user
+            )
         else:
             queryset = models.Video.objects.all()
 
+        list_exclude = list()
+        for video in queryset:
+            if 'is_deleted' in self.request.query_params.keys():
+                if video.is_delete \
+                        and not self.request.query_params['is_deleted']:
+                    list_exclude.append(video)
+            if 'is_actived' in self.request.query_params.keys():
+                if not video.is_active and \
+                        self.request.query_params['is_actived']:
+                    list_exclude.append(video)
+
         queryset = queryset. \
             exclude(pk__in=[video.pk for video in list_exclude])
+        # else:
+        #     queryset = models.Video.objects.all()
 
         return queryset
 
