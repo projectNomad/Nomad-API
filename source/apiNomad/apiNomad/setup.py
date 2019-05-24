@@ -1,7 +1,7 @@
 from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
 
-from video.models import Video
+from video.models import Video, Image
 # from apiNomad.models import User, Profile
 from video.models import Genre
 from . import settings
@@ -43,15 +43,20 @@ def init_producer_group():
         name=settings.CONSTANT["GROUPS_USER"]["PRODUCER"]
     )
 
-    # pas besoin dinitialiser ces permissions dans le groupes
-    # elles sont a tous les utilisateurs
-    # init_user_group(settings.CONSTANT["GROUPS_USER"]["PRODUCER"])
-
+    # video permissions
     content_type_video = ContentType.objects.get_for_model(Video)
     all_permissions_video = Permission.objects.filter(
         content_type=content_type_video
     )
     for permission in all_permissions_video:
+        group_producer.permissions.add(permission)
+
+    # image permissions
+    content_type_image = ContentType.objects.get_for_model(Image)
+    all_permissions_image = Permission.objects.filter(
+        content_type=content_type_image
+    )
+    for permission in all_permissions_image:
         group_producer.permissions.add(permission)
 
 

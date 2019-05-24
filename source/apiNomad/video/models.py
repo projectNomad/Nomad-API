@@ -64,10 +64,31 @@ class PathAndRename(object):
         return os.path.join(self.path, filename)
 
 
+class Image(models.Model):
+    class Meta:
+        verbose_name_plural = 'Images'
+
+    file = models.ImageField(
+        upload_to=PathAndRename(
+            'uploads/images/videos/{}'.format(time.strftime("%Y/%m/%d"))
+        ),
+        null=False,
+        blank=False
+    )
+
+    def __str__(self):
+        return self.file.name
+
+    @property
+    def hostPathFile(self):
+        return settings.CONSTANT['SERVER_HOST'] + '/' + \
+               settings.MEDIA_URL + '/' + self.file.name
+
+
 class Video(models.Model):
     class Meta:
         verbose_name_plural = 'Videos'
-        ordering = ('is_created',)
+        ordering = ['is_created']
 
     owner = models.ForeignKey(
         User,
@@ -109,6 +130,15 @@ class Video(models.Model):
             )
         ]
     )
+
+    avatar = models.OneToOneField(
+        Image,
+        verbose_name="Poster",
+        null=True,
+        related_name='Avatar',
+        on_delete=models.SET_NULL
+    )
+
     description = models.TextField(
         verbose_name="Description",
         blank=True,
