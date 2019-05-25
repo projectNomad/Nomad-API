@@ -123,7 +123,6 @@ class VideosTests(APITestCase):
             format='json',
         )
         content = json.loads(response.content)
-        # print(content)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(content['count'], 4)
@@ -132,7 +131,7 @@ class VideosTests(APITestCase):
         attributes = ['id', 'title', 'owner', 'description', 'height',
                       'is_created', 'is_active', 'is_delete', 'width',
                       'size', 'duration', 'is_actived', 'is_deleted',
-                      'file', 'genres', 'hostPathFile',
+                      'file', 'genres', 'hostPathFile', 'avatar',
                       'durationToHMS']
 
         for key in content['results'][0].keys():
@@ -174,7 +173,8 @@ class VideosTests(APITestCase):
         attributes = ['id', 'title', 'owner', 'description', 'height',
                       'is_created', 'is_active', 'is_delete', 'width',
                       'size', 'duration', 'is_actived', 'is_deleted',
-                      'file', 'genres', 'hostPathFile', 'durationToHMS']
+                      'file', 'genres', 'hostPathFile', 'durationToHMS',
+                      'avatar']
 
         for key in content['results'][0].keys():
             self.assertTrue(

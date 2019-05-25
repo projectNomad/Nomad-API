@@ -5,8 +5,8 @@ from video.models import Genre
 
 
 class EventTests(APITransactionTestCase):
-    TITLE = 'event title'
-    DESCRIPTION = 'description event'
+    TITLE = 'genre title'
+    DESCRIPTION = 'genre description'
 
     def test_create_video(self):
         """
