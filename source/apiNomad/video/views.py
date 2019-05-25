@@ -120,7 +120,6 @@ class Video(generics.ListCreateAPIView):
         return queryset
 
     def post(self, request, *args, **kwargs):
-
         if self.request.user.has_perm("video.add_video"):
             return self.create(request, *args, **kwargs)
 
@@ -173,3 +172,28 @@ class VideoId(generics.RetrieveUpdateDestroyAPIView):
         }
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
+
+class ActivateOrNot(generics.RetrieveUpdateDestroyAPIView):
+    """
+    get:
+    Return the detail of a specific video.
+
+    patch:
+    Update a specific video.
+
+    delete:
+    Delete a specific video.
+    """
+    serializer_class = serializers.ActivateOrNotSerializer
+
+    def get_queryset(self):
+        return models.Video.objects.filter()
+
+    def patch(self, request, *args, **kwargs):
+        if self.request.user.has_perm('video.change_video'):
+            return self.partial_update(request, *args, **kwargs)
+
+        content = {
+            'detail': _("You are not authorized to update a given video."),
+        }
+        return Response(content, status=status.HTTP_403_FORBIDDEN)

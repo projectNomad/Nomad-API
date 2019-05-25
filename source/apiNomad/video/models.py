@@ -151,13 +151,13 @@ class Video(models.Model):
     is_deleted = models.DateTimeField(
         verbose_name="Date de suppression",
         default=datetime.datetime(
-            1990, 1, 1, 0, 0, 0, 127325, tzinfo=pytz.UTC
+            1960, 1, 1, 0, 0, 0, 127325, tzinfo=pytz.UTC
         ),
     )
     is_actived = models.DateTimeField(
         verbose_name="visible",
         default=datetime.datetime(
-            1990, 1, 1, 0, 0, 0, 127325, tzinfo=pytz.UTC
+            1960, 1, 1, 0, 0, 0, 127325, tzinfo=pytz.UTC
         ),
     )
 
