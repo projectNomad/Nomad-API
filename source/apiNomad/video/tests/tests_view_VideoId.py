@@ -324,3 +324,58 @@ class VideosTests(APITestCase):
         )
 
         self.assertEqual(self.pre_signals, post_signals)
+
+    def test_actived_video(self):
+        """
+        Ensure we can actived video.
+        """
+        self.client.force_authenticate(user=self.admin)
+
+        response = self.client.patch(
+            reverse(
+                'video:activateOrNot_id',
+                kwargs={'pk': self.video_admin.id}
+            ),
+            {'mode': True},
+            format='json',
+        )
+
+        content = json.loads(response.content)
+        self.assertTrue(content['is_active'])
+
+    def test_deactived_video(self):
+        """
+        Ensure we can deactived video.
+        """
+        self.client.force_authenticate(user=self.admin)
+
+        response = self.client.patch(
+            reverse(
+                'video:activateOrNot_id',
+                kwargs={'pk': self.video_user_actif.id}
+            ),
+            {'mode': False},
+            format='json',
+        )
+        content = json.loads(response.content)
+        self.assertFalse(content['is_active'])
+
+    def test_deactived_video_without_permissions(self):
+        """
+        Ensure we can deactived video.
+        """
+        self.client.force_authenticate(user=self.user)
+
+        response = self.client.patch(
+            reverse(
+                'video:activateOrNot_id',
+                kwargs={'pk': self.video_user_actif.id}
+            ),
+            {'mode': False},
+            format='json',
+        )
+        content = json.loads(response.content)
+        response = {
+            'detail': 'You are not authorized to update a given video.'
+        }
+        self.assertEquals(content, response)

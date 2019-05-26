@@ -20,14 +20,26 @@ urlpatterns = format_suffix_patterns(
             name='videos_id',
         ),
         url(
+            r'^activate/(?P<pk>\d+)$',
+            views.ActivateOrNot.as_view(),
+            name='activateOrNot_id',
+        ),
+        # Genres
+        url(
             r'^genres$',
             views.Genre.as_view(),
-            name='genre',
+            name='genres',
         ),
         url(
             r'^genres/delete$',
             views.VideoGenreId.as_view(),
             name='genresVideos_id',
+        ),
+        # Images
+        url(
+            r'^images$',
+            views.Image.as_view(),
+            name='image',
         ),
     ]
 )

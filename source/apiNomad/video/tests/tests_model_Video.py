@@ -5,7 +5,7 @@ from apiNomad.factories import UserFactory, AdminFactory
 from video.models import Video
 
 
-class EventTests(APITransactionTestCase):
+class VideoTests(APITransactionTestCase):
     TITLE = 'event title'
     DESCRIPTION = 'description event'
 

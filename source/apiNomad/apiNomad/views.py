@@ -78,7 +78,7 @@ class ObtainTemporaryAuthToken(ObtainAuthToken):
                 token, _created = TemporaryToken.objects.get_or_create(
                     user=user
                 )
-                user.last_login = timezone.now();
+                user.last_login = timezone.now()
                 user.save()
 
             if token and token.expired:

@@ -99,7 +99,9 @@ class TemporaryToken(Token):
     def save(self, *args, **kwargs):
         if not self.pk:
             self.expires = timezone.now() + timezone.timedelta(
-                minutes=int(settings.REST_FRAMEWORK_TEMPORARY_TOKENS['MINUTES'])
+                minutes=int(
+                    settings.REST_FRAMEWORK_TEMPORARY_TOKENS['MINUTES']
+                )
             )
 
         super(TemporaryToken, self).save(*args, **kwargs)
