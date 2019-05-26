@@ -3,6 +3,7 @@ from unittest import mock
 from django.urls import reverse
 from django.conf import settings
 from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
 
 from rest_framework import status
 from rest_framework.test import APIClient, APITestCase
@@ -91,26 +92,61 @@ class VideosTests(APITestCase):
 
     # TODO: create video test
     # def test_create_new_video_with_permission(self):
-        # path_video = 'media/upload/2019/01/15/video.mp4'
+    #     path_video = 'media/upload/2019/01/15/video.mp4'
+    #
+    #     file_mock = mock.MagicMock(spec=File)
+    #     file_mock.filename = 'video.mp4'
+    #     self.client.force_authenticate(user=self.admin)
+    #     with open(__file__, 'rb') as fp:
+    #         data = {
+    #             'file': path_video,
+    #         }
+    #
+    #         response = self.client.post(
+    #             reverse('video:videos'),
+    #             data,
+    #             format='json',
+    #         )
+    #
+    #         content = json.loads(response.content)
+    #         print(content)
 
-        # file_mock = mock.MagicMock(spec=File)
-        # file_mock.filename = 'video.mp4'
-        # self.client.force_authenticate(user=self.admin)
-        # with open(__file__, 'rb') as fp:
-        #     data = {
-        #         'file': fp,
-        #     }
-        #
-        #     response = self.client.post(
-        #         reverse('video:videos'),
-        #         data,
-        #         format='json',
-        #         # content_type=client.MULTIPART_CONTENT,
-        #         Content_disposition =
-        #   'form-data; name="file"; filename="video.mp4"'
-        #     )
-        #
-        #     print(response.data)
+    # TODO: create image test
+    # do the test
+
+    def test_create_new_video_without_video_file(self):
+        self.client.force_authenticate(user=self.admin)
+
+        response = self.client.post(
+                reverse('video:videos'),
+                # data,
+                format='json'
+            )
+
+        content = json.loads(response.content)
+        response = {
+            'genres': [_('Ce champ est obligatoire.')],
+            'file': [_('Aucun fichier n\'a été soumis.')]
+        }
+        self.assertEquals(content, response)
+
+    def test_create_new_video_without_permissions(self):
+        path_video = 'media/upload/2019/01/15/video.mp4'
+        self.client.force_authenticate(user=self.user)
+        data = {
+                    'file': path_video,
+                }
+        response = self.client.post(
+                reverse('video:videos'),
+                data,
+                format='json'
+            )
+
+        content = json.loads(response.content)
+        response = {
+            'detail': 'You are not authorized to update a given video.'
+        }
+        self.assertEquals(content, response)
 
     def test_list_videos_with_permissions(self):
         """

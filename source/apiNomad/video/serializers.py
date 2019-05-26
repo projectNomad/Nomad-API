@@ -37,8 +37,8 @@ class ImageBasicSerializer(serializers.ModelSerializer):
                 and 'video' in validated_data.keys():
             return data
         error = {
-            'message': (
-                _("Data required")
+            'detail': (
+                _("Video required")
             )
         }
         raise serializers.ValidationError(error)

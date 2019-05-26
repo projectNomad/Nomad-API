@@ -16,6 +16,11 @@ from video.models import Video
 
 
 class VideosTests(APITestCase):
+    attributes = ['id', 'title', 'owner', 'description', 'height',
+                  'is_created', 'is_active', 'is_delete', 'width',
+                  'size', 'duration', 'is_actived', 'is_deleted',
+                  'file', 'genres', 'hostPathFile', 'durationToHMS',
+                  'avatar']
 
     def setUp(self):
 
@@ -360,6 +365,14 @@ class VideosTests(APITestCase):
         content = json.loads(response.content)
         self.assertFalse(content['is_active'])
 
+        for key in content.keys():
+            self.assertTrue(
+                key in self.attributes,
+                'Attribute "{0}" is not expected but is '
+                'returned by the system.'.format(key),
+            )
+            self.attributes.remove(key)
+
     def test_deactived_video_without_permissions(self):
         """
         Ensure we can deactived video.
@@ -374,6 +387,7 @@ class VideosTests(APITestCase):
             {'mode': False},
             format='json',
         )
+
         content = json.loads(response.content)
         response = {
             'detail': 'You are not authorized to update a given video.'
