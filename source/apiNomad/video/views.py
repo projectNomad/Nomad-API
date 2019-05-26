@@ -173,7 +173,7 @@ class VideoId(generics.RetrieveUpdateDestroyAPIView):
         return Response(content, status=status.HTTP_403_FORBIDDEN)
 
 
-class ActivateOrNot(generics.RetrieveUpdateDestroyAPIView):
+class ActivateOrNot(generics.UpdateAPIView):
     """
     get:
     Return the detail of a specific video.

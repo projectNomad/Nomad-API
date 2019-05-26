@@ -4,7 +4,7 @@ from rest_framework.test \
 from video.models import Image
 
 
-class EventTests(APITransactionTestCase):
+class ImageTests(APITransactionTestCase):
 
     def test_create_video(self):
         """

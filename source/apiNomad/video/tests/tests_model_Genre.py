@@ -4,7 +4,7 @@ from rest_framework.test \
 from video.models import Genre
 
 
-class EventTests(APITransactionTestCase):
+class GenreTests(APITransactionTestCase):
     TITLE = 'genre title'
     DESCRIPTION = 'genre description'
 

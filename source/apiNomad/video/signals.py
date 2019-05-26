@@ -18,6 +18,7 @@ def signal_file_delete_before_delete_video(sender, instance, **kwargs):
     """
     deleteEmptyRepository(settings.MEDIA_ROOT + '/' + instance.file.name)
 
+
 @receiver(pre_delete, sender=Image)
 def signal_file_delete_before_delete_image(sender, instance, **kwargs):
     """

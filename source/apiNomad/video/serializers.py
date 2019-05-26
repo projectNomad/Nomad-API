@@ -33,7 +33,8 @@ class ImageBasicSerializer(serializers.ModelSerializer):
     def validate(self, data):
         validated_data = super().validate(data)
 
-        if 'file' in validated_data.keys() and 'video' in validated_data.keys():
+        if 'file' in validated_data.keys() \
+                and 'video' in validated_data.keys():
             return data
         error = {
             'message': (

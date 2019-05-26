@@ -14,8 +14,6 @@ from uuid import uuid4
 from apiNomad.models import User
 
 
-
-
 class Genre(models.Model):
     class Meta:
         verbose_name_plural = 'Genres'
