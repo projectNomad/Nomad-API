@@ -159,7 +159,7 @@ class Users(generics.ListCreateAPIView):
                 ).key
 
                 # data for email activation
-                msg_html_css = render_to_string('css/confirm_sign_up.css')
+                msg_html_css = render_to_string('css/actived_mail.css')
                 merge_data = {
                     'ACTIVATION_URL':
                         FRONTEND_SETTINGS['ACTIVATION_URL'].replace(

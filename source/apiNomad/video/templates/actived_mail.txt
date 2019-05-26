@@ -1,0 +1,17 @@
+{% load i18n %}
+{% load static %}
+
+{% trans "Bonjour" %} {{USER_FIRST_NAME}},
+
+{% if VIDEO_ACTIVED %}
+  {% blocktrans %}
+      Votre video <a href="{{ VIDEO_URL }}">{{ VIDEO_TITLE }}</a> a été activé.
+  {% endblocktrans %}
+{% else %}
+  {% blocktrans %}
+      Votre video <a href="{{ VIDEO_URL }}">{{ VIDEO_TITLE }}</a> a été désactivé.
+  {% endblocktrans %}
+{% endif %}
+{% trans "Merci pour votre patience" %}
+
+© 2018 Uziya

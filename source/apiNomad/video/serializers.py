@@ -3,13 +3,15 @@ import datetime
 
 import pytz
 from django.conf import settings
+from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 
 from rest_framework import serializers
 from apiNomad.serializers import UserBasicSerializer
 from . import models, functions
-from .models import Video, Image
+from .models import Video
+from apiNomad.services import service_send_mail
 
 
 class GenreBasicSerializer(serializers.ModelSerializer):
@@ -29,19 +31,6 @@ class ImageBasicSerializer(serializers.ModelSerializer):
         required=False,
         allow_null=True,
     )
-
-    def validate(self, data):
-        validated_data = super().validate(data)
-
-        if 'file' in validated_data.keys() \
-                and 'video' in validated_data.keys():
-            return data
-        error = {
-            'detail': (
-                _("Video required")
-            )
-        }
-        raise serializers.ValidationError(error)
 
     def get_hostPathFile(self, obj):
         return obj.hostPathFile
@@ -151,10 +140,6 @@ class VideoBasicSerializer(serializers.ModelSerializer):
             instance.title = validated_data['title']
         if 'description' in validated_data.keys():
             instance.description = validated_data['description']
-        if 'is_deleted' in validated_data.keys():
-            instance.is_deleted = validated_data['is_deleted']
-        if 'is_actived' in validated_data.keys():
-            instance.is_actived = validated_data['is_actived']
         if 'genres' in validated_data.keys():
             for genre in validated_data['genres']:
                 genre = models.Genre.objects.filter(
@@ -245,20 +230,59 @@ class ActivateOrNotSerializer(serializers.ModelSerializer):
 
     def get_durationToHMS(self, obj):
         return obj.durationToHMS
+
     mode = serializers.BooleanField(
         required=False,
     )
 
     def update(self, instance, validated_data):
+        global merge_data
+        user = instance.owner
+        print('user', user.email)
+
         if 'mode' in validated_data.keys():
             if validated_data['mode']:
                 instance.is_actived = timezone.now()
+                merge_data = {
+                    'USER_FIRST_NAME': user.first_name,
+                    'USER_LAST_NAME': user.last_name,
+                    'VIDEO_ACTIVED': validated_data['mode'],
+                    'VIDEO_TITLE': instance.title,
+                    'VIDEO_URL': instance.hostPathFile,
+                    'CSS_STYLE': render_to_string('css/actived_mail.css')
+                }
             else:
                 instance.is_actived = datetime.datetime(
                     1960, 1, 1, 0, 0, 0, 127325, tzinfo=pytz.UTC
                 )
+                merge_data = {
+                    'USER_FIRST_NAME': user.first_name,
+                    'USER_LAST_NAME': user.last_name,
+                    'VIDEO_ACTIVED': validated_data['mode'],
+                    'VIDEO_TITLE': instance.title,
+                    'VIDEO_URL': instance.hostPathFile,
+                    'CSS_STYLE': render_to_string('css/actived_mail.css')
+                }
 
         instance.save()
+
+        plain_msg = render_to_string("actived_mail.txt", merge_data)
+        msg_html = render_to_string("actived_mail.html", merge_data)
+        emails_not_sent = service_send_mail(
+            [user.email],
+            _("UZIYA - Confirmation d'activation de votre video"),
+            plain_msg,
+            msg_html
+        )
+
+        if len(emails_not_sent) <= 0:
+            error = {
+                'message': _("Le compte a été créé mais aucun email "
+                             "n'a été envoyé. Si votre compte n'est "
+                             "pas activé, contactez l'administration."),
+            }
+            raise serializers.ValidationError(error)
+
         return instance
 
     class Meta:

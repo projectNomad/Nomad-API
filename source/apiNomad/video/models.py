@@ -7,6 +7,7 @@ import string
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils.deconstruct import deconstructible
+from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 import pytz
 
@@ -71,7 +72,13 @@ class Image(models.Model):
             'uploads/images/videos/{}'.format(time.strftime("%Y/%m/%d"))
         ),
         null=False,
-        blank=False
+        blank=False,
+        help_text=_('Les extension acceptées: jpeg, jpg, png'),
+        validators=[
+            FileExtensionValidator(
+                allowed_extensions=['png', 'jpg', 'jpeg']
+            )
+        ]
     )
 
     def __str__(self):
@@ -122,6 +129,7 @@ class Video(models.Model):
             'uploads/videos/{}'.format(time.strftime("%Y/%m/%d"))
         ),
         blank=False,
+        help_text=_('Les extension acceptées: mp4, webm'),
         validators=[
             FileExtensionValidator(
                 allowed_extensions=['mp4', 'webm']

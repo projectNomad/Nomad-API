@@ -175,19 +175,11 @@ class VideoId(generics.RetrieveUpdateDestroyAPIView):
 
 class ActivateOrNot(generics.UpdateAPIView):
     """
-    get:
-    Return the detail of a specific video.
-
     patch:
     Update a specific video.
-
-    delete:
-    Delete a specific video.
     """
     serializer_class = serializers.ActivateOrNotSerializer
-
-    def get_queryset(self):
-        return models.Video.objects.filter()
+    queryset = models.Video.objects.filter()
 
     def patch(self, request, *args, **kwargs):
         if self.request.user.has_perm('video.change_video'):
