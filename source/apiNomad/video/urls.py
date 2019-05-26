@@ -28,7 +28,7 @@ urlpatterns = format_suffix_patterns(
         url(
             r'^genres$',
             views.Genre.as_view(),
-            name='genre',
+            name='genres',
         ),
         url(
             r'^genres/delete$',
