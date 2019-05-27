@@ -238,31 +238,19 @@ class ActivateOrNotSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         global merge_data
         user = instance.owner
+        oldStatus = instance.is_active
+        instance.is_actived = datetime.datetime(
+            1960, 1, 1, 0, 0, 0, 127325, tzinfo=pytz.UTC
+        ) if oldStatus else timezone.now()
 
-        if 'mode' in validated_data.keys():
-            if validated_data['mode']:
-                instance.is_actived = timezone.now()
-                merge_data = {
-                    'USER_FIRST_NAME': user.first_name,
-                    'USER_LAST_NAME': user.last_name,
-                    'VIDEO_ACTIVED': validated_data['mode'],
-                    'VIDEO_TITLE': instance.title,
-                    'VIDEO_URL': instance.hostPathFile,
-                    'CSS_STYLE': render_to_string('css/actived_mail.css')
-                }
-            else:
-                instance.is_actived = datetime.datetime(
-                    1960, 1, 1, 0, 0, 0, 127325, tzinfo=pytz.UTC
-                )
-                merge_data = {
-                    'USER_FIRST_NAME': user.first_name,
-                    'USER_LAST_NAME': user.last_name,
-                    'VIDEO_ACTIVED': validated_data['mode'],
-                    'VIDEO_TITLE': instance.title,
-                    'VIDEO_URL': instance.hostPathFile,
-                    'CSS_STYLE': render_to_string('css/actived_mail.css')
-                }
-
+        merge_data = {
+            'USER_FIRST_NAME': user.first_name,
+            'USER_LAST_NAME': user.last_name,
+            'VIDEO_ACTIVED': instance.is_active,
+            'VIDEO_TITLE': instance.title,
+            'VIDEO_URL': instance.hostPathFile,
+            'CSS_STYLE': render_to_string('css/actived_mail.css')
+        }
         instance.save()
 
         plain_msg = render_to_string("actived_mail.txt", merge_data)
