@@ -238,7 +238,6 @@ class ActivateOrNotSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         global merge_data
         user = instance.owner
-        print('user', user.email)
 
         if 'mode' in validated_data.keys():
             if validated_data['mode']:
@@ -277,9 +276,7 @@ class ActivateOrNotSerializer(serializers.ModelSerializer):
 
         if len(emails_not_sent) <= 0:
             error = {
-                'message': _("Le compte a été créé mais aucun email "
-                             "n'a été envoyé. Si votre compte n'est "
-                             "pas activé, contactez l'administration."),
+                'detail': _("Le status de votre video a été modifié."),
             }
             raise serializers.ValidationError(error)
 

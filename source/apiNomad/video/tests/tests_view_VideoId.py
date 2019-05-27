@@ -15,6 +15,7 @@ from apiNomad.factories import AdminFactory, UserFactory
 from video.models import Video
 
 
+@override_settings(EMAIL_BACKEND='anymail.backends.test.EmailBackend')
 class VideosTests(APITestCase):
     attributes = ['id', 'title', 'owner', 'description', 'height',
                   'is_created', 'is_active', 'is_delete', 'width',
@@ -348,6 +349,12 @@ class VideosTests(APITestCase):
         content = json.loads(response.content)
         self.assertTrue(content['is_active'])
 
+    @override_settings(
+        CONSTANT={
+            "EMAIL_SERVICE": True,
+            "SERVER_HOST": "localhost:8000"
+        }
+    )
     def test_deactived_video(self):
         """
         Ensure we can deactived video.
@@ -393,3 +400,29 @@ class VideosTests(APITestCase):
             'detail': 'You are not authorized to update a given video.'
         }
         self.assertEquals(content, response)
+
+    @override_settings(
+        CONSTANT={
+            "EMAIL_SERVICE": False,
+            "SERVER_HOST": "localhost:8000"
+        }
+    )
+    def test_actived_video_without_email(self):
+        """
+        Ensure we can deactived video and not send video.
+        """
+        self.client.force_authenticate(user=self.admin)
+
+        response = self.client.patch(
+            reverse(
+                'video:activateOrNot_id',
+                kwargs={'pk': self.video_user_actif.id}
+            ),
+            {'mode': False},
+            format='json',
+        )
+        content = json.loads(response.content)
+        responseExpected = {"detail": _("Le status de votre video a été modifié.")}
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(content, responseExpected)
