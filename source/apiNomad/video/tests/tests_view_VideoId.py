@@ -12,7 +12,7 @@ from rest_framework import status
 from rest_framework.test import APIClient, APITestCase
 
 from apiNomad.factories import AdminFactory, UserFactory
-from video.models import Video
+from video.models import Video, Genre
 
 
 @override_settings(EMAIL_BACKEND='anymail.backends.test.EmailBackend')
@@ -95,6 +95,16 @@ class VideosTests(APITestCase):
                 is_deleted=subscription_date
             )
 
+            self.genre1 = Genre.objects.create(
+                label='genre_1',
+                description='description genre_1',
+            )
+
+            self.genre2 = Genre.objects.create(
+                label='genre_2',
+                description='description genre_2',
+            )
+
     def test_retrieve_video_id_not_exist(self):
         """
         Ensure we can't retrieve an video that doesn't exist.
@@ -119,7 +129,7 @@ class VideosTests(APITestCase):
     )
     def test_retrieve_video(self):
         """
-        Ensure we can retrieve an event.
+        Ensure we can retrieve an video.
         """
         self.client.force_authenticate(user=self.user)
 
@@ -146,15 +156,27 @@ class VideosTests(APITestCase):
     @override_settings(
         TIME_ZONE='UTC'
     )
-    def test_update_video_with_permission(self):
+    def test_update_video(self):
         """
         Ensure we can update a specific video.
         """
         title = 'new title video'
         description = 'new description video'
-        data_post = {
+        data = {
             "title": title,
             "description": description,
+            "genres": [
+                {
+                    'id': self.genre1.id,
+                    'description': self.genre1.description,
+                    'label': self.genre1.label
+                },
+                {
+                    'id': self.genre2.id,
+                    'description': self.genre2.description,
+                    'label': self.genre2.label
+                }
+            ],
         }
 
         self.admin.is_superuser = True
@@ -167,7 +189,7 @@ class VideosTests(APITestCase):
                 'video:videos_id',
                 kwargs={'pk': self.video_admin.id},
             ),
-            data_post,
+            data,
             format='json',
         )
 
@@ -422,7 +444,9 @@ class VideosTests(APITestCase):
             format='json',
         )
         content = json.loads(response.content)
-        responseExpected = {"detail": _("Le status de votre video a été modifié.")}
+        responseExpected = {
+            "detail": _("Le status de votre video a été modifié.")
+        }
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(content, responseExpected)
