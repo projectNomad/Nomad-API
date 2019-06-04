@@ -6,6 +6,8 @@ from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
+from PIL import Image
+from resizeimage import resizeimage
 
 from rest_framework import serializers
 from apiNomad.serializers import UserBasicSerializer
@@ -26,42 +28,84 @@ class GenreBasicSerializer(serializers.ModelSerializer):
 
 
 class ImageBasicSerializer(serializers.ModelSerializer):
-    hostPathFile = serializers.SerializerMethodField()
     video = serializers.CharField(
         required=False,
         allow_null=True,
     )
 
-    def get_hostPathFile(self, obj):
-        return obj.hostPathFile
+    def resize_images(self, image, thumbnail=False):
+        # after resizing, image change a type
+        # and the new type don't have a pth attribut'
+        path = image.filename
+        if thumbnail:
+            image = resizeimage.resize_width(
+                image,
+                settings.CONSTANT['IMAGES']['ORIGIN']
+            )
+        else:
+            image = resizeimage.resize_thumbnail(
+                image,
+                settings.CONSTANT['IMAGES']['THUMBNAIL']
+            )
+        image.save(path, 'png')
 
     def create(self, validated_data):
         poster = models.Image()
+        poster_thumbnail = models.Image()
         poster.file = validated_data['file']
+        poster.save()
 
         try:
-            poster.save()
+            # resize image for poster
+            image = Image.open(poster.file.path)
+            self.resize_images(
+                image,
+                True
+            )
+
+            # do a copy of original image
+            pathFile = image.filename.split('/')
+            nameFile = 'Thumb_' + pathFile[len(pathFile)-1]
+            pathThumbFile = '/' + nameFile
+            del pathFile[len(pathFile)-1]
+            pathFile = '/'.join(pathFile)
+            imageTmp = image.copy()
+            imageTmp.save(pathFile + pathThumbFile, 'png')
+            # save a copy in database
+            pathFile = image.filename.split('/')
+            del pathFile[0:9]
+            del pathFile[len(pathFile) - 1]
+            pathFile = '/'.join(pathFile)
+            poster_thumbnail.file = pathFile + pathThumbFile
+            poster_thumbnail.save()
+            # resize image for thumbnail image
+            imageTmp = Image.open(poster_thumbnail.file.path)
+            self.resize_images(
+                imageTmp
+            )
+
             video = Video.objects.get(id=validated_data['video'])
 
             if video.id and poster.id:
                 old_poster = None
-                if video.avatar:
-                    old_poster = video.avatar
+                old_poster_thumbnail = None
+                if video.poster:
+                    old_poster = video.poster
+                if video.poster_thumbnail:
+                    old_poster_thumbnail = video.poster_thumbnail
 
-                video.avatar = poster
+                video.poster = poster
+                video.poster_thumbnail = poster_thumbnail
                 video.save()
 
                 if old_poster:
                     old_poster.delete()
-        except Exception as e:
-            if os.path.exists(poster.hostPathFile()):
-                functions.deleteEmptyRepository(poster.hostPathFile())
-
+                if old_poster_thumbnail:
+                    old_poster_thumbnail.delete()
+        except FileNotFoundError:
             error = {
                 'message': (
-                    _("Erreur du serveur. Si cela persiste, "
-                      "s'il vous plait veiller contacter "
-                      "nos services.")
+                    _("Aucun fichiers retrouvés.")
                 )
             }
             raise serializers.ValidationError(error)

@@ -137,11 +137,19 @@ class Video(models.Model):
         ]
     )
 
-    avatar = models.OneToOneField(
+    poster = models.OneToOneField(
         Image,
         verbose_name="Poster",
         null=True,
-        related_name='Avatar',
+        related_name='poster',
+        on_delete=models.SET_NULL
+    )
+
+    poster_thumbnail = models.OneToOneField(
+        Image,
+        verbose_name="Poster thumbnail",
+        null=True,
+        related_name='poster_thumbnail',
         on_delete=models.SET_NULL
     )
 
@@ -181,10 +189,13 @@ class Video(models.Model):
     @property
     def is_active(self):
         """
-        the video is enable if not deleted and she is actived
+        The video is activated if it has a title, if it is not
+        deleted and if the activation date is greater than the
+        date of creation.
         """
-        if not self.is_delete:
-            return self.is_actived >= self.is_created
+        if self.title:
+            if not self.is_delete:
+                return self.is_actived >= self.is_created
         return False
 
     @property

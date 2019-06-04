@@ -111,9 +111,6 @@ class VideosTests(APITestCase):
     #         content = json.loads(response.content)
     #         print(content)
 
-    # TODO: create image test
-    # do the test
-
     def test_create_new_video_without_video_file(self):
         self.client.force_authenticate(user=self.admin)
 
@@ -167,8 +164,8 @@ class VideosTests(APITestCase):
         attributes = ['id', 'title', 'owner', 'description', 'height',
                       'is_created', 'is_active', 'is_delete', 'width',
                       'size', 'duration', 'is_actived', 'is_deleted',
-                      'file', 'genres', 'hostPathFile', 'avatar',
-                      'durationToHMS']
+                      'file', 'genres', 'hostPathFile', 'poster',
+                      'durationToHMS', 'poster_thumbnail']
 
         for key in content['results'][0].keys():
             self.assertTrue(
@@ -210,7 +207,7 @@ class VideosTests(APITestCase):
                       'is_created', 'is_active', 'is_delete', 'width',
                       'size', 'duration', 'is_actived', 'is_deleted',
                       'file', 'genres', 'hostPathFile', 'durationToHMS',
-                      'avatar']
+                      'poster', 'poster_thumbnail']
 
         for key in content['results'][0].keys():
             self.assertTrue(

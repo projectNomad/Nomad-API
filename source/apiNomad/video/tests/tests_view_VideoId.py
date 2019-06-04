@@ -7,6 +7,10 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.test.utils import override_settings
 from django.db.models import signals
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.utils.six import BytesIO
+from PIL import Image
+from django.core.files.base import ContentFile
 
 from rest_framework import status
 from rest_framework.test import APIClient, APITestCase
@@ -21,7 +25,7 @@ class VideosTests(APITestCase):
                   'is_created', 'is_active', 'is_delete', 'width',
                   'size', 'duration', 'is_actived', 'is_deleted',
                   'file', 'genres', 'hostPathFile', 'durationToHMS',
-                  'avatar']
+                  'poster', 'poster_thumbnail']
 
     def setUp(self):
 
@@ -321,7 +325,7 @@ class VideosTests(APITestCase):
 
             data.append(
                 (instance, sender, kwargs.get("raw", False))
-             )
+            )
 
         signals.pre_delete.connect(pre_delete_handler, weak=False)
 
@@ -348,7 +352,7 @@ class VideosTests(APITestCase):
         end that all the signals we register get properly unregistered
         """
         post_signals = (
-           len(signals.pre_delete.receivers),
+            len(signals.pre_delete.receivers),
         )
 
         self.assertEqual(self.pre_signals, post_signals)
@@ -449,4 +453,27 @@ class VideosTests(APITestCase):
         }
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(content, responseExpected)
+
+    def test_update_image_video_without_permission(self):
+        """
+        Ensure we can not add poster for video without permission
+        """
+        self.client.force_authenticate(user=self.user)
+
+        response = self.client.post(
+            reverse(
+                'video:image'),
+            {
+                'file': 'uploads/images/videos/2019/01/01/testimg.png',
+                'video': self.video_user.id
+            },
+            format='json',
+        )
+        content = json.loads(response.content)
+        responseExpected = {
+            "detail": _("Vous n'êtes pas autorisé à faire cette action.")
+        }
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(content, responseExpected)
