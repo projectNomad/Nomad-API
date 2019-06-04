@@ -17,10 +17,8 @@ def signal_file_delete_before_delete_video(sender, instance, **kwargs):
     :return:
     """
     try:
-        print('je suis dans le signal de video')
         deleteEmptyRepository(settings.MEDIA_ROOT + '/' + instance.file.name)
     except FileNotFoundError as e:
-        print('je suis dans le signal ex filenot')
         pass
 
 
@@ -35,11 +33,11 @@ def signal_image_delete_after_delete_video(sender, instance, **kwargs):
     :return:
     """
     try:
-        print('je suis dans le signal de video apres delete')
-        if instance.avatar:
-            instance.avatar.delete()
+        if instance.poster:
+            instance.poster.delete()
+        if instance.poster_thumbnail:
+            instance.poster_thumbnail.delete()
     except FileNotFoundError as e:
-        print('je suis dans le signal ex filenot')
         pass
 
 
@@ -54,8 +52,6 @@ def signal_file_delete_before_delete_image(sender, instance, **kwargs):
     :return:
     """
     try:
-        print('je suis dans le signal de image')
         deleteEmptyRepository(settings.MEDIA_ROOT + '/' + instance.file.name)
     except FileNotFoundError as e:
-        print('je suis dans le signal de image exp filenot')
         pass
