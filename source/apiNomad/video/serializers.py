@@ -3,6 +3,7 @@ import datetime
 
 import pytz
 from django.conf import settings
+from django.db import Error
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
@@ -102,6 +103,13 @@ class ImageBasicSerializer(serializers.ModelSerializer):
                     old_poster.delete()
                 if old_poster_thumbnail:
                     old_poster_thumbnail.delete()
+        except FileNotFoundError:
+            error = {
+                'message': (
+                    _("Aucun fichiers retrouvés.")
+                )
+            }
+            raise serializers.ValidationError(error)
         except FileNotFoundError:
             error = {
                 'message': (
