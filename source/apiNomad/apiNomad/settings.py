@@ -250,4 +250,8 @@ CONSTANT = {
         "HEIGHT": 720,
         "SIZE": 783504130,
     },
+    "IMAGES": {
+        "THUMBNAIL": [200, 150],
+        "ORIGIN": 800,
+    },
 }
