@@ -33,6 +33,10 @@ class ImageBasicSerializer(serializers.ModelSerializer):
         required=False,
         allow_null=True,
     )
+    hostPathFile = serializers.SerializerMethodField()
+
+    def get_hostPathFile(self, obj):
+        return obj.hostPathFile
 
     def resize_images(self, image, thumbnail=False):
         # after resizing, image change a type
@@ -138,7 +142,10 @@ class VideoBasicSerializer(serializers.ModelSerializer):
     genres = GenreBasicSerializer(
         many=True
     )
-    avatar = ImageBasicSerializer(
+    poster = ImageBasicSerializer(
+        read_only=True
+    )
+    poster_thumbnail = ImageBasicSerializer(
         read_only=True
     )
     is_active = serializers.SerializerMethodField()
@@ -247,7 +254,8 @@ class VideoBasicSerializer(serializers.ModelSerializer):
             'owner',
             'hostPathFile',
             'durationToHMS',
-            'avatar',
+            'poster',
+            'poster_thumbnail',
         ]
 
 
