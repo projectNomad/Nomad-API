@@ -3,7 +3,7 @@ import datetime
 
 import pytz
 from django.conf import settings
-from django.db import Error
+from django.core.files.images import get_image_dimensions
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
@@ -37,6 +37,26 @@ class ImageBasicSerializer(serializers.ModelSerializer):
 
     def get_hostPathFile(self, obj):
         return obj.hostPathFile
+
+    def validate(self, data):
+        validated_data = super().validate(data)
+
+        # validation for first step of video creating
+        file = validated_data.get(
+            'file',
+            getattr(self.instance, 'file', None)
+        )
+        width, height = get_image_dimensions(file)
+
+        if width < settings.CONSTANT['IMAGES']['ORIGIN']:
+            error = {
+                'message': (
+                    _("Dimentions of image is not valide")
+                )
+            }
+            raise serializers.ValidationError(error)
+
+        return data
 
     def resize_images(self, image, thumbnail=False):
         # after resizing, image change a type

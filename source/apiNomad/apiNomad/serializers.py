@@ -3,10 +3,10 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth import authenticate, password_validation
 from django.contrib.auth.models import Group
+from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
-# from .models import ActionToken, User, Profile
 from .models import ActionToken, User
 
 
@@ -23,7 +23,7 @@ class AuthCustomTokenSerializer(serializers.Serializer):
                 user_obj = User.objects.get(email=login)
                 if user_obj:
                     login = user_obj.email
-            except User.DoesNotExist:
+            except ObjectDoesNotExist as e:
                 pass
 
             user = authenticate(request=self.context.get('request'),

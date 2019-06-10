@@ -52,7 +52,6 @@ class ObtainTemporaryAuthToken(ObtainAuthToken):
         """
         Respond to POSTed email/password with token.
         """
-
         serializer = serializers.AuthCustomTokenSerializer(data=request.data)
 
         CONFIG = settings.REST_FRAMEWORK_TEMPORARY_TOKENS

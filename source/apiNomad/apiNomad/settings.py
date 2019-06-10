@@ -222,6 +222,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 DATA_UPLOAD_MAX_NUMBER_FIELDS = None
 FILE_UPLOAD_HANDLERS = [
     'django.core.files.uploadhandler.TemporaryFileUploadHandler',
+    "django.core.files.uploadhandler.MemoryFileUploadHandler"
 ]
 
 # These settings are not related to the core API functionality. Feel free to
