@@ -18,7 +18,7 @@ django-import-export==1.0.0
 django-stubs==0.11.1
 django-toolbelt==0.0.1
 django-username-email==2.2.2
-djangorestframework==3.8.2
+djangorestframework==3.11.2
 djangorestframework-stubs==0.2.0
 drfdocs==0.0.11
 et-xmlfile==1.0.1
