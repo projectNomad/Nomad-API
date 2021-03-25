@@ -46,7 +46,7 @@ pycodestyle==2.4.0
 python-dateutil==2.7.5
 python-decouple==3.1
 pytz==2018.9
-PyYAML==3.13
+PyYAML==5.4
 requests==2.21.0
 six==1.12.0
 static3==0.7.0
